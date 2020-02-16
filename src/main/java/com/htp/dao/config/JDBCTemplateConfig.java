@@ -18,7 +18,6 @@ public class JDBCTemplateConfig {
     @Autowired
     @Qualifier("dataSource")
     private BasicDataSource dataSource;
-    //private DataSource dataSource1;
 
     //https://docs.spring.io/spring/docs/4.0.x/spring-framework-reference/html/jdbc.html
     //https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html

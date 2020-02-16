@@ -22,8 +22,8 @@ public class DBConfig {
         dataSource.setUrl(properties.getProperty("url"));
         dataSource.setUsername(properties.getProperty("username"));
         dataSource.setPassword(properties.getProperty("password"));
-        //dataSource.setInitialSize(Integer.valueOf(Objects.requireNonNull(properties.getProperty("initialSize"))));
-        // dataSource.setMaxActive(Integer.valueOf(Objects.requireNonNull(properties.getProperty("maxActive"))));
+        dataSource.setInitialSize(Integer.valueOf(Objects.requireNonNull(properties.getProperty("initialSize"))));
+        dataSource.setMaxActive(Integer.valueOf(Objects.requireNonNull(properties.getProperty("maxActive"))));
         return dataSource;*/
 
     @Value("${driverClassName}")
@@ -38,6 +38,12 @@ public class DBConfig {
     @Value("${db.username}")
     private String username;
 
+    @Value("${initialSize}")
+    private int initialSize;
+
+    @Value("${maxActive}")
+    private int maxActive;
+
     @Bean(value = "dataSource", destroyMethod = "close")
     @Scope("singleton")
     @Primary
@@ -47,33 +53,10 @@ public class DBConfig {
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
-        //dataSource.setInitialSize(Integer.valueOf(Objects.requireNonNull(properties.getProperty("initialSize"))));
-        // dataSource.setMaxActive(Integer.valueOf(Objects.requireNonNull(properties.getProperty("maxActive"))));
+        dataSource.setInitialSize(initialSize);
+        dataSource.setMaxActive(maxActive);
         return dataSource;
     }
-    /*
-     @Value("org.postgresql.Driver")
-    private String driverClassName;
 
-    @Value("root")
-    private String password;
-
-    @Value("jdbc:postgresql://localhost:5432/test_database")
-    private String url;
-
-    @Value("test")
-    private String username;
-
-    @Value("${driverClassName}")
-    private String driverClassName;
-
-    @Value("${password}")
-    private String password;
-
-    @Value("${url}")
-    private String url;
-
-    @Value("${username}")
-    private String username;*/
 }
 
