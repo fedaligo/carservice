@@ -1,6 +1,6 @@
 package com.htp.dao.users.impl;
 
-import com.htp.dao.users.Users;
+import com.htp.entity.Users;
 import com.htp.dao.users.UsersDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Component("UsersDaoImpl")
@@ -51,7 +50,7 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public List<Users> readAll() {
-        String sql = "SELECT * FROM m_users";
+        String sql = "SELECT * FROM m_users ORDER BY id";
         return namedParameterJdbcTemplate.query(sql, this::getEmployeeRowMapper);
     }
 

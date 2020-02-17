@@ -1,8 +1,8 @@
 package com.htp.dao.users;
 
 import com.htp.dao.GenericDao;
+import com.htp.entity.Users;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 public interface UsersDao extends GenericDao<Users,Long> {

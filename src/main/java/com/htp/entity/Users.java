@@ -1,4 +1,4 @@
-package com.htp.dao.users;
+package com.htp.entity;
 
 import java.sql.Timestamp;
 import java.util.Date;

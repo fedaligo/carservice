@@ -1,6 +1,6 @@
-package com.htp.controller;
+package com.htp.dao.controller;
 
-import com.htp.dao.users.Users;
+import com.htp.entity.Users;
 import com.htp.dao.users.UsersDao;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
