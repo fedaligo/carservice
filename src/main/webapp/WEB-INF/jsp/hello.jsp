@@ -14,7 +14,8 @@
 <body>
 <h2>${usersdeleted}</h2>
 <h2>${usersreadall}</h2>
+<h2>${trackingreadall}</h2>
+<h2>${bycost}</h2>
 
-<h2>${users}</h2>
 </body>
 </html>

@@ -13,21 +13,22 @@ import java.util.Map;
 @Aspect
 @Component
 public class StatisticsAspect {
-    private Map<Class<?>, Integer> counter = new HashMap<>();
+    private Map<Class<?>, Integer> counterReadAll = new HashMap<>();
 
     @Pointcut("execution(* *.readAll(..))")
-    private void allLogEventMethods() {
+    private void usersReadAllmethod() {
     }
 
-    @AfterReturning("allLogEventMethods()")
+    @AfterReturning("usersReadAllmethod()")
     public void count(JoinPoint jp) {
         Class<?> clazz = jp.getTarget().getClass();
-        if (!counter.containsKey(clazz)) {
-            counter.put(clazz, 0);
+        if (!counterReadAll.containsKey(clazz)) {
+            counterReadAll.put(clazz, 0);
         }
-        counter.put(clazz, counter.get(clazz) + 1);
+        counterReadAll.put(clazz, counterReadAll.get(clazz) + 1);
     }
-    public Map<Class<?>, Integer> getCounter() {
-        return Collections.unmodifiableMap(counter);
+    public Map<Class<?>, Integer> getCounterReadAll() {
+        return Collections.unmodifiableMap(counterReadAll);
     }
+
 }

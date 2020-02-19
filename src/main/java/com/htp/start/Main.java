@@ -3,6 +3,7 @@ package com.htp.start;
 import com.htp.dao.aspect.LoggingAspect;
 import com.htp.dao.aspect.StatisticsAspect;
 import com.htp.dao.config.AppConfig;
+import com.htp.dao.tracking.TrackingDao;
 import com.htp.dao.users.UsersDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -19,6 +20,7 @@ public class Main {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         UsersDao usersDAO = (UsersDao) context.getBean("UsersDaoImpl");
+        TrackingDao trackingDao = (TrackingDao) context.getBean("TrackingDaoImpl");
 
         /*CREATE
         Timestamp ts = new Timestamp(2019-1900,11,31,12,0,0,0);
@@ -50,19 +52,23 @@ public class Main {
         /*CREATED AFTER DATE - not working
         Timestamp ts = new Timestamp(2019-1900,11,22,21,32,31,0);
         System.out.println(usersDAO.createdAfter());*/
-        System.out.print(" FindAll : " + usersDAO.readAll());
+        /*System.out.print(" FindAll : " + usersDAO.readAll());
         System.out.println(usersDAO.readById(29l));;
 
         Main mn = (Main)context.getBean("main") ;
-        mn.outputLoggingCounter();
+        mn.outputLoggingCounter();*/
+        System.out.print(" FindAll : " + trackingDao.trackingByHigherCost(100l));
 
         context.close();
     }
+
+
     private void outputLoggingCounter() {
         if (statisticsAspect != null) {
-            System.out.println("Loggers statistics. Number of calls: ");
-            for (Map.Entry<Class<?>, Integer> entry: statisticsAspect.getCounter().entrySet()) {
-                System.out.println("    " + entry.getKey().getSimpleName() + ": " + entry.getValue());
+            System.out.print("Loggers statistics. Number of calls USERS READALL: ");
+            for (Map.Entry<Class<?>, Integer> entry: statisticsAspect.getCounterReadAll().entrySet()) {
+                //System.out.println("    " + entry.getKey().getSimpleName() + ": " + entry.getValue());
+                System.out.println("    " + entry.getValue());
             }
         }
     }
