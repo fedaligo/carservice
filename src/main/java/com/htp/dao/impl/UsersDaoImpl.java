@@ -114,8 +114,4 @@ public class UsersDaoImpl implements UsersDao {
 
     }
 
-    /*@Override
-    public void deleteById(int id) {
-
-    }*/
 }
