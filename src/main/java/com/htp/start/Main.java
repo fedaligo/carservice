@@ -1,16 +1,14 @@
 package com.htp.start;
 
-import com.htp.dao.aspect.LoggingAspect;
-import com.htp.dao.aspect.StatisticsAspect;
-import com.htp.dao.config.AppConfig;
-import com.htp.dao.tracking.TrackingDao;
-import com.htp.dao.users.UsersDao;
+import com.htp.aspect.StatisticsAspect;
+import com.htp.config.AppConfig;
+import com.htp.dao.*;
+import com.htp.entity.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.Map;
 
 @Service
@@ -21,6 +19,10 @@ public class Main {
         ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         UsersDao usersDAO = (UsersDao) context.getBean("UsersDaoImpl");
         TrackingDao trackingDao = (TrackingDao) context.getBean("TrackingDaoImpl");
+        CarsDao carsDao = (CarsDao) context.getBean("CarsDaoImpl");
+        OrganizationsDao organizationsDao = (OrganizationsDao) context.getBean("OrganizationsDaoImpl");
+        RolesDao rolesDao = (RolesDao) context.getBean("RolesDaoImpl");
+        TasksDao tasksDao = (TasksDao) context.getBean("TasksDaoImpl");
 
         /*CREATE
         Timestamp ts = new Timestamp(2019-1900,11,31,12,0,0,0);
@@ -57,7 +59,8 @@ public class Main {
 
         Main mn = (Main)context.getBean("main") ;
         mn.outputLoggingCounter();*/
-        System.out.print(" FindAll : " + trackingDao.trackingByHigherCost(100l));
+        //System.out.print(" FindAll : " + trackingDao.trackingByHigherCost(100l));
+        System.out.println(rolesDao.findAll());
 
         context.close();
     }

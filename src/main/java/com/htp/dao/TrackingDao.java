@@ -1,4 +1,4 @@
-package com.htp.dao.tracking;
+package com.htp.dao;
 
 import com.htp.dao.GenericDao;
 import com.htp.entity.Tracking;

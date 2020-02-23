@@ -1,16 +1,12 @@
-package com.htp.dao.aspect;
+package com.htp.aspect;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 

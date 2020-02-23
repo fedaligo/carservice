@@ -1,4 +1,4 @@
-package com.htp.dao.aspect;
+package com.htp.aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;

@@ -2,6 +2,7 @@ package com.htp.entity;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Objects;
 
 public class Users {
     private Long id;
@@ -104,5 +105,25 @@ public class Users {
                 ", eMail='" + eMail + '\'' +
                 ", phNumberUser=" + phNumberUser +
                 '}'+"\n";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Users)) return false;
+        Users users = (Users) o;
+        return getId().equals(users.getId()) &&
+                getLogin().equals(users.getLogin()) &&
+                getPassword().equals(users.getPassword()) &&
+                getCreated().equals(users.getCreated()) &&
+                getChanged().equals(users.getChanged()) &&
+                isDeleted.equals(users.isDeleted) &&
+                geteMail().equals(users.geteMail()) &&
+                getPhNumberUser().equals(users.getPhNumberUser());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getLogin(), getPassword(), getCreated(), getChanged(), isDeleted, geteMail(), getPhNumberUser());
     }
 }

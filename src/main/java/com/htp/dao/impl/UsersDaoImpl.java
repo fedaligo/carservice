@@ -1,19 +1,20 @@
-package com.htp.dao.users.impl;
+package com.htp.dao.impl;
 
 import com.htp.entity.Users;
-import com.htp.dao.users.UsersDao;
+import com.htp.dao.UsersDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-@Component("UsersDaoImpl")
+@Repository("UsersDaoImpl")
 @Transactional
 public class UsersDaoImpl implements UsersDao {
 
@@ -49,13 +50,13 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
-    public List<Users> readAll() {
+    public List<Users> findAll() {
         String sql = "SELECT * FROM m_users ORDER BY id";
         return namedParameterJdbcTemplate.query(sql, this::getEmployeeRowMapper);
     }
 
     @Override
-    public Users readById(Long id) {
+    public Users findById(Long id) {
         String sql = "SELECT * FROM m_users WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
@@ -68,7 +69,7 @@ public class UsersDaoImpl implements UsersDao {
     }*/
 
     @Override
-    public Users updateById(Users entity) {
+    public List<Users> update(Users entity) {
         final String sql = "UPDATE m_users set login = :login, password = :password, created = :created, changed = :changed, is_deleted = :is_deleted, e_mail = :e_mail, phone_number_user = :phone_number_user where id = :id";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -81,7 +82,7 @@ public class UsersDaoImpl implements UsersDao {
         params.addValue("phone_number_user", entity.getPhNumberUser());
         params.addValue("id", entity.getId());
         namedParameterJdbcTemplate.update(sql, params);
-        return readById(entity.getId());
+        return findAll();
     }
 
     @Override
@@ -94,7 +95,7 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
-    public List<Users> deleted() {
+    public List<Users> findAllDeletedUsers() {
         String sql = "SELECT * FROM m_users WHERE is_deleted = true";
                return namedParameterJdbcTemplate.query(sql, this::getEmployeeRowMapper);
     }

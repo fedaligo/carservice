@@ -2,25 +2,26 @@ package com.htp.entity;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Objects;
 
 public class Tracking {
     private Long id;
-    private Long id_task;
-    private Long id_organaizer;
+    private Long idTask;
+    private Long idOrganaizer;
     private String status;
-    private Date confirm_date;
+    private Date confirmDate;
     private Long cost;
 
     public Tracking() {
 
     }
 
-    public Tracking(Long id, Long id_task, Long id_organaizer, String status, Date confirm_date, Long cost) {
+    public Tracking(Long id, Long idTask, Long idOrganaizer, String status, Date confirmDate, Long cost) {
         this.id = id;
-        this.id_task = id_task;
-        this.id_organaizer = id_organaizer;
+        this.idTask = idTask;
+        this.idOrganaizer = idOrganaizer;
         this.status = status;
-        this.confirm_date = confirm_date;
+        this.confirmDate = confirmDate;
         this.cost = cost;
     }
 
@@ -32,20 +33,20 @@ public class Tracking {
         this.id = id;
     }
 
-    public Long getId_task() {
-        return id_task;
+    public Long getIdTask() {
+        return idTask;
     }
 
-    public void setId_task(Long id_task) {
-        this.id_task = id_task;
+    public void setIdTask(Long idTask) {
+        this.idTask = idTask;
     }
 
-    public Long getId_organaizer() {
-        return id_organaizer;
+    public Long getIdOrganaizer() {
+        return idOrganaizer;
     }
 
-    public void setId_organaizer(Long id_organaizer) {
-        this.id_organaizer = id_organaizer;
+    public void setIdOrganaizer(Long idOrganaizer) {
+        this.idOrganaizer = idOrganaizer;
     }
 
     public String getStatus() {
@@ -56,12 +57,12 @@ public class Tracking {
         this.status = status;
     }
 
-    public Date getConfirm_date() {
-        return confirm_date;
+    public Date getConfirmDate() {
+        return confirmDate;
     }
 
-    public void setConfirm_date(Date confirm_date) {
-        this.confirm_date = confirm_date;
+    public void setConfirmDate(Date confirmDate) {
+        this.confirmDate = confirmDate;
     }
 
     public Long getCost() {
@@ -73,13 +74,31 @@ public class Tracking {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tracking)) return false;
+        Tracking tracking = (Tracking) o;
+        return getId().equals(tracking.getId()) &&
+                getIdTask().equals(tracking.getIdTask()) &&
+                getIdOrganaizer().equals(tracking.getIdOrganaizer()) &&
+                getStatus().equals(tracking.getStatus()) &&
+                getConfirmDate().equals(tracking.getConfirmDate()) &&
+                getCost().equals(tracking.getCost());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getIdTask(), getIdOrganaizer(), getStatus(), getConfirmDate(), getCost());
+    }
+
+    @Override
     public String toString() {
         return "Tracking{" +
                 "id=" + id +
-                ", id_task=" + id_task +
-                ", id_organaizer=" + id_organaizer +
+                ", idTask=" + idTask +
+                ", idOrganaizer=" + idOrganaizer +
                 ", status='" + status + '\'' +
-                ", confirm_date=" + confirm_date +
+                ", confirmDate=" + confirmDate +
                 ", cost=" + cost +
                 '}'+"\n";
     }

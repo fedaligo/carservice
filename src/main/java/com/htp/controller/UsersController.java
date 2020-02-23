@@ -1,7 +1,7 @@
-package com.htp.dao.controller;
+package com.htp.controller;
 
 import com.htp.entity.Users;
-import com.htp.dao.users.UsersDao;
+import com.htp.dao.UsersDao;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,19 +25,19 @@ public class UsersController {
     @ResponseStatus(HttpStatus.OK)
     public String printHello1(ModelMap model) {
         model.addAttribute("usersdeleted",
-                userDao.deleted().stream()
+                userDao.findAllDeletedUsers().stream()
                         .map(Users::toString)
                         .collect(Collectors.joining("---"))
         );
         return "hello";
     }
 
-    /*GET localhost:8080/HelloWeb/users/readall*/
-    @RequestMapping(value = "/users/readall", method = RequestMethod.GET)
+    /*GET localhost:8080/HelloWeb/users/all*/
+    @RequestMapping(value = "/users/all", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public String printHello2(ModelMap model) {
         model.addAttribute("usersreadall",
-                userDao.readAll().stream()
+                userDao.findAll().stream()
                         .map(Users::toString)
                         .collect(Collectors.joining(","))
         );

@@ -1,12 +1,8 @@
-package com.htp.dao.config;
+package com.htp.config;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
-import org.springframework.core.env.Environment;
-
-import java.util.Objects;
 
 @Configuration
 @PropertySource("classpath:database.properties")

@@ -1,4 +1,4 @@
-package com.htp.dao.users;
+package com.htp.dao;
 
 import com.htp.dao.GenericDao;
 import com.htp.entity.Users;
@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UsersDao extends GenericDao<Users,Long> {
 
-    public List<Users> deleted();
+    public List<Users> findAllDeletedUsers();
     public List<Users> createdAfter();
 
     /* public void create(final Users entity);

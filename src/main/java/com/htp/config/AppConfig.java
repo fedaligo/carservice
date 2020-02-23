@@ -1,4 +1,4 @@
-package com.htp.dao.config;
+package com.htp.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
