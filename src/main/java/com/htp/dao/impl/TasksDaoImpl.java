@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
@@ -40,6 +41,7 @@ public class TasksDaoImpl implements TasksDao {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void create(Tasks entity) {
 
         String sql = "INSERT INTO m_tasks " +
@@ -73,6 +75,7 @@ public class TasksDaoImpl implements TasksDao {
 //id, service_work_name, necessity_of_evacuation, wheel_brake, id_car, created, description, latitude, " +
 //                "longitude, local_description
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public List<Tasks> update(Tasks entity) {
         final String sql = "UPDATE m_tasks_id_seq set service_work_name = :service_work_name, necessity_of_evacuation = :necessity_of_evacuation, " +
                 "wheel_brake = :wheel_brake, id_car = :id_car, created = :created , description = :description, latitude = :latitude" +
@@ -94,6 +97,7 @@ public class TasksDaoImpl implements TasksDao {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void deleteById(Long id) {
         final String sql = "delete from m_tasks where id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();

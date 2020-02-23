@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
@@ -36,6 +37,7 @@ public class TrackingDaoImpl implements TrackingDao {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void create(Tracking entity) {
 
         String sql = "INSERT INTO tracking_system " +
@@ -66,6 +68,7 @@ public class TrackingDaoImpl implements TrackingDao {
     }*/
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public List<Tracking> update(Tracking entity) {
         final String sql = "UPDATE tracking_system set id_task = :id_task, id_organizer = :id_organizer, " +
                 "status = :status, confirm_date = :confirm_date, cost = :cost  where id = :id";
@@ -82,6 +85,7 @@ public class TrackingDaoImpl implements TrackingDao {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void deleteById(Long id) {
         final String sql = "delete from tracking_system where id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();

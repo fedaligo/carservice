@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
@@ -39,6 +41,7 @@ public class UsersDaoImpl implements UsersDao {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void create(Users entity) {
 
         String sql = "INSERT INTO m_users " +
@@ -69,6 +72,7 @@ public class UsersDaoImpl implements UsersDao {
     }*/
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public List<Users> update(Users entity) {
         final String sql = "UPDATE m_users set login = :login, password = :password, created = :created, changed = :changed, is_deleted = :is_deleted, e_mail = :e_mail, phone_number_user = :phone_number_user where id = :id";
 
@@ -86,6 +90,7 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void deleteById(Long id) {
         final String sql = "delete from m_users where id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();

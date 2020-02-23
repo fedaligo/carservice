@@ -16,6 +16,10 @@
 <h2>${usersreadall}</h2>
 <h2>${trackingreadall}</h2>
 <h2>${bycost}</h2>
+<h2>${carsreadall}</h2>
+<h2>${organizationsreadall}</h2>
+<h2>${rolesreadall}</h2>
+<h2>${tasksreadall}</h2>
 
 </body>
 </html>

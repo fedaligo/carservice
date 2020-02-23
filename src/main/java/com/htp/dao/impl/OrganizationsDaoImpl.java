@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
@@ -38,6 +39,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void create(Organization entity) {
 
         String sql = "INSERT INTO m_organization " +
@@ -68,6 +70,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     }*/
 //id, name, web_site, phone_number, location, working_time, specialize, e_mail
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public List<Organization> update(Organization entity) {
         final String sql = "UPDATE m_organization set name = :name, web_site = :web_site, " +
                 "phone_number = :phone_number, location = :location, working_time = :working_time, specialize = :specialize, " +
@@ -87,6 +90,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void deleteById(Long id) {
         final String sql = "delete from m_organization where id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();

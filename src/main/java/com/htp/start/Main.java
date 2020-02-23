@@ -60,7 +60,7 @@ public class Main {
         Main mn = (Main)context.getBean("main") ;
         mn.outputLoggingCounter();*/
         //System.out.print(" FindAll : " + trackingDao.trackingByHigherCost(100l));
-        System.out.println(rolesDao.findAll());
+        System.out.println(organizationsDao.findAll());
 
         context.close();
     }

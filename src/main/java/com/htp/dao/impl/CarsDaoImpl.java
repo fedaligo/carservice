@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
@@ -37,6 +38,7 @@ public class CarsDaoImpl implements CarsDao {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void create(Cars entity) {
 
         String sql = "INSERT INTO m_car " +
@@ -67,6 +69,7 @@ public class CarsDaoImpl implements CarsDao {
     }*/
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public List<Cars> update(Cars entity) {
         final String sql = "UPDATE m_car set car_brand = :car_brand, type_of_transmission = :type_of_transmission, " +
                 "type_of_fuel = :type_of_fuel, vin_number = :vin_number, user_id = :user_id, car_weight = :car_weight  where id = :id";
@@ -84,6 +87,7 @@ public class CarsDaoImpl implements CarsDao {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void deleteById(Long id) {
         final String sql = "delete from m_car where id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
