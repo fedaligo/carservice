@@ -9,6 +9,8 @@ public interface UsersDao extends GenericDao<Users,Long> {
 
     public List<Users> findAllDeletedUsers();
     public List<Users> createdAfter();
+    public List<Long> batchUpdate(List<Users> users);
+    public Users findByLogin(String login);
 
     /* public void create(final Users entity);
     public List<Users> readAll();

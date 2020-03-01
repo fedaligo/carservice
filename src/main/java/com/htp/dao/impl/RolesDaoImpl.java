@@ -95,4 +95,9 @@ public class RolesDaoImpl implements RolesDao {
         return namedParameterJdbcTemplate.query(sql, params, this::getEmployeeRowMapper);
     }*/
 
+    @Override
+    public List<Roles> getRolesByUserId(Long userId) {
+        final String getRolesByUserId = "select * from m_roles where name_of_role = ?";
+        return jdbcTemplate.query(getRolesByUserId, new Object[]{userId}, this::getEmployeeRowMapper);
+    }
 }

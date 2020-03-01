@@ -1,4 +1,4 @@
-package com.htp.controller;
+package com.htp.controller.requests;
 
 import com.htp.entity.Users;
 import com.htp.dao.UsersDao;

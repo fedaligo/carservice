@@ -1,0 +1,11 @@
+datasource:
+  driverName: org.postgresql.Driver
+  url: "jdbc:postgresql://localhost:5432/car_service_database?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+  login: test
+  password: root
+  initialSize: 10
+  maxActive: 7
+app:
+  login: stork
+  token: test
+  password: 111q111

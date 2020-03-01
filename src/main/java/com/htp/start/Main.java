@@ -1,28 +1,53 @@
 package com.htp.start;
 
 import com.htp.aspect.StatisticsAspect;
-import com.htp.config.AppConfig;
+import com.htp.config.core.AmazonConfiguration;
+import com.htp.config.core.AppConfig;
+import com.htp.config.core.DBConfig;
+import com.htp.config.core.JDBCTemplateConfig;
+import com.htp.config.swagger.SwaggerConfig;
 import com.htp.dao.*;
-import com.htp.entity.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Map;
 
-@Service
-public class Main {
-    @Autowired
-    private StatisticsAspect statisticsAspect;
+@EnableSwagger2
+@EnableAspectJAutoProxy
+@EnableTransactionManagement(proxyTargetClass = true)
+@SpringBootApplication(scanBasePackages = {"com.htp"}, exclude = JacksonAutoConfiguration.class)
+@Import({
+        DBConfig.class,
+        JDBCTemplateConfig.class,
+        SwaggerConfig.class,
+        AmazonConfiguration.class
+})
+
+public class Main extends SpringBootServletInitializer {
+    /*@Autowired
+    private StatisticsAspect statisticsAspect;*/
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+        SpringApplication.run(Main.class, args);
+
+        /*ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         UsersDao usersDAO = (UsersDao) context.getBean("UsersDaoImpl");
         TrackingDao trackingDao = (TrackingDao) context.getBean("TrackingDaoImpl");
         CarsDao carsDao = (CarsDao) context.getBean("CarsDaoImpl");
         OrganizationsDao organizationsDao = (OrganizationsDao) context.getBean("OrganizationsDaoImpl");
         RolesDao rolesDao = (RolesDao) context.getBean("RolesDaoImpl");
-        TasksDao tasksDao = (TasksDao) context.getBean("TasksDaoImpl");
+        TasksDao tasksDao = (TasksDao) context.getBean("TasksDaoImpl");*/
 
         /*CREATE
         Timestamp ts = new Timestamp(2019-1900,11,31,12,0,0,0);
@@ -60,13 +85,16 @@ public class Main {
         Main mn = (Main)context.getBean("main") ;
         mn.outputLoggingCounter();*/
         //System.out.print(" FindAll : " + trackingDao.trackingByHigherCost(100l));
-        System.out.println(organizationsDao.findAll());
 
-        context.close();
+
+        //context.close();
+    }
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Main.class);
     }
 
-
-    private void outputLoggingCounter() {
+    /*private void outputLoggingCounter() {
         if (statisticsAspect != null) {
             System.out.print("Loggers statistics. Number of calls USERS READALL: ");
             for (Map.Entry<Class<?>, Integer> entry: statisticsAspect.getCounterReadAll().entrySet()) {
@@ -74,5 +102,5 @@ public class Main {
                 System.out.println("    " + entry.getValue());
             }
         }
-    }
+    }*/
 }

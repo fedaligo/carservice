@@ -2,6 +2,7 @@ package com.htp.dao.impl;
 
 import com.htp.entity.Users;
 import com.htp.dao.UsersDao;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,9 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
-@Repository("UsersDaoImpl")
+@Repository//("UsersDaoImpl")
+@RequiredArgsConstructor
 @Transactional
 public class UsersDaoImpl implements UsersDao {
 
@@ -33,8 +36,8 @@ public class UsersDaoImpl implements UsersDao {
         user.setPassword(resultSet.getString("password"));
         user.setCreated(resultSet.getTimestamp("created"));
         user.setChanged(resultSet.getTimestamp("changed"));
-        user.setDeleted(resultSet.getBoolean("is_deleted"));
-        user.seteMail(resultSet.getString("e_mail"));
+        user.setIsDeleted(resultSet.getBoolean("is_deleted"));
+        user.setEMail(resultSet.getString("e_mail"));
         user.setPhNumberUser(resultSet.getLong("phone_number_user"));
         return user;
     }
@@ -49,7 +52,7 @@ public class UsersDaoImpl implements UsersDao {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(sql, new Object[] { entity.getId(), entity.getLogin(), entity.getPassword(), entity.getCreated(),
-                entity.getChanged(), entity.getDeleted(), entity.geteMail(), entity.getPhNumberUser()});
+                entity.getChanged(), entity.getIsDeleted(), entity.getEMail(), entity.getPhNumberUser()});
     }
 
     @Override
@@ -81,8 +84,8 @@ public class UsersDaoImpl implements UsersDao {
         params.addValue("password", entity.getPassword());
         params.addValue("created", entity.getCreated());
         params.addValue("changed", entity.getChanged());
-        params.addValue("is_deleted", entity.getDeleted());
-        params.addValue("e_mail", entity.geteMail());
+        params.addValue("is_deleted", entity.getIsDeleted());
+        params.addValue("e_mail", entity.getEMail());
         params.addValue("phone_number_user", entity.getPhNumberUser());
         params.addValue("id", entity.getId());
         namedParameterJdbcTemplate.update(sql, params);
@@ -113,5 +116,19 @@ public class UsersDaoImpl implements UsersDao {
         return namedParameterJdbcTemplate.query(sql, this::getEmployeeRowMapper);
 
     }
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public List<Long> batchUpdate(List<Users> users) {
+        return Collections.emptyList();
+    }
 
+    @Override
+    public Users findByLogin(String login) {
+        final String findById = "select * from m_users where login = :login";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("login", login);
+
+        return namedParameterJdbcTemplate.queryForObject(findById, params, this::getEmployeeRowMapper);
+    }
 }

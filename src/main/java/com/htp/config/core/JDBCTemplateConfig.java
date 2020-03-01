@@ -1,4 +1,4 @@
-package com.htp.config;
+package com.htp.config.core;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +11,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 @Configuration
-@ComponentScan("com.htp")
+//@ComponentScan("com.htp")
 public class JDBCTemplateConfig {
     @Autowired
-    @Qualifier("dataSource")
+    //@Qualifier("dataSource")
     private BasicDataSource dataSource;
 
     //https://docs.spring.io/spring/docs/4.0.x/spring-framework-reference/html/jdbc.html

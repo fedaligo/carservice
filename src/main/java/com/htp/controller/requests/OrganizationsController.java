@@ -1,8 +1,8 @@
-package com.htp.controller;
+package com.htp.controller.requests;
 
-import com.htp.dao.CarsDao;
+import com.htp.dao.OrganizationsDao;
 import com.htp.dao.TrackingDao;
-import com.htp.entity.Cars;
+import com.htp.entity.Organization;
 import com.htp.entity.Tracking;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-public class CarsController {
-    private final CarsDao carsDao;
+public class OrganizationsController {
+    private final OrganizationsDao organizationsDao;
 
-    public CarsController(CarsDao carsDao) {
-        this.carsDao = carsDao;
+    public OrganizationsController(OrganizationsDao organizationsDao) {
+        this.organizationsDao = organizationsDao;
     }
 
     //http://localhost:8081/tracking/search?cost=100
@@ -35,12 +35,12 @@ public class CarsController {
     }*/
 
     /*GET localhost:8081/tracking/all*/
-    @RequestMapping(value = "/cars/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/organizations/all", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public String printHello2(ModelMap model) {
-        model.addAttribute("carsreadall",
-                carsDao.findAll().stream()
-                        .map(Cars::toString)
+        model.addAttribute("organizationsreadall",
+               organizationsDao.findAll().stream()
+                        .map(Organization::toString)
                         .collect(Collectors.joining(","))
         );
         return "hello";

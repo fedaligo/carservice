@@ -1,6 +1,8 @@
-package com.htp.controller;
+package com.htp.controller.requests;
 
+import com.htp.dao.CarsDao;
 import com.htp.dao.TrackingDao;
+import com.htp.entity.Cars;
 import com.htp.entity.Tracking;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -15,31 +17,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-public class TrackingController {
+public class CarsController {
+    private final CarsDao carsDao;
 
-    private final TrackingDao trackingDao;
-
-    public TrackingController(TrackingDao trackingDao) {
-        this.trackingDao = trackingDao;
+    public CarsController(CarsDao carsDao) {
+        this.carsDao = carsDao;
     }
 
     //http://localhost:8081/tracking/search?cost=100
-    @RequestMapping(value = "/tracking/search", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/tracking/search", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public String printHello(@RequestParam("cost") Long query, ModelMap model) {
         List<Tracking> search = trackingDao.trackingByHigherCost(query);
         model.addAttribute("bycost",
                 StringUtils.join(search.stream().map(Tracking::toString).collect(Collectors.toList()), ","));
         return "hello";
-    }
+    }*/
 
     /*GET localhost:8081/tracking/all*/
-    @RequestMapping(value = "/tracking/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/cars/all", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public String printHello2(ModelMap model) {
-        model.addAttribute("trackingreadall",
-                trackingDao.findAll().stream()
-                        .map(Tracking::toString)
+        model.addAttribute("carsreadall",
+                carsDao.findAll().stream()
+                        .map(Cars::toString)
                         .collect(Collectors.joining(","))
         );
         return "hello";

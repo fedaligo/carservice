@@ -1,11 +1,18 @@
-package com.htp.config;
+package com.htp.config.core;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.*;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Configuration
-@PropertySource("classpath:database.properties")
+@ConfigurationProperties("datasource")
 public class DBConfig {
     /*@Autowired
     private Environment properties;
@@ -22,22 +29,22 @@ public class DBConfig {
         dataSource.setMaxActive(Integer.valueOf(Objects.requireNonNull(properties.getProperty("maxActive"))));
         return dataSource;*/
 
-    @Value("${driverClassName}")
+    //@Value("${driverClassName}")
     private String driverClassName;
 
-    @Value("${password}")
+    //@Value("${password}")
     private String password;
 
-    @Value("${url}")
+    //@Value("${url}")
     private String url;
 
-    @Value("${db.username}")
+    //@Value("${db.username}")
     private String username;
 
-    @Value("${initialSize}")
+    //@Value("${initialSize}")
     private int initialSize;
 
-    @Value("${maxActive}")
+    //@Value("${maxActive}")
     private int maxActive;
 
     @Bean(value = "dataSource", destroyMethod = "close")

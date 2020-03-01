@@ -1,8 +1,8 @@
-package com.htp.controller;
+package com.htp.controller.requests;
 
-import com.htp.dao.OrganizationsDao;
+import com.htp.dao.RolesDao;
 import com.htp.dao.TrackingDao;
-import com.htp.entity.Organization;
+import com.htp.entity.Roles;
 import com.htp.entity.Tracking;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -17,15 +17,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-public class OrganizationsController {
-    private final OrganizationsDao organizationsDao;
+public class RolesController {
+    private final RolesDao rolesDao;
 
-    public OrganizationsController(OrganizationsDao organizationsDao) {
-        this.organizationsDao = organizationsDao;
+    public RolesController(RolesDao rolesDao) {
+        this.rolesDao = rolesDao;
     }
 
     //http://localhost:8081/tracking/search?cost=100
-    /*@RequestMapping(value = "/tracking/search", method = RequestMethod.GET)
+   /* @RequestMapping(value = "/tracking/search", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public String printHello(@RequestParam("cost") Long query, ModelMap model) {
         List<Tracking> search = trackingDao.trackingByHigherCost(query);
@@ -35,12 +35,12 @@ public class OrganizationsController {
     }*/
 
     /*GET localhost:8081/tracking/all*/
-    @RequestMapping(value = "/organizations/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/roles/all", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public String printHello2(ModelMap model) {
-        model.addAttribute("organizationsreadall",
-               organizationsDao.findAll().stream()
-                        .map(Organization::toString)
+        model.addAttribute("rolesreadall",
+                rolesDao.findAll().stream()
+                        .map(Roles::toString)
                         .collect(Collectors.joining(","))
         );
         return "hello";

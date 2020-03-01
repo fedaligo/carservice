@@ -33,7 +33,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
         organization.setLocation(resultSet.getString("location"));
         organization.setWorkingTime(resultSet.getString("working_time"));
         organization.setSpecialize(resultSet.getString("specialize"));
-        organization.seteMail(resultSet.getString("e_mail"));
+        organization.setEMail(resultSet.getString("e_mail"));
         return organization;
     }
 
@@ -47,7 +47,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(sql, new Object[] { entity.getId(), entity.getName(), entity.getWebSite(), entity.getPhoneNumber(),
-                entity.getLocation(), entity.getWorkingTime(), entity.getSpecialize(), entity.geteMail()});
+                entity.getLocation(), entity.getWorkingTime(), entity.getSpecialize(), entity.getEMail()});
     }
 
     @Override
@@ -83,7 +83,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
         params.addValue("location", entity.getLocation());
         params.addValue("working_time", entity.getWorkingTime());
         params.addValue("specialize", entity.getSpecialize());
-        params.addValue("e_mail", entity.geteMail());
+        params.addValue("e_mail", entity.getEMail());
         params.addValue("id", entity.getId());
         namedParameterJdbcTemplate.update(sql, params);
         return findAll();
