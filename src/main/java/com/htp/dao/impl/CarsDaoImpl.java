@@ -15,9 +15,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-@Repository("CarsDaoImpl")
+@Repository//("CarsDaoImpl")
 @Transactional
 public class CarsDaoImpl implements CarsDao {
+    public static final String ID ="id";
+    public static final String CAR_BRAND ="car_brand";
+    public static final String TYPE_OF_TRANSMISSION ="type_of_transmission";
+    public static final String TYPE_OF_FUEL ="type_of_fuel";
+    public static final String VIN_NUMBER ="vin_number";
+    public static final String USER_ID ="user_id";
+    public static final String CAR_WEIGHT ="car_weight";
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
@@ -26,13 +33,13 @@ public class CarsDaoImpl implements CarsDao {
     //getEmployeeRowMapper парсит resultset
     private Cars getEmployeeRowMapper(ResultSet resultSet, int i) throws SQLException {
         Cars cars = new Cars();
-        cars.setId(resultSet.getLong("id"));
-        cars.setCarBrand(resultSet.getString("car_brand"));
-        cars.setTypeOfTransmission(resultSet.getString("type_of_transmission"));
-        cars.setTypeOfFuel(resultSet.getString("type_of_fuel"));
-        cars.setVinNumber(resultSet.getString("vin_number"));
-        cars.setUserId(resultSet.getLong("user_id"));
-        cars.setCarWeight(resultSet.getLong("car_weight"));
+        cars.setId(resultSet.getLong(ID));
+        cars.setCarBrand(resultSet.getString(CAR_BRAND));
+        cars.setTypeOfTransmission(resultSet.getString(TYPE_OF_TRANSMISSION));
+        cars.setTypeOfFuel(resultSet.getString(TYPE_OF_FUEL));
+        cars.setVinNumber(resultSet.getString(VIN_NUMBER));
+        cars.setUserId(resultSet.getLong(USER_ID));
+        cars.setCarWeight(resultSet.getLong(CAR_WEIGHT));
         return cars;
     }
 
@@ -59,7 +66,7 @@ public class CarsDaoImpl implements CarsDao {
     public Cars findById(Long id) {
         String sql = "SELECT * FROM m_car WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", id);
+        params.addValue(ID, id);
         return namedParameterJdbcTemplate.queryForObject(sql, params, this::getEmployeeRowMapper);
     }
 
@@ -75,13 +82,13 @@ public class CarsDaoImpl implements CarsDao {
                 "type_of_fuel = :type_of_fuel, vin_number = :vin_number, user_id = :user_id, car_weight = :car_weight  where id = :id";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("car_brand", entity.getCarBrand());
-        params.addValue("type_of_transmission", entity.getTypeOfTransmission());
-        params.addValue("type_of_fuel", entity.getTypeOfFuel());
-        params.addValue("vin_number", entity.getVinNumber());
-        params.addValue("user_id", entity.getUserId());
-        params.addValue("car_weight", entity.getCarWeight());
-        params.addValue("id", entity.getId());
+        params.addValue(CAR_BRAND, entity.getCarBrand());
+        params.addValue(TYPE_OF_TRANSMISSION, entity.getTypeOfTransmission());
+        params.addValue(TYPE_OF_FUEL, entity.getTypeOfFuel());
+        params.addValue(VIN_NUMBER, entity.getVinNumber());
+        params.addValue(USER_ID, entity.getUserId());
+        params.addValue(CAR_WEIGHT, entity.getCarWeight());
+        params.addValue(ID, entity.getId());
         namedParameterJdbcTemplate.update(sql, params);
         return findAll();
     }
@@ -91,7 +98,7 @@ public class CarsDaoImpl implements CarsDao {
     public void deleteById(Long id) {
         final String sql = "delete from m_car where id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", id);
+        params.addValue(ID, id);
         namedParameterJdbcTemplate.update(sql, params);
 
     }

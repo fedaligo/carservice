@@ -26,7 +26,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
 //        authenticationManagerBuilder
 //                .userDetailsService(userDetailsService);
-        authenticationManagerBuilder.inMemoryAuthentication().withUser("admin").password("{noop}admin").roles("ADMIN");
+        authenticationManagerBuilder.inMemoryAuthentication().withUser("admin1").password("{noop}admin").roles("ADMIN");
     }
 
     @Bean

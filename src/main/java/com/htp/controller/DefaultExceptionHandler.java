@@ -1,4 +1,4 @@
-package com.htp.controller.requests;
+package com.htp.controller;
 
 import com.htp.controller.messages.ErrorMessage;
 import org.apache.log4j.Logger;

@@ -30,7 +30,7 @@ public class DBConfig {
         return dataSource;*/
 
     //@Value("${driverClassName}")
-    private String driverClassName;
+    private String driverName;
 
     //@Value("${password}")
     private String password;
@@ -39,7 +39,7 @@ public class DBConfig {
     private String url;
 
     //@Value("${db.username}")
-    private String username;
+    private String login;
 
     //@Value("${initialSize}")
     private int initialSize;
@@ -52,9 +52,9 @@ public class DBConfig {
     @Primary
     public BasicDataSource getDatasource() {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(driverClassName);
+        dataSource.setDriverClassName(driverName);
         dataSource.setUrl(url);
-        dataSource.setUsername(username);
+        dataSource.setUsername(login);
         dataSource.setPassword(password);
         dataSource.setInitialSize(initialSize);
         dataSource.setMaxActive(maxActive);

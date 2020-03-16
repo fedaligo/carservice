@@ -1,4 +1,4 @@
-package com.htp.controller.requests;
+package com.htp.controller;
 
 import com.htp.dao.OrganizationsDao;
 import com.htp.dao.TrackingDao;
@@ -37,7 +37,7 @@ public class OrganizationsController {
     /*GET localhost:8081/tracking/all*/
     @RequestMapping(value = "/organizations/all", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public String printHello2(ModelMap model) {
+    public String printAllOrganizations(ModelMap model) {
         model.addAttribute("organizationsreadall",
                organizationsDao.findAll().stream()
                         .map(Organization::toString)
