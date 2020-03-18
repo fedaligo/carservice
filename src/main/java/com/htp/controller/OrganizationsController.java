@@ -1,19 +1,14 @@
 package com.htp.controller;
 
-import com.htp.dao.OrganizationsDao;
-import com.htp.dao.TrackingDao;
+import com.htp.dao.jdbc.OrganizationsDao;
 import com.htp.entity.Organization;
-import com.htp.entity.Tracking;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller

@@ -1,5 +1,6 @@
 package com.htp.dao;
 
+import com.htp.dao.jdbc.UsersDao;
 import com.htp.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.*;
 @Getter
 @NoArgsConstructor
 @Configuration
-@ConfigurationProperties("datasource")
+@PropertySource("classpath:database.properties")
 public class DBConfig {
     /*@Autowired
     private Environment properties;
@@ -29,22 +29,22 @@ public class DBConfig {
         dataSource.setMaxActive(Integer.valueOf(Objects.requireNonNull(properties.getProperty("maxActive"))));
         return dataSource;*/
 
-    //@Value("${driverClassName}")
+    @Value("${dddriverClassName}")
     private String driverName;
 
-    //@Value("${password}")
+    @Value("${ddpassword}")
     private String password;
 
-    //@Value("${url}")
+    @Value("${ddurl}")
     private String url;
 
-    //@Value("${db.username}")
+    @Value("${ddusername}")
     private String login;
 
-    //@Value("${initialSize}")
+    @Value("${ddinitialSize}")
     private int initialSize;
 
-    //@Value("${maxActive}")
+    @Value("${ddmaxActive}")
     private int maxActive;
 
     @Bean(value = "dataSource", destroyMethod = "close")

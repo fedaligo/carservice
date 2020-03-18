@@ -1,6 +1,6 @@
 package com.htp.controller;
 
-import com.htp.dao.TrackingDao;
+import com.htp.dao.jdbc.TrackingDao;
 import com.htp.entity.Tracking;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;

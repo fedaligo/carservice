@@ -1,13 +1,14 @@
-package com.htp.dao.impl;
+package com.htp.dao.jdbc.impl;
 
 import com.htp.entity.Users;
-import com.htp.dao.UsersDao;
+import com.htp.dao.jdbc.UsersDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Repository//("UsersDaoImpl")
 @RequiredArgsConstructor
@@ -57,7 +59,7 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public List<Users> findAll() {
-        String sql = "SELECT * FROM m_users ORDER BY id";
+        final String sql = "SELECT * FROM m_users ORDER BY id";
         return namedParameterJdbcTemplate.query(sql, this::getEmployeeRowMapper);
     }
 
@@ -130,5 +132,30 @@ public class UsersDaoImpl implements UsersDao {
         params.addValue("login", login);
 
         return namedParameterJdbcTemplate.queryForObject(findById, params, this::getEmployeeRowMapper);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT)
+    public Users save(Users entity) {
+        final String sql = "INSERT INTO m_users (login , password , created, changed , is_deleted , e_mail , phone_number_user)" +
+                "VALUES (:login, :password, :created, :changed, :is_deleted, :e_mail,:phone_number_user);";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("login", entity.getLogin());
+        params.addValue("password", entity.getPassword());
+        params.addValue("created", entity.getCreated());
+        params.addValue("changed", entity.getChanged());
+        params.addValue("is_deleted", entity.getIsDeleted());
+        params.addValue("e_mail", entity.getEMail());
+        params.addValue("phone_number_user", entity.getPhNumberUser());
+        params.addValue("id", entity.getId());
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+
+        long createdUserId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+        return findById(createdUserId);
     }
 }

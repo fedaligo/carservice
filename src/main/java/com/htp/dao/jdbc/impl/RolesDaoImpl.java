@@ -1,12 +1,13 @@
-package com.htp.dao.impl;
+package com.htp.dao.jdbc.impl;
 
-import com.htp.dao.RolesDao;
+import com.htp.dao.jdbc.RolesDao;
 import com.htp.entity.Roles;
-import com.htp.entity.Tracking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Repository("RolesDaoImpl")
 @Transactional
@@ -99,5 +101,28 @@ public class RolesDaoImpl implements RolesDao {
     public List<Roles> getRolesByUserId(Long userId) {
         final String getRolesByUserId = "select * from m_roles where name_of_role = ?";
         return jdbcTemplate.query(getRolesByUserId, new Object[]{userId}, this::getEmployeeRowMapper);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Roles save(Roles entity) {
+
+        final String sql = "INSERT INTO m_roles (name_of_role , user_id)" +
+                "VALUES (:name_of_role, :user_id);";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name_of_role", entity.getNameOfRole());
+        params.addValue("user_id", entity.getUserId());
+        params.addValue("id", entity.getId());
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+
+        long createdRoleId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+        return findById(createdRoleId);
+
+
     }
 }

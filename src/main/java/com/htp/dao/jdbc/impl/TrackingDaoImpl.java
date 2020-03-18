@@ -1,12 +1,11 @@
-package com.htp.dao.impl;
+package com.htp.dao.jdbc.impl;
 
-import com.htp.dao.TrackingDao;
+import com.htp.dao.jdbc.TrackingDao;
 import com.htp.entity.Tracking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

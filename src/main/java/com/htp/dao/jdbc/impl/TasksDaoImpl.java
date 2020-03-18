@@ -1,8 +1,7 @@
-package com.htp.dao.impl;
+package com.htp.dao.jdbc.impl;
 
-import com.htp.dao.TasksDao;
+import com.htp.dao.jdbc.TasksDao;
 import com.htp.entity.Tasks;
-import com.htp.entity.Tracking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

@@ -1,4 +1,4 @@
-package com.htp.dao;
+package com.htp.dao.jdbc;
 
 import com.htp.dao.GenericDao;
 import com.htp.entity.Users;
@@ -11,6 +11,7 @@ public interface UsersDao extends GenericDao<Users,Long> {
     public List<Users> createdAfter();
     public List<Long> batchUpdate(List<Users> users);
     public Users findByLogin(String login);
+    public Users save(Users entity);
 
     /* public void create(final Users entity);
     public List<Users> readAll();

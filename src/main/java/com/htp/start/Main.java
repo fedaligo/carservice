@@ -1,27 +1,18 @@
 package com.htp.start;
 
-import com.htp.aspect.StatisticsAspect;
-import com.htp.config.core.AmazonConfiguration;
 import com.htp.config.core.AppConfig;
 import com.htp.config.core.DBConfig;
 import com.htp.config.core.JDBCTemplateConfig;
 import com.htp.config.swagger.SwaggerConfig;
-import com.htp.dao.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.util.Map;
 
 @EnableSwagger2
 @EnableAspectJAutoProxy
@@ -31,7 +22,7 @@ import java.util.Map;
         DBConfig.class,
         JDBCTemplateConfig.class,
         SwaggerConfig.class,
-        AmazonConfiguration.class
+        AppConfig.class
 })
 
 public class Main extends SpringBootServletInitializer {

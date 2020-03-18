@@ -1,6 +1,7 @@
-package com.htp.dao.hibernate;
+package com.htp.dao.hibernate.impl;
 
-import com.htp.entity.hibernate.TestUser;
+import com.htp.dao.hibernate.HibernateUsersDao;
+import com.htp.entity.hibernate.HibernateUsers;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Repository
 @Qualifier("hibernateUserDao")
-public class HibernateUserDao implements HibernateUser {
+public class HibernateUsersDaoImpl implements HibernateUsersDao {
 
     @Autowired
     @Qualifier("sessionFactory")
@@ -23,14 +24,14 @@ public class HibernateUserDao implements HibernateUser {
 //    private EntityManagerFactory entityManagerFactory;
 
     @Override
-    public void create(TestUser entity) {
+    public void create(HibernateUsers entity) {
 
     }
 
     @Override
-    public List<TestUser> findAll() {
+    public List<HibernateUsers> findAll() {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("select tu from TestUser tu", TestUser.class).list();
+            return session.createQuery("select tu from HibernateUsers tu", HibernateUsers.class).list();
         }
 //
 //        EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -39,46 +40,40 @@ public class HibernateUserDao implements HibernateUser {
     }
 
     @Override
-    public TestUser findById(Long id) {
+    public HibernateUsers findById(Long id) {
         return null;
     }
 
     @Override
-    public List<TestUser> update(TestUser entity) {
+    public List<HibernateUsers> update(HibernateUsers entity) {
         return Collections.emptyList();
     }
 
     @Override
     public void deleteById(Long id) {
-
     }
 
-   /* @Override
-    public void delete(Long id) {
-
-    }*/
-
-    /*@Override
-    public TestUser save(TestUser entity) {
+    @Override
+    public HibernateUsers save(HibernateUsers entity) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
             Long newUserID = (Long)session.save(entity);
             transaction.commit();
-            return session.find(TestUser.class, newUserID);
+            return session.find(HibernateUsers.class, newUserID);
         }
-    }*/
+    }
 
-    /*@Override
-    public TestUser update(TestUser entity) {
+    @Override
+    public HibernateUsers updateOne(HibernateUsers entity) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
             session.saveOrUpdate(entity);
             transaction.commit();
-            return session.find(TestUser.class, entity.getUserId());
+            return session.find(HibernateUsers.class, entity.getUserId());
         }
-    }*/
+    }
 
 
 }
