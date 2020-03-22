@@ -1,10 +1,13 @@
 package com.htp.entity.hibernate;
 
+import com.htp.entity.Gender;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
+
+import static javax.persistence.EnumType.STRING;
 
 @Data
 @Setter
@@ -46,5 +49,8 @@ public class HibernateUsers {
     @Column
     private Long phone_number_user;
 
+    @Enumerated(STRING)
+    @Column
+    private Gender gender = Gender.NOT_SELECTED;
 
 }

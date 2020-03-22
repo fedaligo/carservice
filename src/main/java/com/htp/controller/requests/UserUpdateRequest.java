@@ -1,6 +1,9 @@
 package com.htp.controller.requests;
 
-import lombok.*;
+import com.htp.entity.Gender;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -11,8 +14,7 @@ import java.sql.Timestamp;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreateRequest {
-
+public class UserUpdateRequest {
     @NotNull
     @NotEmpty
     @Size(min = 6, max = 20)
@@ -39,4 +41,6 @@ public class UserCreateRequest {
     @NotEmpty
     @Size(min = 11, max = 11)
     private Long phNumberUser;
+
+    private Gender gender;
 }
