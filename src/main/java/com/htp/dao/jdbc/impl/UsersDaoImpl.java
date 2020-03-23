@@ -65,7 +65,7 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public Users findById(Long id) {
-        String sql = "SELECT * FROM m_users WHERE id = :id";
+        final String sql = "SELECT * FROM m_users WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
         return namedParameterJdbcTemplate.queryForObject(sql, params, this::getEmployeeRowMapper);
@@ -92,6 +92,50 @@ public class UsersDaoImpl implements UsersDao {
         params.addValue("id", entity.getId());
         namedParameterJdbcTemplate.update(sql, params);
         return findAll();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Users createOne(Users entity) {
+        final String sql = "INSERT INTO m_users \" +\n" +
+                "                \"(login, password, created, changed, is_deleted, e_mail, phone_number_user) \" +\n" +
+                "                \"VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("login", entity.getLogin());
+        params.addValue("password", entity.getPassword());
+        params.addValue("created", entity.getCreated());
+        params.addValue("changed", entity.getChanged());
+        params.addValue("is_deleted", entity.getIsDeleted());
+        params.addValue("e_mail", entity.getEMail());
+        params.addValue("phone_number_user", entity.getPhNumberUser());
+        params.addValue("id", entity.getId());
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+        long createdUserId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return findById(createdUserId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Users updateOne(Users entity) {
+        final String sql = "UPDATE m_users set login = :login, password = :password, created = :created, changed = :changed, is_deleted = :is_deleted, e_mail = :e_mail, phone_number_user = :phone_number_user where id = :id";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("login", entity.getLogin());
+        params.addValue("password", entity.getPassword());
+        params.addValue("created", entity.getCreated());
+        params.addValue("changed", entity.getChanged());
+        params.addValue("is_deleted", entity.getIsDeleted());
+        params.addValue("e_mail", entity.getEMail());
+        params.addValue("phone_number_user", entity.getPhNumberUser());
+        params.addValue("id", entity.getId());
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+        long createdUserId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return findById(createdUserId);
     }
 
     @Override
@@ -150,12 +194,21 @@ public class UsersDaoImpl implements UsersDao {
         params.addValue("is_deleted", entity.getIsDeleted());
         params.addValue("e_mail", entity.getEMail());
         params.addValue("phone_number_user", entity.getPhNumberUser());
-        params.addValue("id", entity.getId());
 
-        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
 
         long createdUserId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         return findById(createdUserId);
     }
+
+
+
+
+
 }
+
+
+
+

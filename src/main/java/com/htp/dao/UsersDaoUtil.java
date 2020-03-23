@@ -18,7 +18,7 @@ public class UsersDaoUtil {
     @Autowired
     private UsersDao usersDao;
 
-    public void testOperations() {
+    /*public void testOperations() {
         usersDao.update(
                 new Users(30l, "Mouse", "2er4h23", new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()),
                         false, "Mouse@gmail.com", 80291904111l)
@@ -31,5 +31,5 @@ public class UsersDaoUtil {
         third.setLogin("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
 
         usersDao.batchUpdate(Arrays.asList(second, third));
-    }
+    }*/
 }

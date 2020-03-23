@@ -21,6 +21,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -37,11 +39,7 @@ import java.util.Properties;
         JDBCTemplateConfig.class,
         SwaggerConfig.class
 })
-
 public class SpringBootHibernateApplication extends SpringBootServletInitializer {
-
-    @Autowired
-    private Environment env;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringBootHibernateApplication.class, args);
@@ -67,9 +65,6 @@ public class SpringBootHibernateApplication extends SpringBootServletInitializer
         return sf;
     }
 
-    //Entity Manager
-
-    @Autowired
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em
@@ -84,11 +79,17 @@ public class SpringBootHibernateApplication extends SpringBootServletInitializer
         return em;
     }
 
+    @Bean(name = "entityManager")
+    public EntityManager getEntityManager(EntityManagerFactory entityManagerFactory) {
+        return entityManagerFactory.createEntityManager();
+    }
+
     private Properties getAdditionalProperties() {
         Properties properties = new Properties();
 
         // See: application.properties
         properties.put("hibernate.show_sql", "true");
+        properties.put("hibernate.archive.autodetection", "class, hbm");
         properties.put("current_session_context_class", "org.springframework.orm.hibernate5.SpringSessionContext");
         return properties;
     }

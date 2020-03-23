@@ -23,6 +23,7 @@ public class Users {
     private Boolean isDeleted;
     private String eMail;
     private Long phNumberUser;
+    private Gender gender= Gender.NOT_SELECTED;
 
 
 }

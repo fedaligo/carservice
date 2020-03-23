@@ -12,6 +12,8 @@ public interface UsersDao extends GenericDao<Users,Long> {
     public List<Long> batchUpdate(List<Users> users);
     public Users findByLogin(String login);
     public Users save(Users entity);
+    public Users updateOne(Users entity);
+    public Users createOne(Users entity);
 
     /* public void create(final Users entity);
     public List<Users> readAll();

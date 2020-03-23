@@ -23,12 +23,6 @@ public class UserCreateRequest {
     @Size(min = 1, max = 100)
     private String password;
 
-    private Timestamp created;
-
-    private Timestamp changed;
-
-    private Boolean isDeleted;
-
     @NotNull
     @NotEmpty
     @Email

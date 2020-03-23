@@ -9,7 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Repository
@@ -20,8 +24,8 @@ public class HibernateUsersDaoImpl implements HibernateUsersDao {
     @Qualifier("sessionFactory")
     private SessionFactory sessionFactory;
 
-//    @Autowired
-//    private EntityManagerFactory entityManagerFactory;
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public void create(HibernateUsers entity) {
@@ -30,18 +34,18 @@ public class HibernateUsersDaoImpl implements HibernateUsersDao {
 
     @Override
     public List<HibernateUsers> findAll() {
-        try (Session session = sessionFactory.openSession()) {
+        /*try (Session session = sessionFactory.openSession()) {
             return session.createQuery("select tu from HibernateUsers tu", HibernateUsers.class).list();
-        }
+        }*/
 //
 //        EntityManager entityManager = entityManagerFactory.createEntityManager();
-//        System.out.println(entityManager.toString());
-//        return entityManager.createQuery("select tu from TestUser tu", TestUser.class).getResultList();
+        System.out.println(entityManager.toString());
+        return entityManager.createQuery("select tu from HibernateUsers tu order by tu.id", HibernateUsers.class).getResultList();
     }
 
     @Override
     public HibernateUsers findById(Long id) {
-        return null;
+        return entityManager.find(HibernateUsers.class, id);
     }
 
     @Override
@@ -51,7 +55,9 @@ public class HibernateUsersDaoImpl implements HibernateUsersDao {
 
     @Override
     public void deleteById(Long id) {
+        entityManager.remove(findById(id));
     }
+
 
     @Override
     public HibernateUsers save(HibernateUsers entity) {

@@ -115,9 +115,9 @@ public class RolesDaoImpl implements RolesDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name_of_role", entity.getNameOfRole());
         params.addValue("user_id", entity.getUserId());
-        params.addValue("id", entity.getId());
 
-        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
 
         long createdRoleId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
