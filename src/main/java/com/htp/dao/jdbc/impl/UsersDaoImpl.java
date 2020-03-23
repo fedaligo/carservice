@@ -117,26 +117,7 @@ public class UsersDaoImpl implements UsersDao {
         return findById(createdUserId);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Users updateOne(Users entity) {
-        final String sql = "UPDATE m_users set login = :login, password = :password, created = :created, changed = :changed, is_deleted = :is_deleted, e_mail = :e_mail, phone_number_user = :phone_number_user where id = :id";
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("login", entity.getLogin());
-        params.addValue("password", entity.getPassword());
-        params.addValue("created", entity.getCreated());
-        params.addValue("changed", entity.getChanged());
-        params.addValue("is_deleted", entity.getIsDeleted());
-        params.addValue("e_mail", entity.getEMail());
-        params.addValue("phone_number_user", entity.getPhNumberUser());
-        params.addValue("id", entity.getId());
-        namedParameterJdbcTemplate.update(sql, params, keyHolder);
-        long createdUserId = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        return findById(createdUserId);
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
@@ -203,7 +184,26 @@ public class UsersDaoImpl implements UsersDao {
         return findById(createdUserId);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Users updateOne(Users entity) {
+        final String sql = "UPDATE m_users set login = :login, password = :password, created = :created, changed = :changed, is_deleted = :is_deleted, e_mail = :e_mail, phone_number_user = :phone_number_user where id = :id";
 
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("login", entity.getLogin());
+        params.addValue("password", entity.getPassword());
+        params.addValue("created", entity.getCreated());
+        params.addValue("changed", entity.getChanged());
+        params.addValue("is_deleted", entity.getIsDeleted());
+        params.addValue("e_mail", entity.getEMail());
+        params.addValue("phone_number_user", entity.getPhNumberUser());
+        params.addValue("id", entity.getId());
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+        long createdUserId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return findById(createdUserId);
+    }
 
 
 

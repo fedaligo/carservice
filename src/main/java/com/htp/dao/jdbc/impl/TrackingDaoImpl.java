@@ -2,17 +2,22 @@ package com.htp.dao.jdbc.impl;
 
 import com.htp.dao.jdbc.TrackingDao;
 import com.htp.entity.Tracking;
+import com.htp.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Repository("TrackingDaoImpl")
 @Transactional
@@ -27,7 +32,7 @@ public class TrackingDaoImpl implements TrackingDao {
         Tracking tracking = new Tracking();
         tracking.setId(resultSet.getLong("id"));
         tracking.setIdTask(resultSet.getLong("id_task"));
-        tracking.setIdOrganaizer(resultSet.getLong("id_organizer"));
+        tracking.setIdOrganaizer(resultSet.getLong("id_organaizer"));
         tracking.setStatus(resultSet.getString("status"));
         tracking.setConfirmDate(resultSet.getDate("confirm_date"));
         tracking.setCost(resultSet.getLong("cost"));
@@ -100,5 +105,49 @@ public class TrackingDaoImpl implements TrackingDao {
         params.addValue("cost", cost);
         return namedParameterJdbcTemplate.query(sql, params, this::getEmployeeRowMapper);
     }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT)
+    public Tracking save(Tracking entity) {
+        final String sql = "INSERT INTO tracking_system " +
+                "(id, id_task, id_organizer, status, confirm_date, cost) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id_task", entity.getIdTask());
+        params.addValue("id_organizer", entity.getIdOrganaizer());
+        params.addValue("status", entity.getStatus());
+        params.addValue("confirm_date", entity.getConfirmDate());
+        params.addValue("cost", entity.getCost());
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
+
+        long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+        return findById(createdId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Tracking updateOne(Tracking entity) {
+        final String sql = "UPDATE tracking_system set id_task = :id_task, id_organizer = :id_organizer, " +
+                "status = :status, confirm_date = :confirm_date, cost = :cost  where id = :id";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id_task", entity.getIdTask());
+        params.addValue("id_organizer", entity.getIdOrganaizer());
+        params.addValue("status", entity.getStatus());
+        params.addValue("confirm_date", entity.getConfirmDate());
+        params.addValue("cost", entity.getCost());
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+        long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return findById(createdId);
+    }
+
 
 }

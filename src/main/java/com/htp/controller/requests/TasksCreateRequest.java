@@ -1,8 +1,10 @@
 package com.htp.controller.requests;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
@@ -12,30 +14,40 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class TasksCreateRequest {
+    @NotNull
+    @NotEmpty
     @Size(min = 2, max = 100)
     private String serviceWorkName;
 
-    /*@NotNull
-    @PositiveOrZero
-    private Float salary;
-
-    private List<Long> users = Collections.emptyList();*/
-
+    @NotNull
+    @NotEmpty
     private Boolean necessityOfEvacuation;
 
+    @NotNull
+    @NotEmpty
     private Boolean wheelBrake;
 
     @NotNull
-    private Long idCar;
-
-    private Date created;
-
+    @NotEmpty
+    @Size(min = 2, max = 100)
     private String description;
 
+    @NotNull
+    @NotEmpty
+    @Size(min = 2, max = 10)
     private Double latitude;
 
+    @NotNull
+    @NotEmpty
+    @Size(min = 2, max = 10)
     private Double longitude;
 
+    @NotNull
+    @NotEmpty
+    @Size(min = 2, max = 50)
     private String localDescription;
+
+    //idCar
 }

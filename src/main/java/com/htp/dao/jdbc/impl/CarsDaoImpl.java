@@ -2,17 +2,22 @@ package com.htp.dao.jdbc.impl;
 
 import com.htp.dao.jdbc.CarsDao;
 import com.htp.entity.Cars;
+import com.htp.entity.Organizations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Repository//("CarsDaoImpl")
 @Transactional
@@ -100,6 +105,51 @@ public class CarsDaoImpl implements CarsDao {
         params.addValue(ID, id);
         namedParameterJdbcTemplate.update(sql, params);
 
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT)
+    public Cars save(Cars entity) {
+        final String sql = "INSERT INTO m_car " +
+                "(id, car_brand, type_of_transmission, type_of_fuel, vin_number, user_id, car_weight) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(CAR_BRAND, entity.getCarBrand());
+        params.addValue(TYPE_OF_TRANSMISSION, entity.getTypeOfTransmission());
+        params.addValue(TYPE_OF_FUEL, entity.getTypeOfFuel());
+        params.addValue(VIN_NUMBER, entity.getVinNumber());
+        params.addValue(USER_ID, entity.getUserId());
+        params.addValue(CAR_WEIGHT, entity.getCarWeight());
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
+
+        long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+        return findById(createdId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Cars updateOne(Cars entity) {
+        final String sql = "UPDATE m_car set car_brand = :car_brand, type_of_transmission = :type_of_transmission, " +
+                "type_of_fuel = :type_of_fuel, vin_number = :vin_number, user_id = :user_id, car_weight = :car_weight  where id = :id";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(CAR_BRAND, entity.getCarBrand());
+        params.addValue(TYPE_OF_TRANSMISSION, entity.getTypeOfTransmission());
+        params.addValue(TYPE_OF_FUEL, entity.getTypeOfFuel());
+        params.addValue(VIN_NUMBER, entity.getVinNumber());
+        params.addValue(USER_ID, entity.getUserId());
+        params.addValue(CAR_WEIGHT, entity.getCarWeight());
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+        long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return findById(createdId);
     }
 
     /*@Override

@@ -77,7 +77,6 @@ public class UsersController {
 
     private final RolesDao rolesDao;
 
-    //bad working
     @PostMapping("/create")
     @Transactional
     @ResponseStatus(HttpStatus.CREATED)

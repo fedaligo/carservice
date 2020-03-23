@@ -2,6 +2,7 @@ package com.htp.dao.jdbc.impl;
 
 import com.htp.dao.jdbc.RolesDao;
 import com.htp.entity.Roles;
+import com.htp.entity.Tasks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -124,5 +126,23 @@ public class RolesDaoImpl implements RolesDao {
         return findById(createdRoleId);
 
 
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Roles updateOne(Roles entity) {
+        final String sql = "UPDATE m_roles set name_of_role = :name_of_role, user_id = :user_id, " +
+                " where id = :id";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name_of_role", entity.getNameOfRole());
+        params.addValue("user_id", entity.getUserId());
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+        long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return findById(createdId);
     }
 }

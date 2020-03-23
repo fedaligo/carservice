@@ -2,17 +2,22 @@ package com.htp.dao.jdbc.impl;
 
 import com.htp.dao.jdbc.TasksDao;
 import com.htp.entity.Tasks;
+import com.htp.entity.Tracking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Repository("TasksDaoImpl")
 @Transactional
@@ -76,7 +81,7 @@ public class TasksDaoImpl implements TasksDao {
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public List<Tasks> update(Tasks entity) {
-        final String sql = "UPDATE m_tasks_id_seq set service_work_name = :service_work_name, necessity_of_evacuation = :necessity_of_evacuation, " +
+        final String sql = "UPDATE m_tasks set service_work_name = :service_work_name, necessity_of_evacuation = :necessity_of_evacuation, " +
                 "wheel_brake = :wheel_brake, id_car = :id_car, created = :created , description = :description, latitude = :latitude" +
                 ", longitude = :longitude, local_description = :local_description where id = :id";
 
@@ -103,6 +108,59 @@ public class TasksDaoImpl implements TasksDao {
         params.addValue("id", id);
         namedParameterJdbcTemplate.update(sql, params);
 
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT)
+    public Tasks save(Tasks entity) {
+        final String sql = "INSERT INTO m_tasks " +
+                "(id, service_work_name, necessity_of_evacuation, wheel_brake, id_car, created, description, latitude, " +
+                "longitude, local_description) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("service_work_name", entity.getServiceWorkName());
+        params.addValue("necessity_of_evacuation", entity.getNecessityOfEvacuation());
+        params.addValue("wheel_brake", entity.getWheelBrake());
+        params.addValue("id_car", entity.getIdCar());
+        params.addValue("created", entity.getCreated());
+        params.addValue("description", entity.getDescription());
+        params.addValue("latitude", entity.getLatitude());
+        params.addValue("longitude", entity.getLongitude());
+        params.addValue("local_description", entity.getLocalDescription());
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
+
+        long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+        return findById(createdId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Tasks updateOne(Tasks entity) {
+        final String sql = "UPDATE m_tasks set service_work_name = :service_work_name, necessity_of_evacuation = :necessity_of_evacuation, " +
+                "wheel_brake = :wheel_brake, id_car = :id_car, created = :created , description = :description, latitude = :latitude" +
+                ", longitude = :longitude, local_description = :local_description where id = :id";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("service_work_name", entity.getServiceWorkName());
+        params.addValue("necessity_of_evacuation", entity.getNecessityOfEvacuation());
+        params.addValue("wheel_brake", entity.getWheelBrake());
+        params.addValue("id_car", entity.getIdCar());
+        params.addValue("created", entity.getCreated());
+        params.addValue("description", entity.getDescription());
+        params.addValue("latitude", entity.getLatitude());
+        params.addValue("longitude", entity.getLongitude());
+        params.addValue("local_description", entity.getLocalDescription());
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+        long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return findById(createdId);
     }
 
     /*@Override

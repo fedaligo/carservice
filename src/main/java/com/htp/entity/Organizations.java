@@ -12,7 +12,7 @@ import java.util.Objects;
 @Builder
 @EqualsAndHashCode
 @ToString
-public class Organization {
+public class Organizations {
     private Long id;
     private String name;
     private String webSite;

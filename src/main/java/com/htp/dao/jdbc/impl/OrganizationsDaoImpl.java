@@ -1,18 +1,24 @@
 package com.htp.dao.jdbc.impl;
 
 import com.htp.dao.jdbc.OrganizationsDao;
-import com.htp.entity.Organization;
+import com.htp.entity.Organizations;
+import com.htp.entity.Roles;
+import com.htp.entity.Tasks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Repository("OrganizationsDaoImpl")
 @Transactional
@@ -23,23 +29,23 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     //getEmployeeRowMapper парсит resultset
-    private Organization getEmployeeRowMapper(ResultSet resultSet, int i) throws SQLException {
-        Organization organization = new Organization();
-        organization.setId(resultSet.getLong("id"));
-        organization.setName(resultSet.getString("name"));
-        organization.setWebSite(resultSet.getString("web_site"));
-        organization.setPhoneNumber(resultSet.getLong("phone_number"));
-        organization.setLocation(resultSet.getString("location"));
-        organization.setWorkingTime(resultSet.getString("working_time"));
-        organization.setSpecialize(resultSet.getString("specialize"));
-        organization.setEMail(resultSet.getString("e_mail"));
-        return organization;
+    private Organizations getEmployeeRowMapper(ResultSet resultSet, int i) throws SQLException {
+        Organizations organizations = new Organizations();
+        organizations.setId(resultSet.getLong("id"));
+        organizations.setName(resultSet.getString("name"));
+        organizations.setWebSite(resultSet.getString("web_site"));
+        organizations.setPhoneNumber(resultSet.getLong("phone_number"));
+        organizations.setLocation(resultSet.getString("location"));
+        organizations.setWorkingTime(resultSet.getString("working_time"));
+        organizations.setSpecialize(resultSet.getString("specialize"));
+        organizations.setEMail(resultSet.getString("e_mail"));
+        return organizations;
     }
 
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public void create(Organization entity) {
+    public void create(Organizations entity) {
 
         String sql = "INSERT INTO m_organization " +
                 "(id, name, web_site, phone_number, location, working_time, specialize, e_mail) " +
@@ -50,13 +56,13 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     }
 
     @Override
-    public List<Organization> findAll() {
+    public List<Organizations> findAll() {
         String sql = "SELECT * FROM m_organization ORDER BY id";
         return namedParameterJdbcTemplate.query(sql, this::getEmployeeRowMapper);
     }
 
     @Override
-    public Organization findById(Long id) {
+    public Organizations findById(Long id) {
         String sql = "SELECT * FROM m_organization WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
@@ -70,7 +76,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
 //id, name, web_site, phone_number, location, working_time, specialize, e_mail
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public List<Organization> update(Organization entity) {
+    public List<Organizations> update(Organizations entity) {
         final String sql = "UPDATE m_organization set name = :name, web_site = :web_site, " +
                 "phone_number = :phone_number, location = :location, working_time = :working_time, specialize = :specialize, " +
                 "e_mail = :e_mail  where id = :id";
@@ -96,6 +102,54 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
         params.addValue("id", id);
         namedParameterJdbcTemplate.update(sql, params);
 
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT)
+    public Organizations save(Organizations entity) {
+        final String sql = "INSERT INTO m_organization " +
+                "(id, name, web_site, phone_number, location, working_time, specialize, e_mail) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", entity.getName());
+        params.addValue("web_site", entity.getWebSite());
+        params.addValue("phone_number", entity.getPhoneNumber());
+        params.addValue("location", entity.getLocation());
+        params.addValue("working_time", entity.getWorkingTime());
+        params.addValue("specialize", entity.getSpecialize());
+        params.addValue("e_mail", entity.getEMail());
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
+
+        long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+        return findById(createdId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Organizations updateOne(Organizations entity) {
+        final String sql = "UPDATE m_organization set name = :name, web_site = :web_site, " +
+                "phone_number = :phone_number, location = :location, working_time = :working_time, specialize = :specialize, " +
+                "e_mail = :e_mail  where id = :id";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", entity.getName());
+        params.addValue("web_site", entity.getWebSite());
+        params.addValue("phone_number", entity.getPhoneNumber());
+        params.addValue("location", entity.getLocation());
+        params.addValue("working_time", entity.getWorkingTime());
+        params.addValue("specialize", entity.getSpecialize());
+        params.addValue("e_mail", entity.getEMail());
+
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+        long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return findById(createdId);
     }
 /*
     @Override
