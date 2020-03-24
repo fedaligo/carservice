@@ -1,6 +1,7 @@
 package com.htp.entity.hibernate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,9 +13,8 @@ import java.util.Date;
 @Entity
 @Builder
 @Table(name = "m_tasks")
-@ToString/*(exclude = {
-        "users"
-})*/
+@EqualsAndHashCode(exclude = {"id",/*"cars",*/"tracking"})
+@ToString(exclude = {"tracking"/*"cars"*/})
 public class HibernateTasks {
 
     @Id
@@ -46,9 +46,20 @@ public class HibernateTasks {
     @Column(name = "local_Description")
     private String localDescription;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    /*@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_car")
     @JsonBackReference
-    @MapsId
-    private HibernateCars hibernateCars;
+    //@MapsId
+    private HibernateCars cars;*/
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_car")
+    private HibernateCars cars;
+
+    @JsonManagedReference
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "tasks")
+    private HibernateTracking tracking;
+
+
 }

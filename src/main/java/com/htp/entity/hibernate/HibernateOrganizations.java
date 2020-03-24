@@ -1,10 +1,13 @@
 package com.htp.entity.hibernate;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.htp.entity.Gender;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.Set;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -12,12 +15,8 @@ import static javax.persistence.EnumType.STRING;
 @Setter
 @Getter
 @RequiredArgsConstructor
-@EqualsAndHashCode/*(exclude = {
-        "userId", "roles", "professions"
-})*/
-@ToString/*(exclude = {
-        "roles", "professions"
-})*/
+@EqualsAndHashCode//(exclude = {"Id","tracking"})
+@ToString//(exclude = {"tracking"})
 @Entity
 @Table(name = "m_organization")
 public class HibernateOrganizations {
@@ -47,4 +46,8 @@ public class HibernateOrganizations {
 
         @Column
         private String e_mail;
+
+        @JsonManagedReference
+        @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "organizations")
+        private Set<HibernateTracking> tracking = Collections.emptySet();
 }
