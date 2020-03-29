@@ -1,9 +1,9 @@
 package com.htp.service;
 
-import com.htp.dao.jdbc.RolesDao;
-import com.htp.dao.jdbc.UsersDao;
-import com.htp.entity.Roles;
-import com.htp.entity.Users;
+import com.htp.repository.jdbc.RolesDao;
+import com.htp.repository.jdbc.UsersDao;
+import com.htp.domain.Roles;
+import com.htp.domain.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;

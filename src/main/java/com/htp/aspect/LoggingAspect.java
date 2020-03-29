@@ -35,7 +35,7 @@ public class LoggingAspect {
     скобочках, что аргументы могут быть любые. Мы также можем указывать путь
     к интерфейсу, а не класса. Тогда аспект будет
     работать для всех классов, которые имплементируют данный интерфейс.*/
-    @Pointcut("execution(* com.htp.dao.*.*(..))")
+    @Pointcut("execution(* com.htp.repository.*.*(..))")
     public void domainEntitiesMethods() {
     }
 

@@ -1,27 +1,16 @@
 package com.htp.controller;
 
-import com.htp.controller.requests.TasksCreateRequest;
-import com.htp.dao.hibernate.impl.HibernateRolesDaoImpl;
-import com.htp.dao.hibernate.impl.HibernateTasksDaoImpl;
-import com.htp.dao.jdbc.RolesDao;
-import com.htp.dao.jdbc.TasksDao;
-import com.htp.entity.Roles;
-import com.htp.entity.Tasks;
-import com.htp.entity.hibernate.HibernateRoles;
-import com.htp.entity.hibernate.HibernateTasks;
+import com.htp.repository.hibernate.impl.HibernateRolesDaoImpl;
+import com.htp.repository.jdbc.RolesDao;
+import com.htp.domain.Roles;
+import com.htp.domain.hibernate.HibernateRoles;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin

@@ -1,28 +1,18 @@
 package com.htp.controller;
 
 import com.htp.controller.requests.OrganizationsCreateRequest;
-import com.htp.controller.requests.TasksCreateRequest;
-import com.htp.dao.hibernate.impl.HibernateOrganizationsDaoImpl;
-import com.htp.dao.hibernate.impl.HibernateTasksDaoImpl;
-import com.htp.dao.jdbc.OrganizationsDao;
-import com.htp.dao.jdbc.TasksDao;
-import com.htp.entity.Organizations;
-import com.htp.entity.Tasks;
-import com.htp.entity.hibernate.HibernateOrganizations;
-import com.htp.entity.hibernate.HibernateTasks;
+import com.htp.repository.hibernate.impl.HibernateOrganizationsDaoImpl;
+import com.htp.repository.jdbc.OrganizationsDao;
+import com.htp.domain.Organizations;
+import com.htp.domain.hibernate.HibernateOrganizations;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -89,9 +79,7 @@ public class OrganizationsController {
             t.setSpecialize(request.getSpecialize());
             t.setEMail(request.getE_Mail());
 
-            Organizations savedOrganizations = organizationsDao.save(t);
-
-            return new ResponseEntity<>(savedOrganizations, HttpStatus.OK);
+            return new ResponseEntity<>(organizationsDao.save(t), HttpStatus.OK);
         }
 
         @PostMapping("/hibernate/create")
@@ -117,9 +105,9 @@ public class OrganizationsController {
                 @ApiResponse(code = 404, message = "Organization was not found 111111"),
                 @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
         })
-        @ApiImplicitParams({
+        /*@ApiImplicitParams({
                 @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-        })
+        })*/
         @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
         @ResponseStatus(HttpStatus.OK)
         public ResponseEntity<Organizations> updateOrganization(@PathVariable("id") Long id,
@@ -133,7 +121,7 @@ public class OrganizationsController {
             t.setSpecialize(request.getSpecialize());
             t.setEMail(request.getE_Mail());
 
-            return new ResponseEntity<>(t, HttpStatus.OK);
+            return new ResponseEntity<>(organizationsDao.updateOne(t), HttpStatus.OK);
         }
 
         @ApiOperation(value = "Update Organization by userID")
@@ -148,9 +136,7 @@ public class OrganizationsController {
         public ResponseEntity<HibernateOrganizations> updateHibernateOrganizations(@ApiParam(value = "Organization ID", required = false) @PathVariable("id") Long id,
                                                                   @RequestBody OrganizationsCreateRequest request) {
 
-            hibernateOrganizationsDao.findById(id);
-
-            HibernateOrganizations t = new HibernateOrganizations();
+            HibernateOrganizations t = hibernateOrganizationsDao.findById(id);
             t.setName(request.getName());
             t.setWeb_site(request.getWebSite());
             t.setPhone_number(request.getPhoneNumber());

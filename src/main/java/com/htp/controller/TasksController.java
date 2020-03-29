@@ -1,30 +1,21 @@
 package com.htp.controller;
 
 import com.htp.controller.requests.TasksCreateRequest;
-import com.htp.controller.requests.UserCreateRequest;
-import com.htp.dao.hibernate.impl.HibernateTasksDaoImpl;
-import com.htp.dao.hibernate.impl.HibernateUsersDaoImpl;
-import com.htp.dao.jdbc.RolesDao;
-import com.htp.dao.jdbc.TasksDao;
-import com.htp.dao.jdbc.UsersDao;
-import com.htp.entity.Roles;
-import com.htp.entity.Tasks;
-import com.htp.entity.Users;
-import com.htp.entity.hibernate.HibernateTasks;
-import com.htp.entity.hibernate.HibernateUsers;
+import com.htp.domain.hibernate.HibernateUsers;
+import com.htp.repository.hibernate.impl.HibernateTasksDaoImpl;
+import com.htp.repository.jdbc.TasksDao;
+import com.htp.domain.Tasks;
+import com.htp.domain.hibernate.HibernateTasks;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -92,9 +83,7 @@ public class TasksController {
             t.setLongitude(request.getLongitude());
             t.setLocalDescription(request.getLocalDescription());
 
-            Tasks savedTasks = tasksDao.save(t);
-
-            return new ResponseEntity<>(savedTasks, HttpStatus.OK);
+            return new ResponseEntity<>(tasksDao.save(t), HttpStatus.OK);
         }
 
         @PostMapping("/hibernate/create")
@@ -122,9 +111,9 @@ public class TasksController {
                 @ApiResponse(code = 404, message = "Task was not found 111111"),
                 @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
         })
-        @ApiImplicitParams({
+       /* @ApiImplicitParams({
                 @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-        })
+        })*/
         @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
         @ResponseStatus(HttpStatus.OK)
         public ResponseEntity<Tasks> updateTask(@PathVariable("id") Long id,
@@ -139,7 +128,7 @@ public class TasksController {
             t.setLongitude(request.getLongitude());
             t.setLocalDescription(request.getLocalDescription());
 
-            return new ResponseEntity<>(t, HttpStatus.OK);
+            return new ResponseEntity<>(tasksDao.updateOne(t), HttpStatus.OK);
         }
 
         @ApiOperation(value = "Update Task by userID")
@@ -154,9 +143,7 @@ public class TasksController {
         public ResponseEntity<HibernateTasks> updateHibernateTask(@ApiParam(value = "Task ID", required = false) @PathVariable("id") Long id,
                                                                   @RequestBody TasksCreateRequest request) {
 
-            hibernateTasksDao.findById(id);
-
-            HibernateTasks t = new HibernateTasks();
+            HibernateTasks t = hibernateTasksDao.findById(id);
             t.setServiceWorkName(request.getServiceWorkName());
             t.setNecessityOfEvacuation(request.getNecessityOfEvacuation());
             t.setWheelBrake(request.getWheelBrake());

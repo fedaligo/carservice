@@ -1,28 +1,23 @@
 package com.htp.controller;
 
 import com.htp.controller.requests.CarsCreateRequest;
-import com.htp.controller.requests.TasksCreateRequest;
-import com.htp.dao.hibernate.impl.HibernateCarsDaoImpl;
-import com.htp.dao.hibernate.impl.HibernateTasksDaoImpl;
-import com.htp.dao.jdbc.CarsDao;
-import com.htp.dao.jdbc.TasksDao;
-import com.htp.entity.Cars;
-import com.htp.entity.Tasks;
-import com.htp.entity.hibernate.HibernateCars;
-import com.htp.entity.hibernate.HibernateTasks;
+import com.htp.controller.requests.UserCreateRequest;
+import com.htp.domain.Roles;
+import com.htp.domain.Users;
+import com.htp.repository.hibernate.impl.HibernateCarsDaoImpl;
+import com.htp.repository.jdbc.CarsDao;
+import com.htp.domain.Cars;
+import com.htp.domain.hibernate.HibernateCars;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -87,9 +82,9 @@ public class CarsController {
             t.setCarWeight(request.getCarWeight());
             t.setVinNumber(request.getVinNumber());
 
-            Cars savedCars = carsDao.save(t);
+            Cars savedCar = carsDao.save(t);
 
-            return new ResponseEntity<>(savedCars, HttpStatus.OK);
+            return new ResponseEntity<>(savedCar, HttpStatus.OK);
         }
 
         @PostMapping("/hibernate/create")
@@ -114,9 +109,9 @@ public class CarsController {
                 @ApiResponse(code = 404, message = "Cars was not found 111111"),
                 @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
         })
-        @ApiImplicitParams({
+        /*@ApiImplicitParams({
                 @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-        })
+        })*/
         @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
         @ResponseStatus(HttpStatus.OK)
         public ResponseEntity<Cars> updateCars(@PathVariable("id") Long id,
@@ -129,7 +124,7 @@ public class CarsController {
             t.setCarWeight(request.getCarWeight());
             t.setVinNumber(request.getVinNumber());
 
-            return new ResponseEntity<>(t, HttpStatus.OK);
+            return new ResponseEntity<>(carsDao.updateOne(t), HttpStatus.OK);
         }
 
         @ApiOperation(value = "Update Cars by userID")
@@ -144,9 +139,7 @@ public class CarsController {
         public ResponseEntity<HibernateCars> updateHibernateCar(@ApiParam(value = "Car ID", required = false) @PathVariable("id") Long id,
                                                                   @RequestBody CarsCreateRequest request) {
 
-            hibernateCarsDao.findById(id);
-
-            HibernateCars t = new HibernateCars();
+            HibernateCars t = hibernateCarsDao.findById(id);
             t.setCarBrand(request.getCarBrand());
             t.setBrandModel(request.getBrandModel());
             t.setTypeOfTransmission(request.getTypeOfTransmission());

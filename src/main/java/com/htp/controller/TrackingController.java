@@ -1,31 +1,21 @@
 package com.htp.controller;
 
 import com.htp.controller.requests.TrackingCreateRequest;
-import com.htp.controller.requests.UserCreateRequest;
-import com.htp.dao.hibernate.impl.HibernateTrackingDaoImpl;
-import com.htp.dao.hibernate.impl.HibernateUsersDaoImpl;
-import com.htp.dao.jdbc.RolesDao;
-import com.htp.dao.jdbc.TrackingDao;
-import com.htp.dao.jdbc.UsersDao;
-import com.htp.entity.Roles;
-import com.htp.entity.Tracking;
-import com.htp.entity.Users;
-import com.htp.entity.hibernate.HibernateTracking;
-import com.htp.entity.hibernate.HibernateUsers;
+import com.htp.domain.hibernate.HibernateUsers;
+import com.htp.repository.hibernate.impl.HibernateTrackingDaoImpl;
+import com.htp.repository.jdbc.TrackingDao;
+import com.htp.domain.Tracking;
+import com.htp.domain.hibernate.HibernateTracking;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -113,19 +103,20 @@ public class TrackingController {
                 @ApiResponse(code = 404, message = "Tracking was not found 111111"),
                 @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
         })
-        @ApiImplicitParams({
+       /* @ApiImplicitParams({
                 @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-        })
+        })*/
         @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
         @ResponseStatus(HttpStatus.OK)
         public ResponseEntity<Tracking> updateTracking(@PathVariable("id") Long id,
                                                 @RequestBody TrackingCreateRequest request) {
             Tracking t = trackingDao.findById(id);
+
             t.setConfirmDate(new Timestamp(new Date().getTime()));
             t.setCost(request.getCost());
             t.setStatus(request.getStatus());
 
-            return new ResponseEntity<>(t, HttpStatus.OK);
+            return new ResponseEntity<>(trackingDao.updateOne(t), HttpStatus.OK);
         }
 
         @ApiOperation(value = "Update Tracking by userID")
@@ -140,9 +131,8 @@ public class TrackingController {
         public ResponseEntity<HibernateTracking> updateHibernateTracking(@ApiParam(value = "Tracking ID", required = false) @PathVariable("id") Long id,
                                                                   @RequestBody TrackingCreateRequest request) {
 
-            hibernateTrackingDao.findById(id);
+            HibernateTracking t = hibernateTrackingDao.findById(id);
 
-            HibernateTracking t = new HibernateTracking();
             t.setConfirm_date(new Timestamp(new Date().getTime()));
             t.setCost(request.getCost());
             t.setStatus(request.getStatus());
