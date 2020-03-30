@@ -174,11 +174,7 @@ public class CarsController {
 
 
 
-   /* private final CarsDao carsDao;
-
-    public CarsController(CarsDao carsDao) {
-        this.carsDao = carsDao;
-    }
+   /* 
 
     //http://localhost:8081/tracking/search?cost=100
     *//*@RequestMapping(value = "/tracking/search", method = RequestMethod.GET)
