@@ -155,12 +155,12 @@ public class OrganizationsController {
             return new ResponseEntity<>(id, HttpStatus.OK);
         }
 
-        @DeleteMapping("/hibernate/delete/{id}")
+        /*@DeleteMapping("/hibernate/delete/{id}")
         @ResponseStatus(HttpStatus.OK)
         public ResponseEntity<Long> deleteHibernateOrganization(@PathVariable("id") Long id) {
             hibernateOrganizationsDao.deleteById(id);
             return new ResponseEntity<>(id, HttpStatus.OK);
-        }
+        }*/
 
 
 

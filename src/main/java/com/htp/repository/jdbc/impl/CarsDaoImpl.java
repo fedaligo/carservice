@@ -2,6 +2,7 @@ package com.htp.repository.jdbc.impl;
 
 import com.htp.repository.jdbc.CarsDao;
 import com.htp.domain.Cars;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,10 +20,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository//("CarsDaoImpl")
+@RequiredArgsConstructor
 @Transactional
 public class CarsDaoImpl implements CarsDao {
     public static final String ID ="id";
     public static final String CAR_BRAND ="car_brand";
+    public static final String BRAND_MODEL ="brand_model";
     public static final String TYPE_OF_TRANSMISSION ="type_of_transmission";
     public static final String TYPE_OF_FUEL ="type_of_fuel";
     public static final String VIN_NUMBER ="vin_number";
@@ -39,6 +42,7 @@ public class CarsDaoImpl implements CarsDao {
         Cars cars = new Cars();
         cars.setId(resultSet.getLong(ID));
         cars.setCarBrand(resultSet.getString(CAR_BRAND));
+        cars.setBrandModel(resultSet.getString(BRAND_MODEL));
         cars.setTypeOfTransmission(resultSet.getString(TYPE_OF_TRANSMISSION));
         cars.setTypeOfFuel(resultSet.getString(TYPE_OF_FUEL));
         cars.setVinNumber(resultSet.getString(VIN_NUMBER));
@@ -54,7 +58,7 @@ public class CarsDaoImpl implements CarsDao {
 
         String sql = "INSERT INTO m_car " +
                 "(id, car_brand, type_of_transmission, type_of_fuel, vin_number, user_id, car_weight) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (:id, :car_brand, :type_of_transmission, :type_of_fuel, :vin_number, :user_id, :car_weight)";
 
         jdbcTemplate.update(sql, new Object[] { entity.getId(), entity.getCarBrand(), entity.getTypeOfTransmission(), entity.getTypeOfFuel(),
                 entity.getVinNumber(), entity.getUserId(), entity.getCarWeight()});
@@ -82,11 +86,12 @@ public class CarsDaoImpl implements CarsDao {
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public List<Cars> update(Cars entity) {
-        final String sql = "UPDATE m_car set car_brand = :car_brand, type_of_transmission = :type_of_transmission, " +
+        final String sql = "UPDATE m_car set car_brand = :car_brand, brand_model=:brand_model, type_of_transmission = :type_of_transmission, " +
                 "type_of_fuel = :type_of_fuel, vin_number = :vin_number, user_id = :user_id, car_weight = :car_weight  where id = :id";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(CAR_BRAND, entity.getCarBrand());
+        params.addValue(BRAND_MODEL,entity.getBrandModel());
         params.addValue(TYPE_OF_TRANSMISSION, entity.getTypeOfTransmission());
         params.addValue(TYPE_OF_FUEL, entity.getTypeOfFuel());
         params.addValue(VIN_NUMBER, entity.getVinNumber());
@@ -111,13 +116,14 @@ public class CarsDaoImpl implements CarsDao {
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT)
     public Cars save(Cars entity) {
         final String sql = "INSERT INTO m_car " +
-                "(car_brand, type_of_transmission, type_of_fuel, vin_number, user_id, car_weight) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+                "(car_brand, brand_model, type_of_transmission, type_of_fuel, vin_number, user_id, car_weight) " +
+                "VALUES (:car_brand, :brand_model, :type_of_transmission, :type_of_fuel, :vin_number, :user_id, :car_weight)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(CAR_BRAND, entity.getCarBrand());
+        params.addValue(BRAND_MODEL,entity.getBrandModel());
         params.addValue(TYPE_OF_TRANSMISSION, entity.getTypeOfTransmission());
         params.addValue(TYPE_OF_FUEL, entity.getTypeOfFuel());
         params.addValue(VIN_NUMBER, entity.getVinNumber());
@@ -135,7 +141,7 @@ public class CarsDaoImpl implements CarsDao {
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Cars updateOne(Cars entity) {
-        final String sql = "UPDATE m_car set car_brand = :car_brand, type_of_transmission = :type_of_transmission, " +
+        final String sql = "UPDATE m_car set car_brand = :car_brand, brand_model=:brand_model, type_of_transmission = :type_of_transmission, " +
                 "type_of_fuel = :type_of_fuel, vin_number = :vin_number, user_id = :user_id, car_weight = :car_weight  where id = :id";
 
         //KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -143,6 +149,7 @@ public class CarsDaoImpl implements CarsDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(ID, entity.getId());
         params.addValue(CAR_BRAND, entity.getCarBrand());
+        params.addValue(BRAND_MODEL,entity.getBrandModel());
         params.addValue(TYPE_OF_TRANSMISSION, entity.getTypeOfTransmission());
         params.addValue(TYPE_OF_FUEL, entity.getTypeOfFuel());
         params.addValue(VIN_NUMBER, entity.getVinNumber());

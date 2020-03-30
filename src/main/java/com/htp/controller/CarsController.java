@@ -5,6 +5,7 @@ import com.htp.controller.requests.UserCreateRequest;
 import com.htp.domain.Roles;
 import com.htp.domain.Users;
 import com.htp.repository.hibernate.impl.HibernateCarsDaoImpl;
+import com.htp.repository.hibernate.impl.HibernateUsersDaoImpl;
 import com.htp.repository.jdbc.CarsDao;
 import com.htp.domain.Cars;
 import com.htp.domain.hibernate.HibernateCars;
@@ -28,6 +29,8 @@ public class CarsController {
         private final CarsDao carsDao;
 
         private final HibernateCarsDaoImpl hibernateCarsDao;
+
+        private final HibernateUsersDaoImpl hibernateUsersDao;
 
         @GetMapping("/all")
         @ResponseStatus(HttpStatus.OK)
@@ -81,6 +84,7 @@ public class CarsController {
             t.setTypeOfFuel(request.getTypeOfFuel());
             t.setCarWeight(request.getCarWeight());
             t.setVinNumber(request.getVinNumber());
+            t.setUserId(request.getUser_id());
 
             Cars savedCar = carsDao.save(t);
 
@@ -98,6 +102,7 @@ public class CarsController {
             t.setTypeOfFuel(request.getTypeOfFuel());
             t.setCarWeight(request.getCarWeight());
             t.setVinNumber(request.getVinNumber());
+            t.setUser(hibernateUsersDao.findById(request.getUser_id()));
 
             return new ResponseEntity<>(hibernateCarsDao.save(t), HttpStatus.OK);
         }
@@ -123,6 +128,7 @@ public class CarsController {
             t.setTypeOfFuel(request.getTypeOfFuel());
             t.setCarWeight(request.getCarWeight());
             t.setVinNumber(request.getVinNumber());
+            t.setUserId(request.getUser_id());
 
             return new ResponseEntity<>(carsDao.updateOne(t), HttpStatus.OK);
         }
@@ -146,6 +152,7 @@ public class CarsController {
             t.setTypeOfFuel(request.getTypeOfFuel());
             t.setCarWeight(request.getCarWeight());
             t.setVinNumber(request.getVinNumber());
+            t.setUser(hibernateUsersDao.findById(request.getUser_id()));
 
             return new ResponseEntity<>(hibernateCarsDao.updateOne(t), HttpStatus.OK);
         }
@@ -157,12 +164,12 @@ public class CarsController {
             return new ResponseEntity<>(id, HttpStatus.OK);
         }
 
-        @DeleteMapping("/hibernate/delete/{id}")
+        /*@DeleteMapping("/hibernate/delete/{id}")
         @ResponseStatus(HttpStatus.OK)
         public ResponseEntity<Long> deleteHibernateCar(@PathVariable("id") Long id) {
             hibernateCarsDao.deleteById(id);
             return new ResponseEntity<>(id, HttpStatus.OK);
-        }
+        }*/
 
 
 

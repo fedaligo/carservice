@@ -1,5 +1,6 @@
 package com.htp.controller.requests;
 
+import com.htp.domain.hibernate.HibernateUsers;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,11 @@ public class CarsCreateRequest {
         @NotEmpty
         @Size(min = 3, max = 10)
         private String typeOfFuel;
+
+        @NotNull
+        @NotEmpty
+        //@Size(min = 3, max = 10)
+        private Long user_id;
 
         @NotNull
         @NotEmpty

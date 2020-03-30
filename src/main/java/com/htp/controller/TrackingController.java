@@ -2,6 +2,8 @@ package com.htp.controller;
 
 import com.htp.controller.requests.TrackingCreateRequest;
 import com.htp.domain.hibernate.HibernateUsers;
+import com.htp.repository.hibernate.impl.HibernateOrganizationsDaoImpl;
+import com.htp.repository.hibernate.impl.HibernateTasksDaoImpl;
 import com.htp.repository.hibernate.impl.HibernateTrackingDaoImpl;
 import com.htp.repository.jdbc.TrackingDao;
 import com.htp.domain.Tracking;
@@ -26,6 +28,10 @@ public class TrackingController {
         private final TrackingDao trackingDao;
 
         private final HibernateTrackingDaoImpl hibernateTrackingDao;
+
+        private final HibernateOrganizationsDaoImpl hibernateOrganizationsDao;
+
+        private final HibernateTasksDaoImpl hibernateTasksDao;
 
         @GetMapping("/all")
         @ResponseStatus(HttpStatus.OK)
@@ -77,6 +83,8 @@ public class TrackingController {
             t.setConfirmDate(new Timestamp(new Date().getTime()));
             t.setCost(request.getCost());
             t.setStatus(request.getStatus());
+            t.setIdOrganaizer(request.getId_organaizer());
+            t.setIdTask(request.getId_task());
 
             Tracking savedTracking = trackingDao.save(t);
 
@@ -92,6 +100,8 @@ public class TrackingController {
             t.setConfirm_date(new Timestamp(new Date().getTime()));
             t.setCost(request.getCost());
             t.setStatus(request.getStatus());
+            t.setOrganizations(hibernateOrganizationsDao.findById(request.getId_organaizer()));
+            t.setTasks(hibernateTasksDao.findById(request.getId_task()));
 
             return new ResponseEntity<>(hibernateTrackingDao.save(t), HttpStatus.OK);
         }
@@ -115,6 +125,8 @@ public class TrackingController {
             t.setConfirmDate(new Timestamp(new Date().getTime()));
             t.setCost(request.getCost());
             t.setStatus(request.getStatus());
+            t.setIdOrganaizer(request.getId_organaizer());
+            t.setIdTask(request.getId_task());
 
             return new ResponseEntity<>(trackingDao.updateOne(t), HttpStatus.OK);
         }
@@ -136,6 +148,8 @@ public class TrackingController {
             t.setConfirm_date(new Timestamp(new Date().getTime()));
             t.setCost(request.getCost());
             t.setStatus(request.getStatus());
+            t.setOrganizations(hibernateOrganizationsDao.findById(request.getId_organaizer()));
+            t.setTasks(hibernateTasksDao.findById(request.getId_task()));
 
             return new ResponseEntity<>(hibernateTrackingDao.updateOne(t), HttpStatus.OK);
         }
@@ -171,12 +185,12 @@ public class TrackingController {
             return new ResponseEntity<>(Id, HttpStatus.OK);
         }
 
-        @DeleteMapping("/hibernate/delete/{id}")
+       /* @DeleteMapping("/hibernate/delete/{id}")
         @ResponseStatus(HttpStatus.OK)
         public ResponseEntity<Long> deleteHibernateTracking(@PathVariable("id") Long Id) {
             hibernateTrackingDao.deleteById(Id);
             return new ResponseEntity<>(Id, HttpStatus.OK);
-        }
+        }*/
 
     
 

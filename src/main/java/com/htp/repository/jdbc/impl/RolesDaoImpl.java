@@ -46,7 +46,7 @@ public class RolesDaoImpl implements RolesDao {
 
         String sql = "INSERT INTO m_roles " +
                 "(id, name_of_role, user_id) " +
-                "VALUES (?, ?, ?)";
+                "VALUES (:id, :name_of_role, :user_id)";
 
         jdbcTemplate.update(sql, new Object[] { entity.getId(), entity.getNameOfRole(), entity.getUserId()});
     }

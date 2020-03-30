@@ -69,12 +69,12 @@ public class RolesController {
             return new ResponseEntity<>(id, HttpStatus.OK);
         }
 
-        @DeleteMapping("/hibernate/delete/{id}")
+        /*@DeleteMapping("/hibernate/delete/{id}")
         @ResponseStatus(HttpStatus.OK)
         public ResponseEntity<Long> deleteHibernateRole(@PathVariable("id") Long id) {
             hibernateRolesDao.deleteById(id);
             return new ResponseEntity<>(id, HttpStatus.OK);
-        }
+        }*/
 
 
 

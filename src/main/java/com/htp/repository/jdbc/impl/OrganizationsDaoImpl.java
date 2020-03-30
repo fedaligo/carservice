@@ -2,6 +2,7 @@ package com.htp.repository.jdbc.impl;
 
 import com.htp.repository.jdbc.OrganizationsDao;
 import com.htp.domain.Organizations;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository("OrganizationsDaoImpl")
+@RequiredArgsConstructor
 @Transactional
 public class OrganizationsDaoImpl implements OrganizationsDao {
     public static final String ID ="id";
@@ -56,7 +58,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
 
         String sql = "INSERT INTO m_organization " +
                 "(id, name, web_site, phone_number, location, working_time, specialize, e_mail) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (:id, :name, :web_site, :phone_number, :location, :working_time, :specialize, :e_mail)";
 
         jdbcTemplate.update(sql, new Object[] { entity.getId(), entity.getName(), entity.getWebSite(), entity.getPhoneNumber(),
                 entity.getLocation(), entity.getWorkingTime(), entity.getSpecialize(), entity.getEMail()});
@@ -114,9 +116,8 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT)
     public Organizations save(Organizations entity) {
-        final String sql = "INSERT INTO m_organization " +
-                "(id, name, web_site, phone_number, location, working_time, specialize, e_mail) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        final String sql = "INSERT INTO m_organization (name, web_site, phone_number, location, working_time, specialize, e_mail) " +
+                "VALUES (:name, :web_site, :phone_number, :location, :working_time, :specialize, :e_mail)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

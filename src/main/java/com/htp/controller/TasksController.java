@@ -2,6 +2,7 @@ package com.htp.controller;
 
 import com.htp.controller.requests.TasksCreateRequest;
 import com.htp.domain.hibernate.HibernateUsers;
+import com.htp.repository.hibernate.HibernateCarsDao;
 import com.htp.repository.hibernate.impl.HibernateTasksDaoImpl;
 import com.htp.repository.jdbc.TasksDao;
 import com.htp.domain.Tasks;
@@ -26,6 +27,8 @@ public class TasksController {
         private final TasksDao tasksDao;
 
         private final HibernateTasksDaoImpl hibernateTasksDao;
+
+        private final HibernateCarsDao hibernateCarsDao;
 
         @GetMapping("/all")
         @ResponseStatus(HttpStatus.OK)
@@ -77,6 +80,7 @@ public class TasksController {
             t.setServiceWorkName(request.getServiceWorkName());
             t.setNecessityOfEvacuation(request.getNecessityOfEvacuation());
             t.setWheelBrake(request.getWheelBrake());
+            t.setIdCar(request.getId_car());
             t.setCreated(new Timestamp(new Date().getTime()));
             t.setDescription(request.getDescription());
             t.setLatitude(request.getLatitude());
@@ -95,6 +99,7 @@ public class TasksController {
             t.setServiceWorkName(request.getServiceWorkName());
             t.setNecessityOfEvacuation(request.getNecessityOfEvacuation());
             t.setWheelBrake(request.getWheelBrake());
+            t.setCars(hibernateCarsDao.findById(request.getId_car()));
             t.setCreated(new Timestamp(new Date().getTime()));
             t.setDescription(request.getDescription());
             t.setLatitude(request.getLatitude());
@@ -122,6 +127,7 @@ public class TasksController {
             t.setServiceWorkName(request.getServiceWorkName());
             t.setNecessityOfEvacuation(request.getNecessityOfEvacuation());
             t.setWheelBrake(request.getWheelBrake());
+            t.setIdCar(request.getId_car());
             t.setCreated(new Timestamp(new Date().getTime()));
             t.setDescription(request.getDescription());
             t.setLatitude(request.getLatitude());
@@ -147,6 +153,7 @@ public class TasksController {
             t.setServiceWorkName(request.getServiceWorkName());
             t.setNecessityOfEvacuation(request.getNecessityOfEvacuation());
             t.setWheelBrake(request.getWheelBrake());
+            t.setCars(hibernateCarsDao.findById(request.getId_car()));
             t.setCreated(new Timestamp(new Date().getTime()));
             t.setDescription(request.getDescription());
             t.setLatitude(request.getLatitude());
@@ -163,12 +170,12 @@ public class TasksController {
             return new ResponseEntity<>(id, HttpStatus.OK);
         }
 
-        @DeleteMapping("/hibernate/delete/{id}")
+       /* @DeleteMapping("/hibernate/delete/{id}")
         @ResponseStatus(HttpStatus.OK)
         public ResponseEntity<Long> deleteHibernateTask(@PathVariable("id") Long id) {
             hibernateTasksDao.deleteById(id);
             return new ResponseEntity<>(id, HttpStatus.OK);
-        }
+        }*/
 
 
 

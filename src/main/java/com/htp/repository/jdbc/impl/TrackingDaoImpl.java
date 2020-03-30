@@ -51,8 +51,8 @@ public class TrackingDaoImpl implements TrackingDao {
     public void create(Tracking entity) {
 
         String sql = "INSERT INTO tracking_system " +
-                "(id, id_task, id_organizer, status, confirm_date, cost) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+                "(id, id_task, id_organaizer, status, confirm_date, cost) " +
+                "VALUES (:id, :id_task, :id_organaizer, :status, :confirm_date, :cost)";
 
         jdbcTemplate.update(sql, new Object[] { entity.getId(), entity.getIdTask(), entity.getIdOrganaizer(), entity.getStatus(),
                 entity.getConfirmDate(), entity.getCost()});
@@ -116,8 +116,8 @@ public class TrackingDaoImpl implements TrackingDao {
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT)
     public Tracking save(Tracking entity) {
         final String sql = "INSERT INTO tracking_system " +
-                "(id, id_task, id_organizer, status, confirm_date, cost) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+                "(id_task, id_organaizer, status, confirm_date, cost) " +
+                "VALUES (:id_task, :id_organaizer, :status, :confirm_date, :cost)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

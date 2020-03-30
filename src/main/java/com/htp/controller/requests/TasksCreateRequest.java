@@ -31,6 +31,11 @@ public class TasksCreateRequest {
 
     @NotNull
     @NotEmpty
+    //@Size(min = 2, max = 100)
+    private Long id_car;
+
+    @NotNull
+    @NotEmpty
     @Size(min = 2, max = 100)
     private String description;
 

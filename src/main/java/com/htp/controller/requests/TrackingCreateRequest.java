@@ -21,4 +21,14 @@ public class TrackingCreateRequest {
         @PositiveOrZero
         //@Size(min = 6, max = 20)
         private Long cost;
+
+        @NotNull
+        @NotEmpty
+        //@Size(min = 2, max = 100)
+        private Long id_task;
+
+        @NotNull
+        @NotEmpty
+        //@Size(min = 2, max = 100)
+        private Long id_organaizer;
 }

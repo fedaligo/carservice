@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.Set;
 
 @Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -53,4 +55,5 @@ public class HibernateCars {
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "cars")
     private Set<HibernateTasks> tasks = Collections.emptySet();
+
 }

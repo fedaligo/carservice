@@ -61,7 +61,8 @@ public class TasksDaoImpl implements TasksDao {
         String sql = "INSERT INTO m_tasks " +
                 "(id, service_work_name, necessity_of_evacuation, wheel_brake, id_car, created, description, latitude, " +
                 "longitude, local_description) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (:id, :service_work_name, :necessity_of_evacuation, :wheel_brake, :id_car, :created, :description, :latitude, \" +\n" +
+                "                \":longitude, :local_description)";
 
         jdbcTemplate.update(sql, new Object[] { entity.getId(), entity.getServiceWorkName(), entity.getNecessityOfEvacuation(),
                 entity.getWheelBrake(), entity.getIdCar(),entity.getCreated(),entity.getDescription(),entity.getLatitude(),
@@ -124,9 +125,10 @@ public class TasksDaoImpl implements TasksDao {
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT)
     public Tasks save(Tasks entity) {
         final String sql = "INSERT INTO m_tasks " +
-                "(id, service_work_name, necessity_of_evacuation, wheel_brake, id_car, created, description, latitude, " +
+                "(service_work_name, necessity_of_evacuation, wheel_brake, id_car, created, description, latitude, " +
                 "longitude, local_description) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (:service_work_name, :necessity_of_evacuation, :wheel_brake, :id_car, :created, :description, :latitude, " +
+                ":longitude, :local_description)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
