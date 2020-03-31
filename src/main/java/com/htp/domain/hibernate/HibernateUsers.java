@@ -3,6 +3,8 @@ package com.htp.domain.hibernate;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.htp.domain.Gender;
 import lombok.*;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -17,8 +19,11 @@ import static javax.persistence.EnumType.STRING;
 @RequiredArgsConstructor
 @EqualsAndHashCode(exclude = {"userId","cars","role"})
 @ToString(exclude = {"cars","role"})
+@org.hibernate.annotations.NamedQuery(name = "m_users_multiple_ids_search", query = "select tu from HibernateUsers tu where tu.userId in (:userIds)")
 @Entity
 @Table(name = "m_users")
+/*@Configuration
+@ConfigurationProperties("hibernateusers")*/
 public class HibernateUsers {
 
     @Id
