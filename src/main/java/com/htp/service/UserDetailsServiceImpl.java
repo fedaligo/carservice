@@ -5,6 +5,7 @@ import com.htp.repository.jdbc.UsersDao;
 import com.htp.domain.Roles;
 import com.htp.domain.Users;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +18,7 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
+    @Qualifier("usersDaoImpl")
     private UsersDao usersDao;
 
     @Autowired

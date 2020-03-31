@@ -10,7 +10,8 @@ import org.springframework.data.repository.query.Param;
 import java.sql.Timestamp;
 import java.util.List;
 
-public interface UsersRepository extends CrudRepository<HibernateUsers, Long>, JpaRepository<HibernateUsers,Long> {
+
+public interface UserRepository extends CrudRepository<HibernateUsers, Long>, JpaRepository<HibernateUsers,Long> {
 
     List<HibernateUsers> findByLoginAndGender(String login, Gender gender);
 

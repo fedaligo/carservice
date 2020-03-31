@@ -20,9 +20,9 @@ import java.util.List;
 @Qualifier("hibernateRolesDao")
 public class HibernateRolesDaoImpl implements HibernateRolesDao {
 
-    @Autowired
+    /*@Autowired
     @Qualifier("sessionFactory")
-    private SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;*/
 
     @Autowired
     private EntityManager entityManager;

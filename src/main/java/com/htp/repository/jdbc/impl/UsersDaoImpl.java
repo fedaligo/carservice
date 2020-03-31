@@ -211,11 +211,20 @@ public class UsersDaoImpl implements UsersDao {
         namedParameterJdbcTemplate.update(sql, params);
         //long createdUserId = Objects.requireNonNull(keyHolder.getKey()).longValue();
         return findById(entity.getId());
-
-
     }
 
+    @Override
+    public List<Users> search(String query, Long limit, Long offset) {
+        final String searchQuery = "select * from user where lower(user_name) LIKE lower(:query) or " +
+                "lower(user_surname) LIKE lower(:query) limit :lim offset :off";
 
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("query", "%" + query + "%");
+        params.addValue("lim", limit);
+        params.addValue("off", offset);
+
+        return namedParameterJdbcTemplate.query(searchQuery, params, this::getEmployeeRowMapper);
+    }
 
 }
 

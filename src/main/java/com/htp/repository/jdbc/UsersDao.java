@@ -13,6 +13,7 @@ public interface UsersDao extends GenericDao<Users,Long> {
     public Users findByLogin(String login);
     public Users save(Users entity);
     public Users updateOne(Users entity);
+    public List<Users> search(String query, Long limit, Long offset);
     //public Users createOne(Users entity);
 
     /* public void create(final Users entity);

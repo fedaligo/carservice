@@ -1,39 +1,19 @@
 package com.htp.controller.requests;
 
 import com.htp.domain.Gender;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Data
+@Setter
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserUpdateRequest {
-    @NotNull
-    @NotEmpty
-    @Size(min = 6, max = 20)
-    private String login;
-
-    @NotNull
-    @NotEmpty
-    @Size(min = 1, max = 100)
-    private String password;
-
-    @NotNull
-    @NotEmpty
-    @Email
-    @Size(min = 1, max = 100)
-    private String eMail;
-
-    @NotNull
-    @NotEmpty
-    @Size(min = 11, max = 11)
-    private Long phNumberUser;
-
-    private Gender gender;
+public class UserUpdateRequest extends UserCreateRequest {
+    private Long userId;
 }

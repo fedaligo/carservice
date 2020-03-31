@@ -19,9 +19,9 @@ import java.util.List;
 @Qualifier("hibernateCarsDao")
 public class HibernateCarsDaoImpl implements HibernateCarsDao {
 
-    @Autowired
+    /*@Autowired
     @Qualifier("sessionFactory")
-    private SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;*/
 
     @Autowired
     private EntityManager entityManager;

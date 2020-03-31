@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
+
+import javax.persistence.EntityManagerFactory;
 
 @Configuration
 //@ComponentScan("com.htp")
@@ -32,9 +35,14 @@ public class JDBCTemplateConfig {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 
-    @Bean("txManager")
+   /* @Bean("txManager")
     public DataSourceTransactionManager getTransactionManager() {
         return new DataSourceTransactionManager(dataSource);
+    }*/
+
+    @Bean("transactionManager")
+    public JpaTransactionManager getTransactionManager(EntityManagerFactory entityManagerFactory) {
+        return new JpaTransactionManager(entityManagerFactory);
     }
 
     //https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/aop.html#aop-understanding-aop-proxies

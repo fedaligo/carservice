@@ -15,6 +15,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -29,6 +30,7 @@ import java.util.Properties;
 
 @EnableSwagger2
 @EnableAspectJAutoProxy
+@EnableJpaRepositories
 @EnableTransactionManagement(proxyTargetClass = true)
 @SpringBootApplication(scanBasePackages = {"com.htp"},
         exclude = {
@@ -46,7 +48,7 @@ public class SpringBootHibernateApplication extends SpringBootServletInitializer
         SpringApplication.run(SpringBootHibernateApplication.class, args);
     }
 
-    @Autowired
+    /*@Autowired
     @Bean(name = "sessionFactory")
     public SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
         // Fix Postgres JPA Error:
@@ -64,9 +66,8 @@ public class SpringBootHibernateApplication extends SpringBootServletInitializer
         SessionFactory sf = factoryBean.getObject();
         System.out.println("## getSessionFactory: " + sf);
         return sf;
-    }
+    }*/
 
-    @Primary
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em
@@ -81,10 +82,10 @@ public class SpringBootHibernateApplication extends SpringBootServletInitializer
         return em;
     }
 
-    @Bean(name = "entityManager")
+   /* @Bean(name = "entityManager")
     public EntityManager getEntityManager(EntityManagerFactory entityManagerFactory) {
         return entityManagerFactory.createEntityManager();
-    }
+    }*/
 
     private Properties getAdditionalProperties() {
         Properties properties = new Properties();

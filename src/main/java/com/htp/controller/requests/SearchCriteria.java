@@ -8,11 +8,11 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
+/*@Setter
 @Getter
 @Builder
 @EqualsAndHashCode
-@ToString
+@ToString*/
 public class SearchCriteria {
     private String query;
     private Integer limit;

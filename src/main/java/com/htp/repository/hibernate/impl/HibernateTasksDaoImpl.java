@@ -20,9 +20,9 @@ import java.util.List;
 @Qualifier("hibernateTasksDao")
 public class HibernateTasksDaoImpl implements HibernateTasksDao {
 
-    @Autowired
+    /*@Autowired
     @Qualifier("sessionFactory")
-    private SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;*/
 
     @Autowired
     private EntityManager entityManager;

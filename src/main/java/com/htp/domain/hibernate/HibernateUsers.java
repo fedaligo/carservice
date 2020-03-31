@@ -19,7 +19,7 @@ import static javax.persistence.EnumType.STRING;
 @RequiredArgsConstructor
 @EqualsAndHashCode(exclude = {"userId","cars","role"})
 @ToString(exclude = {"cars","role"})
-@org.hibernate.annotations.NamedQuery(name = "m_users_multiple_ids_search", query = "select tu from HibernateUsers tu where tu.userId in (:userIds)")
+@NamedQuery(name = "m_users_multiple_ids_search", query = "select tu from HibernateUsers tu where tu.userId in (:userIds)")
 @Entity
 @Table(name = "m_users")
 /*@Configuration

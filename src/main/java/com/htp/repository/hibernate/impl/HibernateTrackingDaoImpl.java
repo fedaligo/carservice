@@ -20,9 +20,9 @@ import java.util.List;
 @Qualifier("hibernateTrackingDao")
 public class HibernateTrackingDaoImpl implements HibernateTrackingDao{
 
-        @Autowired
+        /*@Autowired
         @Qualifier("sessionFactory")
-        private SessionFactory sessionFactory;
+        private SessionFactory sessionFactory;*/
 
         @Autowired
         private EntityManager entityManager;
