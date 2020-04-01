@@ -2,16 +2,22 @@ package com.htp.repository.springdata;
 
 import com.htp.domain.Gender;
 import com.htp.domain.hibernate.HibernateUsers;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
 
-
-public interface UserRepository extends CrudRepository<HibernateUsers, Long>, JpaRepository<HibernateUsers,Long> {
+//@Repository
+public interface HibernateUsersRepository extends CrudRepository<HibernateUsers, Long>, JpaRepository<HibernateUsers,Long> {
 
     List<HibernateUsers> findByLoginAndGender(String login, Gender gender);
 

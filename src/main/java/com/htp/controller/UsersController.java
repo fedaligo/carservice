@@ -10,7 +10,7 @@ import com.htp.domain.Roles;
 import com.htp.domain.Users;
 import com.htp.repository.jdbc.UsersDao;
 import com.htp.domain.hibernate.HibernateUsers;
-import com.htp.repository.springdata.UserRepository;
+import com.htp.repository.springdata.HibernateUsersRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -29,7 +31,7 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-//@Controller
+
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/rest/users")
@@ -39,16 +41,16 @@ public class UsersController {
     private static final Gender gender = Gender.NOT_SELECTED;
     private final UsersDao userDao;
 
-    private final HibernateUsersDaoImpl hibernateUserDao;
+    private final HibernateUsersRepository hibernateUsersRepository;
 
-    private final UserRepository userRepository;
+    private final HibernateUsersDaoImpl hibernateUserDao;
 
     private final ConversionService conversionService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<HibernateUsers>> getUsers1() {
-        return new ResponseEntity<>(userRepository.test("5"), HttpStatus.OK);
+        return new ResponseEntity<>( hibernateUsersRepository.test("5"), HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -119,7 +121,7 @@ public class UsersController {
     @org.springframework.transaction.annotation.Transactional
     public ResponseEntity<HibernateUsers> createUser(@RequestBody @Valid UserCreateRequest request) {
         HibernateUsers convertedUser = conversionService.convert(request, HibernateUsers.class);
-        return new ResponseEntity<>(userRepository.saveAndFlush(convertedUser), CREATED);
+        return new ResponseEntity<>( hibernateUsersRepository.saveAndFlush(convertedUser), CREATED);
     }
 
     @PostMapping("/hibernate/create")
@@ -173,7 +175,7 @@ public class UsersController {
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<HibernateUsers> updateUser(@RequestBody @Valid UserUpdateRequest request) {
-        return new ResponseEntity<>(userRepository.save(conversionService.convert(request, HibernateUsers.class)), HttpStatus.OK);
+        return new ResponseEntity<>( hibernateUsersRepository.save(conversionService.convert(request, HibernateUsers.class)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Update user by userID")
@@ -214,7 +216,7 @@ public class UsersController {
     @GetMapping("/spring-data/all")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Page<HibernateUsers>> getUsersSpringData(@ApiIgnore Pageable pageable) {
-        return new ResponseEntity<>(userRepository.findAll(pageable), HttpStatus.OK);
+        return new ResponseEntity<>( hibernateUsersRepository.findAll(pageable), HttpStatus.OK);
     }
 
     /*@ApiOperation(value = "Search user by query")
