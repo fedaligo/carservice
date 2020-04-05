@@ -19,14 +19,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    /*@Autowired
-    private UserDetailsService userDetailsService;*/
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-//        authenticationManagerBuilder
-//                .userDetailsService(userDetailsService);
-        authenticationManagerBuilder.inMemoryAuthentication().withUser("admin1").password("{noop}admin").roles("ADMIN");
+        authenticationManagerBuilder
+                .userDetailsService(userDetailsService);
+        //authenticationManagerBuilder.inMemoryAuthentication().withUser("admin1").password("{noop}admin").roles("ADMIN");
     }
 
     @Bean
@@ -41,8 +41,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .exceptionHandling()
-                .and()
-                .httpBasic()
+                /*.and()
+                .httpBasic()*/
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -52,8 +52,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/actuator/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/rest/users/secured").hasRole("ADMIN")
-                //.antMatchers("/rest/**").permitAll()
+                //.antMatchers("/rest/users/secured").hasRole("ADMIN")
+                .antMatchers("/rest/**").permitAll()
                 .antMatchers("/admin/**").permitAll()
                 .anyRequest().authenticated();
     }

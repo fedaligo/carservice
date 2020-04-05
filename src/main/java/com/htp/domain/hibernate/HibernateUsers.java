@@ -3,8 +3,6 @@ package com.htp.domain.hibernate;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.htp.domain.Gender;
 import lombok.*;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -12,6 +10,8 @@ import java.util.Collections;
 import java.util.Set;
 
 import static javax.persistence.EnumType.STRING;
+
+//import org.springframework.context.annotation.Configuration;
 
 @Data
 @Setter

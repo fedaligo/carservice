@@ -3,13 +3,13 @@ package com.htp.controller;
 import com.htp.controller.requests.UserCreateRequest;
 import com.htp.controller.requests.UserUpdateRequest;
 import com.htp.domain.Gender;
+import com.htp.domain.Roles;
+import com.htp.domain.Users;
+import com.htp.domain.hibernate.HibernateUsers;
 import com.htp.repository.hibernate.HibernateRolesDao;
 import com.htp.repository.hibernate.impl.HibernateUsersDaoImpl;
 import com.htp.repository.jdbc.RolesDao;
-import com.htp.domain.Roles;
-import com.htp.domain.Users;
 import com.htp.repository.jdbc.UsersDao;
-import com.htp.domain.hibernate.HibernateUsers;
 import com.htp.repository.springdata.HibernateUsersRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -41,16 +39,22 @@ public class UsersController {
     private static final Gender gender = Gender.NOT_SELECTED;
     private final UsersDao userDao;
 
+    //@Autowired
     private final HibernateUsersRepository hibernateUsersRepository;
 
     private final HibernateUsersDaoImpl hibernateUserDao;
 
     private final ConversionService conversionService;
 
-    @GetMapping
+    /*@Autowired
+    public void setHibernateUsersRepository(HibernateUsersRepository hibernateUsersRepository){
+        this.hibernateUsersRepository = hibernateUsersRepository;
+    }*/
+
+    @GetMapping("/repository")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<HibernateUsers>> getUsers1() {
-        return new ResponseEntity<>( hibernateUsersRepository.test("5"), HttpStatus.OK);
+        return new ResponseEntity<>( hibernateUsersRepository.test(), HttpStatus.OK);
     }
 
     @GetMapping("/all")

@@ -1,9 +1,9 @@
 package com.htp.service;
 
-import com.htp.repository.jdbc.RolesDao;
-import com.htp.repository.jdbc.UsersDao;
 import com.htp.domain.Roles;
 import com.htp.domain.Users;
+import com.htp.repository.jdbc.RolesDao;
+import com.htp.repository.jdbc.UsersDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -23,6 +23,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private RolesDao rolesDao;
+
+/*
+    private final HibernateUsersRepository hibernateUsersRepository;
+
+    public UserDetailsServiceImpl(HibernateUsersRepository hibernateUsersRepository) {
+        this.hibernateUsersRepository = hibernateUsersRepository;
+    }
+
+    @Transactional
+    public void testCrudRepository(){
+        Optional<HibernateUsers> hibernateUsers = hibernateUsersRepository.findById(5l);
+    }*/
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
