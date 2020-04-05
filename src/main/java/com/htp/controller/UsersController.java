@@ -5,11 +5,13 @@ import com.htp.controller.requests.UserUpdateRequest;
 import com.htp.domain.Gender;
 import com.htp.domain.Roles;
 import com.htp.domain.Users;
+import com.htp.domain.hibernate.HibernateRoles;
 import com.htp.domain.hibernate.HibernateUsers;
 import com.htp.repository.hibernate.HibernateRolesDao;
 import com.htp.repository.hibernate.impl.HibernateUsersDaoImpl;
 import com.htp.repository.jdbc.RolesDao;
 import com.htp.repository.jdbc.UsersDao;
+import com.htp.repository.springdata.HibernateRolesRepository;
 import com.htp.repository.springdata.HibernateUsersRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +44,8 @@ public class UsersController {
     //@Autowired
     private final HibernateUsersRepository hibernateUsersRepository;
 
+    private final HibernateRolesRepository hibernateRolesRepository;
+
     private final HibernateUsersDaoImpl hibernateUserDao;
 
     private final ConversionService conversionService;
@@ -51,11 +55,7 @@ public class UsersController {
         this.hibernateUsersRepository = hibernateUsersRepository;
     }*/
 
-    @GetMapping("/repository")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<HibernateUsers>> getUsers1() {
-        return new ResponseEntity<>( hibernateUsersRepository.test(), HttpStatus.OK);
-    }
+
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
@@ -67,6 +67,28 @@ public class UsersController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<HibernateUsers>> getHibernateUsers() {
         return new ResponseEntity<>(hibernateUserDao.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/spring-data/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<HibernateUsers>> getHibernatesUsersRepository() {
+        return new ResponseEntity<>( hibernateUsersRepository.findAll(), HttpStatus.OK);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
+                    value = "Results page you want to retrieve (0..N)"),
+            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
+                    value = "Number of records per page."),
+            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
+                    value = "Sorting criteria in the format: property(,asc|desc). " +
+                            "Default sort order is ascending. " +
+                            "Multiple sort criteria are supported.")
+    })
+    @GetMapping("/spring-data/all(pageable)")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Page<HibernateUsers>> getUsersSpringData(@ApiIgnore Pageable pageable) {
+        return new ResponseEntity<>( hibernateUsersRepository.findAll(pageable), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get user from server by id")
@@ -97,11 +119,25 @@ public class UsersController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Get user from server by id")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful getting user"),
+            @ApiResponse(code = 400, message = "Invalid User ID supplied"),
+            @ApiResponse(code = 401, message = "Lol kek"),
+            @ApiResponse(code = 404, message = "User was not found"),
+            @ApiResponse(code = 500, message = "Server error, something wrong")
+    })
+    @RequestMapping(value = "/spring-data/getUserById/{id}", method = RequestMethod.GET)
+    public ResponseEntity<HibernateUsers> getHibernateUserByIdRepository(@ApiParam("User Path Id") @PathVariable Long id) {
+        HibernateUsers user = hibernateUsersRepository.findById(id).orElse(null);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
 
     private final RolesDao rolesDao;
     private final HibernateRolesDao hibernateRolesDao;
 
-    /*@PostMapping("/create")
+    @PostMapping("/create")
     @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Users> createUser(@RequestBody UserCreateRequest request) {
@@ -119,13 +155,6 @@ public class UsersController {
         rolesDao.save(new Roles(savedUser.getId(), "ROLE_USER"));
 
         return new ResponseEntity<>(savedUser, HttpStatus.OK);
-    }*/
-
-    @PostMapping
-    @org.springframework.transaction.annotation.Transactional
-    public ResponseEntity<HibernateUsers> createUser(@RequestBody @Valid UserCreateRequest request) {
-        HibernateUsers convertedUser = conversionService.convert(request, HibernateUsers.class);
-        return new ResponseEntity<>( hibernateUsersRepository.saveAndFlush(convertedUser), CREATED);
     }
 
     @PostMapping("/hibernate/create")
@@ -151,6 +180,14 @@ public class UsersController {
         return new ResponseEntity<>(savedUser, HttpStatus.OK);
     }
 
+    @PostMapping("/spring-data/create(converted)")
+    @Transactional
+    public ResponseEntity<HibernateUsers> createConvertedHibernateUser(@RequestBody @Valid UserCreateRequest request) {
+        HibernateUsers savedConvertedUser = hibernateUsersRepository.saveAndFlush(conversionService.convert(request, HibernateUsers.class));
+        hibernateRolesRepository.saveAndFlush(new HibernateRoles("ROLE_USER",savedConvertedUser));
+        return new ResponseEntity<>( hibernateUsersRepository.saveAndFlush(savedConvertedUser), CREATED);
+    }
+
     @ApiOperation(value = "Update user by userID")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful user update 1111111"),
@@ -160,7 +197,7 @@ public class UsersController {
     })
    /* @ApiImplicitParams({
             @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
+    })*/
     @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Users> updateUser(@PathVariable("id") Long userId,
@@ -175,11 +212,6 @@ public class UsersController {
         user.setPhNumberUser(request.getPhNumberUser());
 
         return new ResponseEntity<>(userDao.updateOne(user), HttpStatus.OK);
-    }*/
-    @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<HibernateUsers> updateUser(@RequestBody @Valid UserUpdateRequest request) {
-        return new ResponseEntity<>( hibernateUsersRepository.save(conversionService.convert(request, HibernateUsers.class)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Update user by userID")
@@ -207,21 +239,21 @@ public class UsersController {
         return new ResponseEntity<>(hibernateUserDao.updateOne(user), HttpStatus.OK);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
-                    value = "Results page you want to retrieve (0..N)"),
-            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
-                    value = "Number of records per page."),
-            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
-                    value = "Sorting criteria in the format: property(,asc|desc). " +
-                            "Default sort order is ascending. " +
-                            "Multiple sort criteria are supported.")
+    @ApiOperation(value = "Update user by userID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful user update 1111111"),
+            @ApiResponse(code = 400, message = "Invalid User ID supplied 111111"),
+            @ApiResponse(code = 404, message = "User was not found 111111"),
+            @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
     })
-    @GetMapping("/spring-data/all")
+    @PutMapping("/spring-data/update(converted)/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<HibernateUsers>> getUsersSpringData(@ApiIgnore Pageable pageable) {
-        return new ResponseEntity<>( hibernateUsersRepository.findAll(pageable), HttpStatus.OK);
+    public ResponseEntity<HibernateUsers> updateHibernateUserRepository(@RequestBody @Valid UserUpdateRequest request) {
+        return new ResponseEntity<>( hibernateUsersRepository.save(conversionService.convert(request, HibernateUsers.class)), HttpStatus.OK);
     }
+
+
+
 
     /*@ApiOperation(value = "Search user by query")
     @ApiResponses({
@@ -251,6 +283,14 @@ public class UsersController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> deleteUser(@PathVariable("id") Long userId) {
         userDao.deleteById(userId);
+        return new ResponseEntity<>(userId, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/spring-data/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Long> deleteHibernateUserRepository(@PathVariable("id") Long userId) {
+        hibernateUsersRepository.deleteById(userId);
         return new ResponseEntity<>(userId, HttpStatus.OK);
     }
 

@@ -8,10 +8,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserCreateRequest {
@@ -32,8 +28,7 @@ public class UserCreateRequest {
     @Size(min = 1, max = 100)
     private String eMail;
 
-    @NotNull
-    @NotEmpty
-    @Size(min = 11, max = 11)
+    /*@NotNull
+    @NotEmpty*/
     private Long phNumberUser;
 }

@@ -29,4 +29,8 @@ public class HibernateRoles {
         //@MapsId
         private HibernateUsers user_role;
 
+        public HibernateRoles(String role_user, HibernateUsers userId) {
+                this.name_of_role = role_user;
+                this.user_role = userId;
+        }
 }
