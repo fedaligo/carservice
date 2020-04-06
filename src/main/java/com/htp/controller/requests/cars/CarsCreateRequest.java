@@ -1,4 +1,4 @@
-package com.htp.controller.requests;
+package com.htp.controller.requests.cars;
 
 import com.htp.domain.hibernate.HibernateUsers;
 import lombok.AllArgsConstructor;

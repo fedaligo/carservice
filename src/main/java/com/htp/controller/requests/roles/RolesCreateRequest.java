@@ -1,4 +1,4 @@
-package com.htp.controller.requests;
+package com.htp.controller.requests.roles;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

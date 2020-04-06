@@ -1,4 +1,4 @@
-package com.htp.controller.requests;
+package com.htp.controller.requests.users;
 
 import lombok.*;
 

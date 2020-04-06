@@ -10,6 +10,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedQuery(name = "m_tasks_multiple_ids_search", query = "select tu from HibernateTasks tu where tu.id in (:ids)")
 @Entity
 @Builder
 @Table(name = "m_tasks")

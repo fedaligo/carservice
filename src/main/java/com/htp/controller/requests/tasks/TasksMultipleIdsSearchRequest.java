@@ -1,4 +1,4 @@
-package com.htp.controller.requests;
+package com.htp.controller.requests.tasks;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsersMultipleIdsSearchRequest {
-    private List<Long> userIds = new ArrayList<>();
+public class TasksMultipleIdsSearchRequest {
+    private List<Long> ids = new ArrayList<>();
 }

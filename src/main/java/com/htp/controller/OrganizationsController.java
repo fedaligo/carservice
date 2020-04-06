@@ -1,11 +1,14 @@
 package com.htp.controller;
 
-import com.htp.controller.requests.OrganizationsCreateRequest;
-import com.htp.repository.hibernate.impl.HibernateOrganizationsDaoImpl;
-import com.htp.repository.jdbc.OrganizationsDao;
+import com.htp.controller.requests.organizations.OrganizationsCreateRequest;
 import com.htp.domain.Organizations;
 import com.htp.domain.hibernate.HibernateOrganizations;
-import io.swagger.annotations.*;
+import com.htp.repository.hibernate.impl.HibernateOrganizationsDaoImpl;
+import com.htp.repository.jdbc.OrganizationsDao;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -155,42 +158,75 @@ public class OrganizationsController {
             return new ResponseEntity<>(id, HttpStatus.OK);
         }
 
-        /*@DeleteMapping("/hibernate/delete/{id}")
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<Long> deleteHibernateOrganization(@PathVariable("id") Long id) {
-            hibernateOrganizationsDao.deleteById(id);
-            return new ResponseEntity<>(id, HttpStatus.OK);
-        }*/
+    /*SPRING DATA*//*
 
-
-
-
-
-    /*private final OrganizationsDao organizationsDao;
-
-    public OrganizationsController(OrganizationsDao organizationsDao) {
-        this.organizationsDao = organizationsDao;
+    *//*FindAll*//*
+    @GetMapping("/spring-data/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<HibernateUsers>> getHibernatesUsersRepository() {
+        return new ResponseEntity<>( hibernateUsersRepository.findAll(), HttpStatus.OK);
     }
 
-    //http://localhost:8081/tracking/search?cost=100
-    *//*@RequestMapping(value = "/tracking/search", method = RequestMethod.GET)
+    *//*FindAll(pageable)*//*
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
+                    value = "Results page you want to retrieve (0..N)"),
+            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
+                    value = "Number of records per page."),
+            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
+                    value = "Sorting criteria in the format: property(,asc|desc). " +
+                            "Default sort order is ascending. " +
+                            "Multiple sort criteria are supported.")
+    })
+    @GetMapping("/spring-data/all(pageable)")
     @ResponseStatus(HttpStatus.OK)
-    public String printHello(@RequestParam("cost") Long query, ModelMap model) {
-        List<Tracking> search = trackingDao.trackingByHigherCost(query);
-        model.addAttribute("bycost",
-                StringUtils.join(search.stream().map(Tracking::toString).collect(Collectors.toList()), ","));
-        return "hello";
-    }*//*
+    public ResponseEntity<Page<HibernateUsers>> getUsersSpringData(@ApiIgnore Pageable pageable) {
+        return new ResponseEntity<>( hibernateUsersRepository.findAll(pageable), HttpStatus.OK);
+    }
 
-    *//*GET localhost:8081/tracking/all*//*
-    @RequestMapping(value = "/organizations/all", method = RequestMethod.GET)
+    *//*FindById*//*
+    @ApiOperation(value = "Get user from server by id")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful getting user"),
+            @ApiResponse(code = 400, message = "Invalid User ID supplied"),
+            @ApiResponse(code = 401, message = "Lol kek"),
+            @ApiResponse(code = 404, message = "User was not found"),
+            @ApiResponse(code = 500, message = "Server error, something wrong")
+    })
+    @RequestMapping(value = "/spring-data/getUserById/{id}", method = RequestMethod.GET)
+    public ResponseEntity<HibernateUsers> getHibernateUserByIdRepository(@ApiParam("User Path Id") @PathVariable Long id) {
+        HibernateUsers user = hibernateUsersRepository.findById(id).orElse(null);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    *//*Create *//*
+    @PostMapping("/spring-data/create(converted)")
+    @Transactional
+    public ResponseEntity<HibernateUsers> createConvertedHibernateUser(@RequestBody @Valid UserCreateRequest request) {
+        HibernateUsers savedConvertedUser = hibernateUsersRepository.saveAndFlush(conversionService.convert(request, HibernateUsers.class));
+        hibernateRolesRepository.saveAndFlush(new HibernateRoles("ROLE_USER",savedConvertedUser));
+        return new ResponseEntity<>( hibernateUsersRepository.saveAndFlush(savedConvertedUser), CREATED);
+    }
+
+    *//*Update*//*
+    @ApiOperation(value = "Update user by userID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful user update 1111111"),
+            @ApiResponse(code = 400, message = "Invalid User ID supplied 111111"),
+            @ApiResponse(code = 404, message = "User was not found 111111"),
+            @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
+    })
+    @PutMapping("/spring-data/update(converted)/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String printAllOrganizations(ModelMap model) {
-        model.addAttribute("organizationsreadall",
-               organizationsDao.findAll().stream()
-                        .map(Organizations::toString)
-                        .collect(Collectors.joining(","))
-        );
-        return "hello";
+    public ResponseEntity<HibernateUsers> updateHibernateUserRepository(@RequestBody @Valid UserUpdateRequest request) {
+        return new ResponseEntity<>( hibernateUsersRepository.save(conversionService.convert(request, HibernateUsers.class)), HttpStatus.OK);
+    }
+
+    *//*Delete*//*
+    @DeleteMapping("/spring-data/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Long> deleteHibernateUserRepository(@PathVariable("id") Long userId) {
+        hibernateUsersRepository.deleteById(userId);
+        return new ResponseEntity<>(userId, HttpStatus.OK);
     }*/
 }

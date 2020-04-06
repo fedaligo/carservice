@@ -1,6 +1,6 @@
-package com.htp.controller.convert;
+package com.htp.controller.convert.users;
 
-import com.htp.controller.requests.UserUpdateRequest;
+import com.htp.controller.requests.users.UserUpdateRequest;
 import com.htp.domain.hibernate.HibernateUsers;
 import com.htp.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Component;

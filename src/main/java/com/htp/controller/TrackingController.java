@@ -1,23 +1,28 @@
 package com.htp.controller;
 
-import com.htp.controller.requests.TrackingCreateRequest;
-import com.htp.domain.hibernate.HibernateUsers;
-import com.htp.repository.hibernate.impl.HibernateOrganizationsDaoImpl;
-import com.htp.repository.hibernate.impl.HibernateTasksDaoImpl;
-import com.htp.repository.hibernate.impl.HibernateTrackingDaoImpl;
-import com.htp.repository.jdbc.TrackingDao;
+import com.htp.controller.requests.tracking.TrackingCreateRequest;
+import com.htp.controller.requests.tracking.TrackingUpdateRequest;
 import com.htp.domain.Tracking;
 import com.htp.domain.hibernate.HibernateTracking;
+import com.htp.repository.jdbc.TrackingDao;
+import com.htp.repository.springdata.HibernateTrackingRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @CrossOrigin
@@ -25,134 +30,160 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TrackingController {
 
-        private final TrackingDao trackingDao;
+    private final TrackingDao trackingDao;
 
-        private final HibernateTrackingDaoImpl hibernateTrackingDao;
+    private final HibernateTrackingRepository hibernateTrackingRepository;
 
-        private final HibernateOrganizationsDaoImpl hibernateOrganizationsDao;
+    private final ConversionService conversionService;
 
-        private final HibernateTasksDaoImpl hibernateTasksDao;
+    /*JDBC*/
 
-        @GetMapping("/all")
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<List<Tracking>> getTracking() {
-            return new ResponseEntity<>(trackingDao.findAll(), HttpStatus.OK);
-        }
+    /*FindAll*/
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<Tracking>> getTracking() {
+        return new ResponseEntity<>(trackingDao.findAll(), HttpStatus.OK);
+    }
 
-        @GetMapping("/hibernate/all")
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<List<HibernateTracking>> getHibernateTracking() {
-            return new ResponseEntity<>(hibernateTrackingDao.findAll(), HttpStatus.OK);
-        }
+    /*FindById*/
+    @ApiOperation(value = "Get tracking from server by id")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful getting tracking"),
+            @ApiResponse(code = 400, message = "Invalid Tracking ID supplied"),
+            @ApiResponse(code = 401, message = "Lol kek"),
+            @ApiResponse(code = 404, message = "Tracking was not found"),
+            @ApiResponse(code = 500, message = "Server error, something wrong")
+    })
+    @RequestMapping(value = "/getTrackingById/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Tracking> getTrackingById(@ApiParam("Tracking Path Id") @PathVariable Long id) {
+        Tracking tracking = trackingDao.findById(id);
+        return new ResponseEntity<>(tracking, HttpStatus.OK);
+    }
 
-        @ApiOperation(value = "Get tracking from server by id")
-        @ApiResponses({
-                @ApiResponse(code = 200, message = "Successful getting tracking"),
-                @ApiResponse(code = 400, message = "Invalid Tracking ID supplied"),
-                @ApiResponse(code = 401, message = "Lol kek"),
-                @ApiResponse(code = 404, message = "Tracking was not found"),
-                @ApiResponse(code = 500, message = "Server error, something wrong")
-        })
-        @RequestMapping(value = "/getTrackingById/{id}", method = RequestMethod.GET)
-        public ResponseEntity<Tracking> getTrackingById(@ApiParam("Tracking Path Id") @PathVariable Long id) {
-            Tracking tracking = trackingDao.findById(id);
-            return new ResponseEntity<>(tracking, HttpStatus.OK);
-        }
+    /*Create*/
+    @PostMapping("/create")
+    @Transactional
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Tracking> createTracking(@RequestBody TrackingCreateRequest request) {
+        Tracking t = new Tracking();
+        t.setConfirmDate(new Timestamp(new Date().getTime()));
+        t.setCost(request.getCost());
+        t.setStatus(request.getStatus());
+        t.setIdOrganaizer(request.getId_organaizer());
+        t.setIdTask(request.getId_task());
 
-        @ApiOperation(value = "Get tracking from server by id")
-        @ApiResponses({
-                @ApiResponse(code = 200, message = "Successful getting tracking"),
-                @ApiResponse(code = 400, message = "Invalid Tracking ID supplied"),
-                @ApiResponse(code = 401, message = "Lol kek"),
-                @ApiResponse(code = 404, message = "Tracking was not found"),
-                @ApiResponse(code = 500, message = "Server error, something wrong")
-        })
-        @RequestMapping(value = "/hibernate/getTrackingById/{id}", method = RequestMethod.GET)
-        public ResponseEntity<HibernateTracking> getHibernateTrackingById(@ApiParam("Tracking Path Id") @PathVariable Long id) {
-            HibernateTracking tracking = hibernateTrackingDao.findById(id);
-            return new ResponseEntity<>(tracking, HttpStatus.OK);
-        }
+        Tracking savedTracking = trackingDao.save(t);
 
+        return new ResponseEntity<>(savedTracking, HttpStatus.OK);
+    }
 
-        @PostMapping("/create")
-        @Transactional
-        @ResponseStatus(HttpStatus.CREATED)
-        public ResponseEntity<Tracking> createTracking(@RequestBody TrackingCreateRequest request) {
-            Tracking t = new Tracking();
-            //userID is empty - will be generated by DB
-            t.setConfirmDate(new Timestamp(new Date().getTime()));
-            t.setCost(request.getCost());
-            t.setStatus(request.getStatus());
-            t.setIdOrganaizer(request.getId_organaizer());
-            t.setIdTask(request.getId_task());
-
-            Tracking savedTracking = trackingDao.save(t);
-
-            return new ResponseEntity<>(savedTracking, HttpStatus.OK);
-        }
-
-        @PostMapping("/hibernate/create")
-        @Transactional
-        @ResponseStatus(HttpStatus.CREATED)
-        public ResponseEntity<HibernateTracking> createHibernateUser(@RequestBody TrackingCreateRequest request) {
-            HibernateTracking t = new HibernateTracking();
-            //userID is empty - will be generated by DB
-            t.setConfirm_date(new Timestamp(new Date().getTime()));
-            t.setCost(request.getCost());
-            t.setStatus(request.getStatus());
-            t.setOrganizations(hibernateOrganizationsDao.findById(request.getId_organaizer()));
-            t.setTasks(hibernateTasksDao.findById(request.getId_task()));
-
-            return new ResponseEntity<>(hibernateTrackingDao.save(t), HttpStatus.OK);
-        }
-
-        @ApiOperation(value = "Update Tracking by userID")
-        @ApiResponses({
-                @ApiResponse(code = 200, message = "Successful Tracking update 1111111"),
-                @ApiResponse(code = 400, message = "Invalid Tracking ID supplied 111111"),
-                @ApiResponse(code = 404, message = "Tracking was not found 111111"),
-                @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
-        })
+    /*Update*/
+    @ApiOperation(value = "Update Tracking by ID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful Tracking update"),
+            @ApiResponse(code = 400, message = "Invalid Tracking ID supplied"),
+            @ApiResponse(code = 404, message = "Tracking was not found"),
+            @ApiResponse(code = 500, message = "Server error, something wrong")
+    })
        /* @ApiImplicitParams({
                 @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
         })*/
-        @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<Tracking> updateTracking(@PathVariable("id") Long id,
-                                                @RequestBody TrackingCreateRequest request) {
-            Tracking t = trackingDao.findById(id);
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Tracking> updateTracking(@PathVariable("id") Long id,
+                                                   @RequestBody TrackingCreateRequest request) {
+        Tracking t = trackingDao.findById(id);
 
-            t.setConfirmDate(new Timestamp(new Date().getTime()));
-            t.setCost(request.getCost());
-            t.setStatus(request.getStatus());
-            t.setIdOrganaizer(request.getId_organaizer());
-            t.setIdTask(request.getId_task());
+        t.setConfirmDate(new Timestamp(new Date().getTime()));
+        t.setCost(request.getCost());
+        t.setStatus(request.getStatus());
+        t.setIdOrganaizer(request.getId_organaizer());
+        t.setIdTask(request.getId_task());
 
-            return new ResponseEntity<>(trackingDao.updateOne(t), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(trackingDao.updateOne(t), HttpStatus.OK);
+    }
 
-        @ApiOperation(value = "Update Tracking by userID")
-        @ApiResponses({
-                @ApiResponse(code = 200, message = "Successful Tracking update 1111111"),
-                @ApiResponse(code = 400, message = "Invalid Tracking ID supplied 111111"),
-                @ApiResponse(code = 404, message = "Tracking was not found 111111"),
-                @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
-        })
-        @RequestMapping(value = "/hibernate/update/{id}", method = RequestMethod.PUT)
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<HibernateTracking> updateHibernateTracking(@ApiParam(value = "Tracking ID", required = false) @PathVariable("id") Long id,
-                                                                  @RequestBody TrackingCreateRequest request) {
+    /*Delete*/
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Long> deleteTracking(@PathVariable("id") Long Id) {
+        trackingDao.deleteById(Id);
+        return new ResponseEntity<>(Id, HttpStatus.OK);
+    }
 
-            HibernateTracking t = hibernateTrackingDao.findById(id);
 
-            t.setConfirm_date(new Timestamp(new Date().getTime()));
-            t.setCost(request.getCost());
-            t.setStatus(request.getStatus());
-            t.setOrganizations(hibernateOrganizationsDao.findById(request.getId_organaizer()));
-            t.setTasks(hibernateTasksDao.findById(request.getId_task()));
 
-            return new ResponseEntity<>(hibernateTrackingDao.updateOne(t), HttpStatus.OK);
-        }
+    /*SPRING DATA*/
+
+    /*FindAll*/
+    @GetMapping("/spring-data/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<HibernateTracking>> getHibernatesTrackingRepository() {
+        return new ResponseEntity<>(hibernateTrackingRepository.findAll(), HttpStatus.OK);
+    }
+
+    /*FindAll(pageable)*/
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
+                    value = "Results page you want to retrieve (0..N)"),
+            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
+                    value = "Number of records per page."),
+            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
+                    value = "Sorting criteria in the format: property(,asc|desc). " +
+                            "Default sort order is ascending. " +
+                            "Multiple sort criteria are supported.")
+    })
+    @GetMapping("/spring-data/all(pageable)")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Page<HibernateTracking>> getTrackingSpringData(@ApiIgnore Pageable pageable) {
+        return new ResponseEntity<>(hibernateTrackingRepository.findAll(pageable), HttpStatus.OK);
+    }
+
+    /*FindById*/
+    @ApiOperation(value = "Get from server by id")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful getting Tracking"),
+            @ApiResponse(code = 400, message = "Invalid Tracking ID supplied"),
+            @ApiResponse(code = 401, message = "Lol kek"),
+            @ApiResponse(code = 404, message = "Tracking was not found"),
+            @ApiResponse(code = 500, message = "Server error, something wrong")
+    })
+    @RequestMapping(value = "/spring-data/getTrackingById/{id}", method = RequestMethod.GET)
+    public ResponseEntity<HibernateTracking> getHibernateTrackingByIdRepository(@ApiParam("Path Id") @PathVariable Long id) {
+        HibernateTracking t = hibernateTrackingRepository.findById(id).orElse(null);
+        return new ResponseEntity<>(t, HttpStatus.OK);
+    }
+
+    /*Create */
+    @PostMapping("/spring-data/create(converted)")
+    @Transactional
+    public ResponseEntity<HibernateTracking> createConvertedHibernateTracking(@RequestBody @Valid TrackingCreateRequest request) {
+        HibernateTracking savedConvertedTracking = conversionService.convert(request, HibernateTracking.class);
+        return new ResponseEntity<>(hibernateTrackingRepository.saveAndFlush(savedConvertedTracking), CREATED);
+    }
+
+    /*Update*/
+    @ApiOperation(value = "Update Tracking by ID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful Tracking update"),
+            @ApiResponse(code = 400, message = "Invalid Tracking ID supplied"),
+            @ApiResponse(code = 404, message = "Tracking was not found"),
+            @ApiResponse(code = 500, message = "Server error, something wrong")
+    })
+    @PutMapping("/spring-data/update(converted)/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<HibernateTracking> updateHibernateTrackingRepository(@RequestBody @Valid TrackingUpdateRequest request) {
+        return new ResponseEntity<>(hibernateTrackingRepository.save(conversionService.convert(request, HibernateTracking.class)), HttpStatus.OK);
+    }
+
+    /*Delete*/
+    @DeleteMapping("/spring-data/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Long> deleteHibernateTrackingRepository(@PathVariable("id") Long id) {
+        hibernateTrackingRepository.deleteById(id);
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
+
 
     /*@ApiOperation(value = "Search user by query")
     @ApiResponses({
@@ -176,58 +207,5 @@ public class TrackingController {
                                                     search.getOffset()
                                                     );
         return new ResponseEntity<>(searchResult, HttpStatus.OK);
-    }*/
-
-        @DeleteMapping("/delete/{id}")
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<Long> deleteTracking(@PathVariable("id") Long Id) {
-            trackingDao.deleteById(Id);
-            return new ResponseEntity<>(Id, HttpStatus.OK);
-        }
-
-       /* @DeleteMapping("/hibernate/delete/{id}")
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<Long> deleteHibernateTracking(@PathVariable("id") Long Id) {
-            hibernateTrackingDao.deleteById(Id);
-            return new ResponseEntity<>(Id, HttpStatus.OK);
-        }*/
-
-    
-
-
-
-
-
-
-   /* PREVIOUS VARIANT
-
-
-
-   private final TrackingDao trackingDao;
-
-    public TrackingController(TrackingDao trackingDao) {
-        this.trackingDao = trackingDao;
-    }
-
-    //http://localhost:8081/tracking/search?cost=100
-    @RequestMapping(value = "/tracking/search", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public String printTrackingByCost(@RequestParam("cost") Long query, ModelMap model) {
-        List<Tracking> search = trackingDao.trackingByHigherCost(query);
-        model.addAttribute("bycost",
-                StringUtils.join(search.stream().map(Tracking::toString).collect(Collectors.toList()), ","));
-        return "hello";
-    }
-
-    *//*GET localhost:8081/tracking/all*//*
-    @RequestMapping(value = "/tracking/all", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public String printAllTracking(ModelMap model) {
-        model.addAttribute("trackingreadall",
-                trackingDao.findAll().stream()
-                        .map(Tracking::toString)
-                        .collect(Collectors.joining(","))
-        );
-        return "hello";
     }*/
 }
