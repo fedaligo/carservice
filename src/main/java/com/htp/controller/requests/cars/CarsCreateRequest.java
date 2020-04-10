@@ -1,11 +1,9 @@
 package com.htp.controller.requests.cars;
 
-import com.htp.domain.hibernate.HibernateUsers;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -35,8 +33,8 @@ public class CarsCreateRequest {
         @Size(min = 3, max = 10)
         private String typeOfFuel;
 
-        @NotNull
-        @NotEmpty
+        /*@NotNull
+        @NotEmpty*/
         //@Size(min = 3, max = 10)
         private Long user_id;
 
@@ -45,8 +43,8 @@ public class CarsCreateRequest {
         @Size(min = 5, max = 17)
         private String vinNumber;
 
-        @NotNull
-        @NotEmpty
+       /* @NotNull
+        @NotEmpty*/
         //@Size(min = 11, max = 11)
         private Long carWeight;
 }

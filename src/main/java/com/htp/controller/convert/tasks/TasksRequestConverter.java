@@ -7,10 +7,11 @@ import com.htp.domain.hibernate.HibernateTasks;
 import java.sql.Timestamp;
 import java.util.Date;
 
+
 public abstract class TasksRequestConverter<S, T> extends EntityConverter<S, T> {
     protected HibernateTasks doConvert(HibernateTasks t, TasksCreateRequest request) {
 
-        //HibernateCarsDao hibernateCarsDao = null;
+        //HibernateCarsDao hibernateCarsDao;
 
         t.setServiceWorkName(request.getServiceWorkName());
         t.setNecessityOfEvacuation(request.getNecessityOfEvacuation());

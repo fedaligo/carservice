@@ -24,8 +24,8 @@ public class OrganizationsCreateRequest {
     @Size(min = 1, max = 30)
     private String webSite;
 
-    @NotNull
-    @NotEmpty
+   /* @NotNull
+    @NotEmpty*/
     //@Size(min = 11, max = 11)
     private Long phoneNumber;
 

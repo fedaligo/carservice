@@ -1,22 +1,26 @@
 package com.htp.controller;
 
 import com.htp.controller.requests.cars.CarsCreateRequest;
+import com.htp.controller.requests.cars.CarsUpdateRequest;
 import com.htp.domain.Cars;
 import com.htp.domain.hibernate.HibernateCars;
-import com.htp.repository.hibernate.impl.HibernateCarsDaoImpl;
-import com.htp.repository.hibernate.impl.HibernateUsersDaoImpl;
 import com.htp.repository.jdbc.CarsDao;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import com.htp.repository.springdata.HibernateCarsRepository;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @CrossOrigin
@@ -24,154 +28,100 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CarsController {
 
-        private final CarsDao carsDao;
+    private final CarsDao carsDao;
 
-        private final HibernateCarsDaoImpl hibernateCarsDao;
+    private final ConversionService conversionService;
 
-        private final HibernateUsersDaoImpl hibernateUsersDao;
+    private final HibernateCarsRepository hibernateCarsRepository;
 
-        @GetMapping("/all")
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<List<Cars>> getCars() {
-            return new ResponseEntity<>(carsDao.findAll(), HttpStatus.OK);
-        }
+    /*JDBC*/
 
-        @GetMapping("/hibernate/all")
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<List<HibernateCars>> getHibernateCars() {
-            return new ResponseEntity<>(hibernateCarsDao.findAll(), HttpStatus.OK);
-        }
+    /*FindAll*/
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<Cars>> getCars() {
+        return new ResponseEntity<>(carsDao.findAll(), HttpStatus.OK);
+    }
 
-        @ApiOperation(value = "Get Cars from server by id")
-        @ApiResponses({
-                @ApiResponse(code = 200, message = "Successful getting Cars"),
-                @ApiResponse(code = 400, message = "Invalid Cars ID supplied"),
-                @ApiResponse(code = 401, message = "Lol kek"),
-                @ApiResponse(code = 404, message = "Cars was not found"),
-                @ApiResponse(code = 500, message = "Server error, something wrong")
-        })
-        @RequestMapping(value = "/getCarsById/{id}", method = RequestMethod.GET)
-        public ResponseEntity<Cars> getCarById(@ApiParam("Car Path Id") @PathVariable Long id) {
-            Cars cars = carsDao.findById(id);
-            return new ResponseEntity<>(cars, HttpStatus.OK);
-        }
+    /*FindById*/
+    @ApiOperation(value = "Get Cars from server by id")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful getting Cars"),
+            @ApiResponse(code = 400, message = "Invalid Cars ID supplied"),
+            @ApiResponse(code = 401, message = "Lol kek"),
+            @ApiResponse(code = 404, message = "Cars was not found"),
+            @ApiResponse(code = 500, message = "Server error, something wrong")
+    })
+    @RequestMapping(value = "/getCarsById/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Cars> getCarById(@ApiParam("Car Path Id") @PathVariable Long id) {
+        Cars cars = carsDao.findById(id);
+        return new ResponseEntity<>(cars, HttpStatus.OK);
+    }
 
-        @ApiOperation(value = "Get Cars from server by id")
-        @ApiResponses({
-                @ApiResponse(code = 200, message = "Successful getting Cars"),
-                @ApiResponse(code = 400, message = "Invalid Cars ID supplied"),
-                @ApiResponse(code = 401, message = "Lol kek"),
-                @ApiResponse(code = 404, message = "Cars was not found"),
-                @ApiResponse(code = 500, message = "Server error, something wrong")
-        })
-        @RequestMapping(value = "/hibernate/getCarById/{id}", method = RequestMethod.GET)
-        public ResponseEntity<HibernateCars> getHibernateCarById(@ApiParam("Car Path Id") @PathVariable Long id) {
-            HibernateCars cars = hibernateCarsDao.findById(id);
-            return new ResponseEntity<>(cars, HttpStatus.OK);
-        }
+    /*Create*/
+    @PostMapping("/create")
+    @Transactional
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Cars> createCar(@RequestBody CarsCreateRequest request) {
+        Cars t = new Cars();
+        t.setCarBrand(request.getCarBrand());
+        t.setBrandModel(request.getBrandModel());
+        t.setTypeOfTransmission(request.getTypeOfTransmission());
+        t.setTypeOfFuel(request.getTypeOfFuel());
+        t.setCarWeight(request.getCarWeight());
+        t.setVinNumber(request.getVinNumber());
+        t.setUserId(request.getUser_id());
 
+        Cars savedCar = carsDao.save(t);
 
-        @PostMapping("/create")
-        @Transactional
-        @ResponseStatus(HttpStatus.CREATED)
-        public ResponseEntity<Cars> createCar(@RequestBody CarsCreateRequest request) {
-            Cars t = new Cars();
-            t.setCarBrand(request.getCarBrand());
-            t.setBrandModel(request.getBrandModel());
-            t.setTypeOfTransmission(request.getTypeOfTransmission());
-            t.setTypeOfFuel(request.getTypeOfFuel());
-            t.setCarWeight(request.getCarWeight());
-            t.setVinNumber(request.getVinNumber());
-            t.setUserId(request.getUser_id());
+        return new ResponseEntity<>(savedCar, HttpStatus.OK);
+    }
 
-            Cars savedCar = carsDao.save(t);
-
-            return new ResponseEntity<>(savedCar, HttpStatus.OK);
-        }
-
-        @PostMapping("/hibernate/create")
-        @Transactional
-        @ResponseStatus(HttpStatus.CREATED)
-        public ResponseEntity<HibernateCars> createHibernateCars(@RequestBody CarsCreateRequest request) {
-            HibernateCars t = new HibernateCars();
-            t.setCarBrand(request.getCarBrand());
-            t.setBrandModel(request.getBrandModel());
-            t.setTypeOfTransmission(request.getTypeOfTransmission());
-            t.setTypeOfFuel(request.getTypeOfFuel());
-            t.setCarWeight(request.getCarWeight());
-            t.setVinNumber(request.getVinNumber());
-            t.setUser(hibernateUsersDao.findById(request.getUser_id()));
-
-            return new ResponseEntity<>(hibernateCarsDao.save(t), HttpStatus.OK);
-        }
-
-        @ApiOperation(value = "Update Cars by userID")
-        @ApiResponses({
-                @ApiResponse(code = 200, message = "Successful Cars update 1111111"),
-                @ApiResponse(code = 400, message = "Invalid Cars ID supplied 111111"),
-                @ApiResponse(code = 404, message = "Cars was not found 111111"),
-                @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
-        })
+    /*Update*/
+    @ApiOperation(value = "Update Cars by userID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful Cars update 1111111"),
+            @ApiResponse(code = 400, message = "Invalid Cars ID supplied 111111"),
+            @ApiResponse(code = 404, message = "Cars was not found 111111"),
+            @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
+    })
         /*@ApiImplicitParams({
                 @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
         })*/
-        @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<Cars> updateCars(@PathVariable("id") Long id,
-                                                @RequestBody CarsCreateRequest request) {
-            Cars t = carsDao.findById(id);
-            t.setCarBrand(request.getCarBrand());
-            t.setBrandModel(request.getBrandModel());
-            t.setTypeOfTransmission(request.getTypeOfTransmission());
-            t.setTypeOfFuel(request.getTypeOfFuel());
-            t.setCarWeight(request.getCarWeight());
-            t.setVinNumber(request.getVinNumber());
-            t.setUserId(request.getUser_id());
-
-            return new ResponseEntity<>(carsDao.updateOne(t), HttpStatus.OK);
-        }
-
-        @ApiOperation(value = "Update Cars by userID")
-        @ApiResponses({
-                @ApiResponse(code = 200, message = "Successful Cars update 1111111"),
-                @ApiResponse(code = 400, message = "Invalid Cars ID supplied 111111"),
-                @ApiResponse(code = 404, message = "Cars was not found 111111"),
-                @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
-        })
-        @RequestMapping(value = "/hibernate/update/{id}", method = RequestMethod.PUT)
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<HibernateCars> updateHibernateCar(@ApiParam(value = "Car ID", required = false) @PathVariable("id") Long id,
-                                                                  @RequestBody CarsCreateRequest request) {
-
-            HibernateCars t = hibernateCarsDao.findById(id);
-            t.setCarBrand(request.getCarBrand());
-            t.setBrandModel(request.getBrandModel());
-            t.setTypeOfTransmission(request.getTypeOfTransmission());
-            t.setTypeOfFuel(request.getTypeOfFuel());
-            t.setCarWeight(request.getCarWeight());
-            t.setVinNumber(request.getVinNumber());
-            t.setUser(hibernateUsersDao.findById(request.getUser_id()));
-
-            return new ResponseEntity<>(hibernateCarsDao.updateOne(t), HttpStatus.OK);
-        }
-
-        @DeleteMapping("/delete/{id}")
-        @ResponseStatus(HttpStatus.OK)
-        public ResponseEntity<Long> deleteCar(@PathVariable("id") Long id) {
-            carsDao.deleteById(id);
-            return new ResponseEntity<>(id, HttpStatus.OK);
-        }
-
-    /*SPRING DATA*//*
-
-    *//*FindAll*//*
-    @GetMapping("/spring-data/all")
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<HibernateUsers>> getHibernatesUsersRepository() {
-        return new ResponseEntity<>( hibernateUsersRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<Cars> updateCars(@PathVariable("id") Long id,
+                                           @RequestBody CarsCreateRequest request) {
+        Cars t = carsDao.findById(id);
+        t.setCarBrand(request.getCarBrand());
+        t.setBrandModel(request.getBrandModel());
+        t.setTypeOfTransmission(request.getTypeOfTransmission());
+        t.setTypeOfFuel(request.getTypeOfFuel());
+        t.setCarWeight(request.getCarWeight());
+        t.setVinNumber(request.getVinNumber());
+        t.setUserId(request.getUser_id());
+
+        return new ResponseEntity<>(carsDao.updateOne(t), HttpStatus.OK);
     }
 
-    *//*FindAll(pageable)*//*
+    /*Delete*/
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Long> deleteCar(@PathVariable("id") Long id) {
+        carsDao.deleteById(id);
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
+
+    /*SPRING DATA*/
+
+    /*FindAll*/
+    @GetMapping("/spring-data/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<HibernateCars>> getHibernatesCarsRepository() {
+        return new ResponseEntity<>(hibernateCarsRepository.findAll(), HttpStatus.OK);
+    }
+
+    /*FindAll(pageable)*/
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
                     value = "Results page you want to retrieve (0..N)"),
@@ -184,53 +134,52 @@ public class CarsController {
     })
     @GetMapping("/spring-data/all(pageable)")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<HibernateUsers>> getUsersSpringData(@ApiIgnore Pageable pageable) {
-        return new ResponseEntity<>( hibernateUsersRepository.findAll(pageable), HttpStatus.OK);
+    public ResponseEntity<Page<HibernateCars>> getCarsSpringData(@ApiIgnore Pageable pageable) {
+        return new ResponseEntity<>(hibernateCarsRepository.findAll(pageable), HttpStatus.OK);
     }
 
-    *//*FindById*//*
-    @ApiOperation(value = "Get user from server by id")
+    /*FindById*/
+    @ApiOperation(value = "Get from server by id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful getting user"),
-            @ApiResponse(code = 400, message = "Invalid User ID supplied"),
+            @ApiResponse(code = 200, message = "Successful getting Cars"),
+            @ApiResponse(code = 400, message = "Invalid Cars ID supplied"),
             @ApiResponse(code = 401, message = "Lol kek"),
-            @ApiResponse(code = 404, message = "User was not found"),
+            @ApiResponse(code = 404, message = "Cars was not found"),
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
-    @RequestMapping(value = "/spring-data/getUserById/{id}", method = RequestMethod.GET)
-    public ResponseEntity<HibernateUsers> getHibernateUserByIdRepository(@ApiParam("User Path Id") @PathVariable Long id) {
-        HibernateUsers user = hibernateUsersRepository.findById(id).orElse(null);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    @RequestMapping(value = "/spring-data/getCarsById/{id}", method = RequestMethod.GET)
+    public ResponseEntity<HibernateCars> getHibernateCarsByIdRepository(@ApiParam("Path Id") @PathVariable Long id) {
+        HibernateCars t = hibernateCarsRepository.findById(id).orElse(null);
+        return new ResponseEntity<>(t, HttpStatus.OK);
     }
 
-    *//*Create *//*
+    /*Create */
     @PostMapping("/spring-data/create(converted)")
     @Transactional
-    public ResponseEntity<HibernateUsers> createConvertedHibernateUser(@RequestBody @Valid UserCreateRequest request) {
-        HibernateUsers savedConvertedUser = hibernateUsersRepository.saveAndFlush(conversionService.convert(request, HibernateUsers.class));
-        hibernateRolesRepository.saveAndFlush(new HibernateRoles("ROLE_USER",savedConvertedUser));
-        return new ResponseEntity<>( hibernateUsersRepository.saveAndFlush(savedConvertedUser), CREATED);
+    public ResponseEntity<HibernateCars> createConvertedHibernateCars(@RequestBody @Valid CarsCreateRequest request) {
+        //HibernateTasks savedConvertedTasks = conversionService.convert(request, HibernateTasks.class);
+        return new ResponseEntity<>(hibernateCarsRepository.saveAndFlush(conversionService.convert(request, HibernateCars.class)), CREATED);
     }
 
-    *//*Update*//*
-    @ApiOperation(value = "Update user by userID")
+    /*Update*/
+    @ApiOperation(value = "Update Cars by ID")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful user update 1111111"),
-            @ApiResponse(code = 400, message = "Invalid User ID supplied 111111"),
-            @ApiResponse(code = 404, message = "User was not found 111111"),
-            @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
+            @ApiResponse(code = 200, message = "Successful Cars update"),
+            @ApiResponse(code = 400, message = "Invalid Cars ID supplied"),
+            @ApiResponse(code = 404, message = "Cars was not found"),
+            @ApiResponse(code = 500, message = "Server error, something wrong")
     })
     @PutMapping("/spring-data/update(converted)/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<HibernateUsers> updateHibernateUserRepository(@RequestBody @Valid UserUpdateRequest request) {
-        return new ResponseEntity<>( hibernateUsersRepository.save(conversionService.convert(request, HibernateUsers.class)), HttpStatus.OK);
+    public ResponseEntity<HibernateCars> updateHibernateCarsRepository(@RequestBody @Valid CarsUpdateRequest request) {
+        return new ResponseEntity<>(hibernateCarsRepository.save(conversionService.convert(request, HibernateCars.class)), HttpStatus.OK);
     }
 
-    *//*Delete*//*
+    /*Delete*/
     @DeleteMapping("/spring-data/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Long> deleteHibernateUserRepository(@PathVariable("id") Long userId) {
-        hibernateUsersRepository.deleteById(userId);
-        return new ResponseEntity<>(userId, HttpStatus.OK);
-    }*/
+    public ResponseEntity<Long> deleteHibernateCarsRepository(@PathVariable("id") Long id) {
+        hibernateCarsRepository.deleteById(id);
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
 }
