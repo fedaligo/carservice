@@ -21,13 +21,15 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .apiInfo(apiEndPointsInfo());
     }
 
     private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder().title("Spring Boot REST API")
-                .description("HTP Test REST API")
-                .contact(new Contact("Igor Fedonenkov", "www.htp.com", "fedaligo@mail.ru"))
+        return new ApiInfoBuilder().title("CARSERVICE.BY")//Spring Boot REST API
+                .description("HTP REST API project for IT-ACADEMY")
+                .contact(new Contact("Igor Fedonenkov", "https://www.facebook.com/profile.php?id=100016753080753&ref=bookmarks",
+                        "fedaligo@mail.ru"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
                 .version("1.0.0")

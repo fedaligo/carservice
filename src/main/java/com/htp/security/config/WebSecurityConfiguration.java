@@ -1,5 +1,7 @@
 package com.htp.security.config;
 
+import com.htp.security.filter.AuthenticationTokenFilter;
+import com.htp.security.util.TokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,11 +27,20 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
 
+    private final TokenUtils tokenUtils;
+
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
                 .userDetailsService(userDetailsService);
         //authenticationManagerBuilder.inMemoryAuthentication().withUser("admin1").password("{noop}admin").roles("ADMIN");
+    }
+
+    @Bean
+    public AuthenticationTokenFilter authenticationTokenFilterBean(AuthenticationManager authenticationManager) throws Exception{
+        AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(tokenUtils, userDetailsService);
+        authenticationTokenFilter.setAuthenticationManager(authenticationManager);
+        return authenticationTokenFilter;
     }
 
     @Bean
@@ -59,9 +71,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/registration/**").permitAll()
                 .antMatchers("/authentication/**").permitAll()
                 //.antMatchers("/rest/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/rest/**").hasRole("USER")
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/rest/**").permitAll()//.hasRole("USER")
+                .antMatchers("/admin/**").permitAll()//.hasRole("ADMIN")
                 .anyRequest().authenticated();
+
+                //Custom JWT based authentication
+        httpSecurity.addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

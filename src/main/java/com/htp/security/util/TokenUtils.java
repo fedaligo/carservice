@@ -21,34 +21,7 @@ public class TokenUtils {
 
     public static final String CREATE_VALUE = "created";
     public static final String ROLES = "roles";
-
     private final JwtTokenConfig jwtTokenConfig;
-
-    public String getUsernameFromToken(String token){
-        return getClaimsFromToken(token).getSubject();
-    }
-
-    public Date getCreatedDateFromToken(String token){
-        return (Date)getClaimsFromToken(token).get(CREATE_VALUE);
-    }
-
-    public Date getExpirationDateFromToken(String token){
-        return getClaimsFromToken(token).getExpiration();
-    }
-
-    private Claims getClaimsFromToken(String token){
-        Claims claims;
-        try{
-            claims = Jwts
-                    .parser()
-                    .setSigningKey(jwtTokenConfig.getSecret())
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (Exception e){
-            claims = null;
-        }
-        return claims;
-    }
 
     private Date generateCurrentDate(){
         return new Date();
@@ -115,9 +88,33 @@ public class TokenUtils {
 
     public Boolean validateToken(String token, UserDetails userDetails){
         final String username = getUsernameFromToken(token);
-
         return username.equals(userDetails.getUsername());
+    }
 
+    public String getUsernameFromToken(String token){
+        return getClaimsFromToken(token).getSubject();
+    }
+
+    public Date getCreatedDateFromToken(String token){
+        return (Date)getClaimsFromToken(token).get(CREATE_VALUE);
+    }
+
+    public Date getExpirationDateFromToken(String token){
+        return getClaimsFromToken(token).getExpiration();
+    }
+
+    private Claims getClaimsFromToken(String token){
+        Claims claims;
+        try{
+            claims = Jwts
+                    .parser()
+                    .setSigningKey(jwtTokenConfig.getSecret())
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e){
+            claims = null;
+        }
+        return claims;
     }
 
 }

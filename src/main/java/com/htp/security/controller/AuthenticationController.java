@@ -1,5 +1,6 @@
 package com.htp.security.controller;
 
+import com.htp.repository.springdata.HibernateUsersRepository;
 import com.htp.security.model.AuthResponse;
 import com.htp.security.model.AuthenticationRequest;
 import com.htp.security.util.TokenUtils;
@@ -27,7 +28,7 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
 
-    //private final UserRepository userRepository;
+    private final HibernateUsersRepository userRepository;
 
     private final TokenUtils tokenUtils;
 
@@ -51,6 +52,8 @@ public class AuthenticationController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authenticate);
+
+        //final String token = tokenUtils.generateToken(userRepository.findByLogin(request.getUsername()));
 
         /*Generate token with answer to user*/
         return ResponseEntity.ok(

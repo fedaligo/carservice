@@ -7,12 +7,15 @@ import com.htp.domain.Roles;
 import com.htp.domain.Users;
 import com.htp.domain.hibernate.HibernateRoles;
 import com.htp.domain.hibernate.HibernateUsers;
+import com.htp.exceptions.EntityNotFoundException;
 import com.htp.repository.jdbc.RolesDao;
 import com.htp.repository.jdbc.UsersDao;
 import com.htp.repository.springdata.HibernateRolesRepository;
 import com.htp.repository.springdata.HibernateUsersRepository;
+import com.htp.security.util.PrincipalUtil;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,13 +26,14 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-
+@Slf4j
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/rest/users")
@@ -48,15 +52,35 @@ public class UsersController {
 
     private final RolesDao rolesDao;
 
-    @GetMapping
+    @GetMapping(value = "/test/{id}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<HibernateUsers> getHibernateUserByIdRepository123(@ApiParam("User Path Id") @PathVariable Long id) {
-        HibernateUsers user = hibernateUsersRepository.findById(id).orElse(null);
+    public ResponseEntity<HibernateUsers> getHibernateUserByIdRepository123(@ApiParam("User Path Id") @PathVariable String id,
+                                                                            @ApiIgnore Principal principal) {
+        String username = PrincipalUtil.getUsername(principal);
+        HibernateUsers performer = hibernateUsersRepository.findByLogin(username).orElseThrow(() -> new EntityNotFoundException(HibernateUsers.class, username));
+        HibernateUsers user = hibernateUsersRepository.findById(Long.valueOf(id)).orElseThrow(() -> new EntityNotFoundException(HibernateUsers.class, id));
+
+        log.info("Performer with username {} find by id {} user with login {}", performer.getLogin(), id, user.getLogin());
+
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    /*@ApiOperation(value = "Get user from server by id")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful getting user"),
+            @ApiResponse(code = 400, message = "Invalid User ID supplied"),
+            @ApiResponse(code = 401, message = "Lol kek"),
+            @ApiResponse(code = 404, message = "User was not found"),
+            @ApiResponse(code = 500, message = "Server error, something wrong")
+    })
+    @RequestMapping(value = "/spring-data/getUserById/{id}", method = RequestMethod.GET)
+    public ResponseEntity<HibernateUsers> getHibernateUserByIdRepository(@ApiParam("User Path Id") @PathVariable Long id) {
+        HibernateUsers user = hibernateUsersRepository.findById(id).orElse(null);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }*/
 
     /*JDBC*/
 

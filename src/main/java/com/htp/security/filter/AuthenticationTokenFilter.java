@@ -3,7 +3,6 @@ package com.htp.security.filter;
 import com.htp.security.ApplicationHeaders;
 import com.htp.security.util.TokenUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +25,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
     private final UserDetailsService userDetailsService;
 
-    private final AuthenticationManager authenticationManager;
+    //private final AuthenticationManager authenticationManager;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -34,16 +33,19 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String authToken = httpRequest.getHeader(ApplicationHeaders.AUTH_TOKEN);
-        String username = tokenUtils.getUsernameFromToken(authToken);
 
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if(tokenUtils.validateToken(authToken, userDetails)){
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null,
-                                userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+        if(authToken != null) {
+            String username = tokenUtils.getUsernameFromToken(authToken);
+
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                if (tokenUtils.validateToken(authToken, userDetails)) {
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(userDetails, null,
+                                    userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         }
         chain.doFilter(request,response);
