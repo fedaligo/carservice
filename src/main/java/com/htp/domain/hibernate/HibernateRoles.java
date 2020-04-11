@@ -5,7 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+//@Data
 @Setter
 @Getter
 @RequiredArgsConstructor
@@ -23,10 +23,15 @@ public class HibernateRoles {
         @Column
         private String name_of_role;
 
-        @OneToOne(fetch = FetchType.EAGER)
+        /*@OneToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "user_id")
         @JsonBackReference
         //@MapsId
+        private HibernateUsers user_role;*/
+
+        @JsonBackReference
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "user_id")
         private HibernateUsers user_role;
 
         public HibernateRoles(String role_user, HibernateUsers userId) {

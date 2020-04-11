@@ -13,7 +13,7 @@ import static javax.persistence.EnumType.STRING;
 
 //import org.springframework.context.annotation.Configuration;
 
-@Data
+//@Data
 @Setter
 @Getter
 @RequiredArgsConstructor
@@ -56,9 +56,13 @@ public class HibernateUsers {
     @Column
     private Gender gender = Gender.NOT_SELECTED;
 
-    @JsonManagedReference
+   /* @JsonManagedReference
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user_role")
-    private HibernateRoles role;
+    private HibernateRoles role;*/
+
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user_role")
+    private Set<HibernateRoles> role = Collections.emptySet();
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")

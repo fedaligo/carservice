@@ -9,3 +9,6 @@ app:
   login: test
   token: test
   password: test
+tokenset:
+  secret: secret
+  expire: 1000000

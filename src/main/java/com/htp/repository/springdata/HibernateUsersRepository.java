@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 //@Repository
 public interface HibernateUsersRepository extends CrudRepository<HibernateUsers, Long>, JpaRepository<HibernateUsers,Long> {
@@ -15,6 +16,8 @@ public interface HibernateUsersRepository extends CrudRepository<HibernateUsers,
 
     @Query("select hu from HibernateUsers hu ")
     List<HibernateUsers> test();
+
+    Optional<HibernateUsers> findByLogin(String login);
 
    /* @Query("select u.birthDate from TestUser u where u.login like %:lowerId%")
     List<Timestamp> qweqweqweqw3(@Param("lowerId") String qweqwe);*/

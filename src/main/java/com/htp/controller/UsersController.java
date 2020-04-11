@@ -48,6 +48,16 @@ public class UsersController {
 
     private final RolesDao rolesDao;
 
+    @GetMapping
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<HibernateUsers> getHibernateUserByIdRepository123(@ApiParam("User Path Id") @PathVariable Long id) {
+        HibernateUsers user = hibernateUsersRepository.findById(id).orElse(null);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
     /*JDBC*/
 
     /*FindAll*/
