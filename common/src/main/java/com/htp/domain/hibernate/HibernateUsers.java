@@ -1,5 +1,6 @@
 package com.htp.domain.hibernate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.htp.domain.Gender;
 import lombok.*;
@@ -34,6 +35,7 @@ public class HibernateUsers {
     @Column
     private String login;
 
+    @JsonIgnore
     @Column
     private String password;
 
@@ -43,12 +45,15 @@ public class HibernateUsers {
     @Column(name = "changed")
     private Timestamp changed;
 
+    @JsonIgnore
     @Column
     private Boolean is_deleted;
 
+    @JsonIgnore
     @Column
     private String e_mail;
 
+    @JsonIgnore
     @Column
     private Long phone_number_user;
 

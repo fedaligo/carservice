@@ -1,7 +1,7 @@
 spring:
   flyway:
     ignore-missing-migrations: true
-    locations: classpath:/db/migrations
+    locations: classpath:migrations
     baseline-on-migrate: true
     baseline-description: Flyway Scripts
 datasource:
