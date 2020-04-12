@@ -1,3 +1,9 @@
+spring:
+  flyway:
+    ignore-missing-migrations: true
+    locations: classpath:/db/migrations
+    baseline-on-migrate: true
+    baseline-description: Flyway Scripts
 datasource:
   driverName: org.postgresql.Driver
   url: jdbc:postgresql://localhost:5432/car_service_database

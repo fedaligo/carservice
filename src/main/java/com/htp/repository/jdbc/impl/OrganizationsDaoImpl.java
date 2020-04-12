@@ -57,7 +57,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     public void create(Organizations entity) {
 
         String sql = "INSERT INTO m_organization " +
-                "(id, name, web_site, phone_number, location, working_time, specialize, e_mail) " +
+                "(id, login, web_site, phone_number, location, working_time, specialize, e_mail) " +
                 "VALUES (:id, :name, :web_site, :phone_number, :location, :working_time, :specialize, :e_mail)";
 
         jdbcTemplate.update(sql, new Object[] { entity.getId(), entity.getName(), entity.getWebSite(), entity.getPhoneNumber(),
@@ -86,7 +86,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public List<Organizations> update(Organizations entity) {
-        final String sql = "UPDATE m_organization set name = :name, web_site = :web_site, " +
+        final String sql = "UPDATE m_organization set login = :name, web_site = :web_site, " +
                 "phone_number = :phone_number, location = :location, working_time = :working_time, specialize = :specialize, " +
                 "e_mail = :e_mail  where id = :id";
 
@@ -116,7 +116,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT)
     public Organizations save(Organizations entity) {
-        final String sql = "INSERT INTO m_organization (name, web_site, phone_number, location, working_time, specialize, e_mail) " +
+        final String sql = "INSERT INTO m_organization (login, web_site, phone_number, location, working_time, specialize, e_mail) " +
                 "VALUES (:name, :web_site, :phone_number, :location, :working_time, :specialize, :e_mail)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -141,7 +141,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Organizations updateOne(Organizations entity) {
-        final String sql = "UPDATE m_organization set name = :name, web_site = :web_site, " +
+        final String sql = "UPDATE m_organization set login = :name, web_site = :web_site, " +
                 "phone_number = :phone_number, location = :location, working_time = :working_time, specialize = :specialize, " +
                 "e_mail = :e_mail  where id = :id";
 

@@ -22,7 +22,7 @@ public class HibernateOrganizations {
         @Column(name = "id")
         private Long Id;
 
-        @Column
+        @Column(name = "login")
         private String name;
 
         @Column(name = "web_site")
