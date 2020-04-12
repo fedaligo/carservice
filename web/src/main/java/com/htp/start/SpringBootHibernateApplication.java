@@ -1,5 +1,6 @@
 package com.htp.start;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.htp.config.core.DBConfig;
 import com.htp.config.core.JDBCTemplateConfig;
 import com.htp.config.swagger.SwaggerConfig;
@@ -10,6 +11,9 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
@@ -24,11 +28,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.sql.DataSource;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 @EnableSwagger2
 @EnableAspectJAutoProxy
 @EnableJpaRepositories({"com.htp.repository"})
 @EntityScan
+@EnableCaching
 @EnableTransactionManagement(proxyTargetClass = true)
 @SpringBootApplication(scanBasePackages = {"com.htp"},
         exclude = {
@@ -47,26 +53,6 @@ public class SpringBootHibernateApplication extends SpringBootServletInitializer
         SpringApplication.run(SpringBootHibernateApplication.class, args);
     }
 
-    /*@Autowired
-    @Bean(name = "sessionFactory")
-    public SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
-        // Fix Postgres JPA Error:
-        // Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
-        // properties.put("hibernate.temp.use_jdbc_metadata_defaults",false);
-
-        LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
-
-        // Package contain entity classes
-        factoryBean.setPackagesToScan("com.htp");
-        factoryBean.setDataSource(dataSource);
-        factoryBean.setHibernateProperties(getAdditionalProperties());
-        factoryBean.afterPropertiesSet();
-        //
-        SessionFactory sf = factoryBean.getObject();
-        System.out.println("## getSessionFactory: " + sf);
-        return sf;
-    }*/
-
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em
@@ -81,14 +67,25 @@ public class SpringBootHibernateApplication extends SpringBootServletInitializer
         return em;
     }
 
-   /* @Bean(name = "entityManager")
-    public EntityManager getEntityManager(EntityManagerFactory entityManagerFactory) {
-        return entityManagerFactory.createEntityManager();
-    }*/
-
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CacheManager cacheManager(){
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("users");
+        cacheManager.setCaffeine(rolesCache());
+        return cacheManager;
+    }
+
+    public Caffeine<Object, Object> rolesCache(){
+        return Caffeine.newBuilder()
+                .initialCapacity(100)
+                .maximumSize(500)
+                .expireAfterAccess(10, TimeUnit.MINUTES)
+                .weakKeys()
+                .recordStats();
     }
 
     private Properties getAdditionalProperties() {
