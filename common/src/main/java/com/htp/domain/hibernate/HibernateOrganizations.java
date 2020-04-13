@@ -23,25 +23,31 @@ public class HibernateOrganizations {
         private Long Id;
 
         @Column(name = "login")
-        private String name;
+        private String login;
+
+        @Column(name = "password")
+        private String password;
+
+        @Column(name = "role")
+        private String role;
 
         @Column(name = "web_site")
-        private String web_site;
+        private String webSite;
 
-        @Column
-        private Long phone_number;
+        @Column(name = "phone_number")
+        private Long phoneNumber;
 
         @Column
         private String location;
 
-        @Column
-        private String working_time;
+        @Column(name = "working_time")
+        private String workingTime;
 
         @Column
         private String specialize;
 
-        @Column
-        private String e_mail;
+        @Column(name = "e_mail")
+        private String eMail;
 
         @JsonManagedReference
         @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "organizations")

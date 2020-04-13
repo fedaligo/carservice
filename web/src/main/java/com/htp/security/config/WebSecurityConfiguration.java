@@ -70,9 +70,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/guest/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
                 .antMatchers("/authentication/**").permitAll()
-                //.antMatchers("/rest/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/rest/**").permitAll()//.hasRole("USER")
-                .antMatchers("/admin/**").permitAll()//.hasRole("ADMIN")
+                .antMatchers("/rest/users/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/rest/cars/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/rest/tasks/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/rest/tracking/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/rest/roles/**").hasRole("ADMIN")
+                .antMatchers("/rest/organizations/**").hasRole("ADMIN")
+                .antMatchers("/admin/**").permitAll()
                 .anyRequest().authenticated();
 
                 //Custom JWT based authentication

@@ -1,8 +1,8 @@
 package com.htp.start;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.htp.config.core.DBConfig;
-import com.htp.config.core.JDBCTemplateConfig;
+import com.htp.config.jdbc.DBConfig;
+import com.htp.config.jdbc.JDBCTemplateConfig;
 import com.htp.config.swagger.SwaggerConfig;
 import com.htp.security.config.JwtTokenConfig;
 import org.springframework.boot.SpringApplication;

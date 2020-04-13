@@ -40,6 +40,9 @@ public class TrackingController {
 
     /*FindAll*/
     @GetMapping("/all")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Tracking>> getTracking() {
         return new ResponseEntity<>(trackingDao.findAll(), HttpStatus.OK);
@@ -54,6 +57,9 @@ public class TrackingController {
             @ApiResponse(code = 404, message = "Tracking was not found"),
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @RequestMapping(value = "/getTrackingById/{id}", method = RequestMethod.GET)
     public ResponseEntity<Tracking> getTrackingById(@ApiParam("Tracking Path Id") @PathVariable Long id) {
         Tracking tracking = trackingDao.findById(id);
@@ -62,6 +68,9 @@ public class TrackingController {
 
     /*Create*/
     @PostMapping("/create")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Tracking> createTracking(@RequestBody TrackingCreateRequest request) {
@@ -69,8 +78,8 @@ public class TrackingController {
         t.setConfirmDate(new Timestamp(new Date().getTime()));
         t.setCost(request.getCost());
         t.setStatus(request.getStatus());
-        t.setIdOrganaizer(request.getId_organaizer());
-        t.setIdTask(request.getId_task());
+        t.setIdOrganaizer(request.getIdOrganaizer());
+        t.setIdTask(request.getIdTask());
 
         Tracking savedTracking = trackingDao.save(t);
 
@@ -85,9 +94,9 @@ public class TrackingController {
             @ApiResponse(code = 404, message = "Tracking was not found"),
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
-       /* @ApiImplicitParams({
+    @ApiImplicitParams({
                 @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-        })*/
+        })
     @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Tracking> updateTracking(@PathVariable("id") Long id,
@@ -97,14 +106,17 @@ public class TrackingController {
         t.setConfirmDate(new Timestamp(new Date().getTime()));
         t.setCost(request.getCost());
         t.setStatus(request.getStatus());
-        t.setIdOrganaizer(request.getId_organaizer());
-        t.setIdTask(request.getId_task());
+        t.setIdOrganaizer(request.getIdOrganaizer());
+        t.setIdTask(request.getIdTask());
 
         return new ResponseEntity<>(trackingDao.updateOne(t), HttpStatus.OK);
     }
 
     /*Delete*/
     @DeleteMapping("/delete/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> deleteTracking(@PathVariable("id") Long Id) {
         trackingDao.deleteById(Id);
@@ -117,6 +129,9 @@ public class TrackingController {
 
     /*FindAll*/
     @GetMapping("/spring-data/all")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<HibernateTracking>> getHibernatesTrackingRepository() {
         return new ResponseEntity<>(hibernateTrackingRepository.findAll(), HttpStatus.OK);
@@ -131,7 +146,8 @@ public class TrackingController {
             @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
                     value = "Sorting criteria in the format: property(,asc|desc). " +
                             "Default sort order is ascending. " +
-                            "Multiple sort criteria are supported.")
+                            "Multiple sort criteria are supported."),
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @GetMapping("/spring-data/all(pageable)")
     @ResponseStatus(HttpStatus.OK)
@@ -148,6 +164,9 @@ public class TrackingController {
             @ApiResponse(code = 404, message = "Tracking was not found"),
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @RequestMapping(value = "/spring-data/getTrackingById/{id}", method = RequestMethod.GET)
     public ResponseEntity<HibernateTracking> getHibernateTrackingByIdRepository(@ApiParam("Path Id") @PathVariable Long id) {
         HibernateTracking t = hibernateTrackingRepository.findById(id).orElse(null);
@@ -156,6 +175,9 @@ public class TrackingController {
 
     /*Create */
     @PostMapping("/spring-data/create(converted)")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @Transactional
     public ResponseEntity<HibernateTracking> createConvertedHibernateTracking(@RequestBody @Valid TrackingCreateRequest request) {
         HibernateTracking savedConvertedTracking = conversionService.convert(request, HibernateTracking.class);
@@ -171,6 +193,9 @@ public class TrackingController {
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
     @PutMapping("/spring-data/update(converted)/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<HibernateTracking> updateHibernateTrackingRepository(@RequestBody @Valid TrackingUpdateRequest request) {
         return new ResponseEntity<>(hibernateTrackingRepository.save(conversionService.convert(request, HibernateTracking.class)), HttpStatus.OK);
@@ -178,6 +203,9 @@ public class TrackingController {
 
     /*Delete*/
     @DeleteMapping("/spring-data/delete/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> deleteHibernateTrackingRepository(@PathVariable("id") Long id) {
         hibernateTrackingRepository.deleteById(id);

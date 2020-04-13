@@ -46,16 +46,16 @@ public class HibernateUsers {
     private Timestamp changed;
 
     @JsonIgnore
-    @Column
-    private Boolean is_deleted;
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
 
     @JsonIgnore
-    @Column
-    private String e_mail;
+    @Column(name = "e_mail")
+    private String eMail;
 
     @JsonIgnore
-    @Column
-    private Long phone_number_user;
+    @Column(name = "phone_number_user")
+    private Long phoneNumberUser;
 
     @Enumerated(STRING)
     @Column
@@ -66,7 +66,7 @@ public class HibernateUsers {
     private HibernateRoles role;*/
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user_role")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "userRole")
     private Set<HibernateRoles> role = Collections.emptySet();
 
     @JsonManagedReference

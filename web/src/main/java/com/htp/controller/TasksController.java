@@ -40,6 +40,9 @@ public class TasksController {
 
     /*FindAll*/
     @GetMapping("/all")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Tasks>> getTasks() {
         return new ResponseEntity<>(tasksDao.findAll(), HttpStatus.OK);
@@ -54,6 +57,9 @@ public class TasksController {
             @ApiResponse(code = 404, message = "Tasks was not found"),
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @RequestMapping(value = "/getTasksById/{id}", method = RequestMethod.GET)
     public ResponseEntity<Tasks> getTaskById(@ApiParam("Task Path Id") @PathVariable Long id) {
         Tasks tasks = tasksDao.findById(id);
@@ -62,6 +68,9 @@ public class TasksController {
 
     /*Create*/
     @PostMapping("/create")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Tasks> createTasks(@RequestBody TasksCreateRequest request) {
@@ -69,7 +78,7 @@ public class TasksController {
         t.setServiceWorkName(request.getServiceWorkName());
         t.setNecessityOfEvacuation(request.getNecessityOfEvacuation());
         t.setWheelBrake(request.getWheelBrake());
-        t.setIdCar(request.getId_car());
+        t.setIdCar(request.getIdCar());
         t.setCreated(new Timestamp(new Date().getTime()));
         t.setDescription(request.getDescription());
         t.setLatitude(request.getLatitude());
@@ -87,9 +96,9 @@ public class TasksController {
             @ApiResponse(code = 404, message = "Task was not found 111111"),
             @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
     })
-       /* @ApiImplicitParams({
+    @ApiImplicitParams({
                 @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-        })*/
+        })
     @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Tasks> updateTask(@PathVariable("id") Long id,
@@ -98,7 +107,7 @@ public class TasksController {
         t.setServiceWorkName(request.getServiceWorkName());
         t.setNecessityOfEvacuation(request.getNecessityOfEvacuation());
         t.setWheelBrake(request.getWheelBrake());
-        t.setIdCar(request.getId_car());
+        t.setIdCar(request.getIdCar());
         t.setCreated(new Timestamp(new Date().getTime()));
         t.setDescription(request.getDescription());
         t.setLatitude(request.getLatitude());
@@ -111,6 +120,9 @@ public class TasksController {
     /*Delete*/
 
     @DeleteMapping("/delete/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> deleteTask(@PathVariable("id") Long id) {
         tasksDao.deleteById(id);
@@ -123,6 +135,9 @@ public class TasksController {
 
     /*FindAll*/
     @GetMapping("/spring-data/all")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<HibernateTasks>> getHibernatesTasksRepository() {
         return new ResponseEntity<>(hibernateTasksRepository.findAll(), HttpStatus.OK);
@@ -137,7 +152,8 @@ public class TasksController {
             @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
                     value = "Sorting criteria in the format: property(,asc|desc). " +
                             "Default sort order is ascending. " +
-                            "Multiple sort criteria are supported.")
+                            "Multiple sort criteria are supported."),
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @GetMapping("/spring-data/all(pageable)")
     @ResponseStatus(HttpStatus.OK)
@@ -154,6 +170,9 @@ public class TasksController {
             @ApiResponse(code = 404, message = "Tasks was not found"),
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @RequestMapping(value = "/spring-data/getTasksById/{id}", method = RequestMethod.GET)
     public ResponseEntity<HibernateTasks> getHibernateTasksByIdRepository(@ApiParam("Path Id") @PathVariable Long id) {
         HibernateTasks t = hibernateTasksRepository.findById(id).orElse(null);
@@ -162,6 +181,9 @@ public class TasksController {
 
     /*Create */
     @PostMapping("/spring-data/create(converted)")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @Transactional
     public ResponseEntity<HibernateTasks> createConvertedHibernateTasks(@RequestBody @Valid TasksCreateRequest request) {
         //HibernateTasks savedConvertedTasks = conversionService.convert(request, HibernateTasks.class);
@@ -177,6 +199,9 @@ public class TasksController {
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
     @PutMapping("/spring-data/update(converted)/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<HibernateTasks> updateHibernateTasksRepository(@RequestBody @Valid TasksUpdateRequest request) {
         return new ResponseEntity<>(hibernateTasksRepository.save(conversionService.convert(request, HibernateTasks.class)), HttpStatus.OK);
@@ -184,6 +209,9 @@ public class TasksController {
 
     /*Delete*/
     @DeleteMapping("/spring-data/delete/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> deleteHibernateTasksRepository(@PathVariable("id") Long id) {
         hibernateTasksRepository.deleteById(id);

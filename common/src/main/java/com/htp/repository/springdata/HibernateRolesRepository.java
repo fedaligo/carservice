@@ -1,7 +1,6 @@
 package com.htp.repository.springdata;
 
 import com.htp.domain.hibernate.HibernateRoles;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -12,7 +11,7 @@ import java.util.Optional;
 public interface HibernateRolesRepository extends CrudRepository<HibernateRoles, Long>, JpaRepository<HibernateRoles,Long> {
 
 
-    @Query(value = "select t.name_of_role from HibernateRoles t where t.id =: id")
+    @Query(value = "select t.nameOfRole from HibernateRoles t where t.id =: id")
     List<Object[]> findNameOfRoleById(String id);
 
 

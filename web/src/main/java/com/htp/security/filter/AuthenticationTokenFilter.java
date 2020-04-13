@@ -17,15 +17,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-//@Component
 @RequiredArgsConstructor
 public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFilter {
 
     private final TokenUtils tokenUtils;
 
     private final UserDetailsService userDetailsService;
-
-    //private final AuthenticationManager authenticationManager;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -50,6 +47,5 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         }
         chain.doFilter(request,response);
     }
-    /*1-42-03*/
 }
 

@@ -1,8 +1,8 @@
 package com.htp.repository.jdbc.impl;
 
-import com.htp.repository.jdbc.TasksDao;
 import com.htp.domain.Tasks;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.htp.repository.jdbc.TasksDao;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
+@RequiredArgsConstructor
 @Repository("TasksDaoImpl")
 @Transactional
 public class TasksDaoImpl implements TasksDao {
@@ -32,12 +33,12 @@ public class TasksDaoImpl implements TasksDao {
     public static final String LONGITUDE ="longitude";
     public static final String LOCAL_DESCRIPTION ="local_description";
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    //@Autowired
+    private final JdbcTemplate jdbcTemplate;
+    //@Autowired
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    //getEmployeeRowMapper парсит resultset
+    //getEmployeeRowMapper parsing resultset
     private Tasks getEmployeeRowMapper(ResultSet resultSet, int i) throws SQLException {
         Tasks tasks = new Tasks();
         tasks.setId(resultSet.getLong(ID));
@@ -83,12 +84,6 @@ public class TasksDaoImpl implements TasksDao {
         return namedParameterJdbcTemplate.queryForObject(sql, params, this::getEmployeeRowMapper);
     }
 
-   /* @Override
-    public Users readById(int id) {
-        return null;
-    }*/
-//id, service_work_name, necessity_of_evacuation, wheel_brake, id_car, created, description, latitude, " +
-//                "longitude, local_description
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public List<Tasks> update(Tasks entity) {
@@ -157,8 +152,6 @@ public class TasksDaoImpl implements TasksDao {
                 "wheel_brake = :wheel_brake, id_car = :id_car, created = :created , description = :description, latitude = :latitude" +
                 ", longitude = :longitude, local_description = :local_description where id = :id";
 
-        //KeyHolder keyHolder = new GeneratedKeyHolder();
-
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(SERVICE_WORK_NAME, entity.getServiceWorkName());
         params.addValue(NECESSITY_OF_EVACUATION, entity.getNecessityOfEvacuation());
@@ -172,16 +165,6 @@ public class TasksDaoImpl implements TasksDao {
         params.addValue(ID, entity.getId());
 
         namedParameterJdbcTemplate.update(sql, params);
-        //long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
         return findById(entity.getId());
     }
-
-    /*@Override
-    public List<Tracking> trackingByHigherCost(Long cost) {
-        String sql = "SELECT * FROM tracking_system WHERE cost >= :cost";
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("cost", cost);
-        return namedParameterJdbcTemplate.query(sql, params, this::getEmployeeRowMapper);
-    }*/
-
 }

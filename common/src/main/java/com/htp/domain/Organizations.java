@@ -5,14 +5,12 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
 @Builder
-@EqualsAndHashCode
-@ToString
 public class Organizations {
     private Long id;
-    private String name;
+    private String login;
+    private String password;
+    private String role;
     private String webSite;
     private Long phoneNumber;
     private String location;

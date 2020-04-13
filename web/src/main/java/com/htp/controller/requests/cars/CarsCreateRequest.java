@@ -36,7 +36,7 @@ public class CarsCreateRequest {
         /*@NotNull
         @NotEmpty*/
         //@Size(min = 3, max = 10)
-        private Long user_id;
+        private Long userId;
 
         @NotNull
         @NotEmpty

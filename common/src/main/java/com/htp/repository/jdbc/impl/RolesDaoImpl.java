@@ -1,8 +1,8 @@
 package com.htp.repository.jdbc.impl;
 
-import com.htp.repository.jdbc.RolesDao;
 import com.htp.domain.Roles;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.htp.repository.jdbc.RolesDao;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
+@RequiredArgsConstructor
 @Repository("RolesDaoImpl")
 @Transactional
 public class RolesDaoImpl implements RolesDao {
@@ -25,12 +26,12 @@ public class RolesDaoImpl implements RolesDao {
     public static final String USER_ID ="user_id";
 
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    //@Autowired
+    private final JdbcTemplate jdbcTemplate;
+    //@Autowired
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    //getEmployeeRowMapper парсит resultset
+    //getEmployeeRowMapper parsing resultset
     private Roles getEmployeeRowMapper(ResultSet resultSet, int i) throws SQLException {
         Roles roles = new Roles();
         roles.setId(resultSet.getLong(ID));
@@ -38,7 +39,6 @@ public class RolesDaoImpl implements RolesDao {
         roles.setUserId(resultSet.getLong(USER_ID));
         return roles;
     }
-
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
@@ -65,11 +65,6 @@ public class RolesDaoImpl implements RolesDao {
         return namedParameterJdbcTemplate.queryForObject(sql, params, this::getEmployeeRowMapper);
     }
 
-   /* @Override
-    public Users readById(int id) {
-        return null;
-    }*/
-
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public List<Roles> update(Roles entity) {
@@ -93,14 +88,6 @@ public class RolesDaoImpl implements RolesDao {
         namedParameterJdbcTemplate.update(sql, params);
 
     }
-/*
-    @Override
-    public List<Tracking> trackingByHigherCost(Long cost) {
-        String sql = "SELECT * FROM tracking_system WHERE cost >= :cost";
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("cost", cost);
-        return namedParameterJdbcTemplate.query(sql, params, this::getEmployeeRowMapper);
-    }*/
 
     @Override
     public List<Roles> getRolesByUserId(Long userId) {
@@ -122,14 +109,10 @@ public class RolesDaoImpl implements RolesDao {
         params.addValue(USER_ID, entity.getUserId());
 
         namedParameterJdbcTemplate.update(sql, params, keyHolder, new String[]{ID});
-
         long createdRoleId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         return findById(createdRoleId);
-
-
     }
-
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
@@ -137,15 +120,12 @@ public class RolesDaoImpl implements RolesDao {
         final String sql = "UPDATE m_roles set name_of_role = :name_of_role, user_id = :user_id, " +
                 " where id = :id";
 
-        //KeyHolder keyHolder = new GeneratedKeyHolder();
-
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(NAME_OF_ROLE, entity.getNameOfRole());
         params.addValue(USER_ID, entity.getUserId());
         params.addValue(ID, entity.getId());
 
         namedParameterJdbcTemplate.update(sql, params);
-        //long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
         return findById(entity.getId());
     }
 }

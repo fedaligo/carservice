@@ -3,7 +3,6 @@ package com.htp.repository.jdbc.impl;
 import com.htp.domain.Users;
 import com.htp.repository.jdbc.UsersDao;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -33,12 +32,12 @@ public class UsersDaoImpl implements UsersDao {
     public static final String PHONE_NUMBER_USER ="phone_number_user";
     public static final String E_MAIL ="e_mail";
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    //@Autowired
+    private final JdbcTemplate jdbcTemplate;
+    //@Autowired
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    //getEmployeeRowMapper парсит resultset
+    //getEmployeeRowMapper parsing resultset
     private Users getEmployeeRowMapper(ResultSet resultSet, int i) throws SQLException {
         Users user = new Users();
         user.setId(resultSet.getLong(ID));
@@ -79,11 +78,6 @@ public class UsersDaoImpl implements UsersDao {
         return namedParameterJdbcTemplate.queryForObject(sql, params, this::getEmployeeRowMapper);
     }
 
-   /* @Override
-    public Users readById(int id) {
-        return null;
-    }*/
-
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public List<Users> update(Users entity) {
@@ -102,32 +96,6 @@ public class UsersDaoImpl implements UsersDao {
         return findAll();
     }
 
-    /*@Override
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Users createOne(Users entity) {
-        final String sql = "INSERT INTO m_users \" +\n" +
-                "                \"(login, password, created, changed, is_deleted, e_mail, phone_number_user) \" +\n" +
-                "                \"VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        //KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("login", entity.getLogin());
-        params.addValue("password", entity.getPassword());
-        params.addValue("created", entity.getCreated());
-        params.addValue("changed", entity.getChanged());
-        params.addValue("is_deleted", entity.getIsDeleted());
-        params.addValue("e_mail", entity.getEMail());
-        params.addValue("phone_number_user", entity.getPhNumberUser());
-        params.addValue("id", entity.getId());
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(sql, params, keyHolder);
-        long createdUserId = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        return findById(createdUserId);
-    }*/
-
-
-
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void deleteById(Long id) {
@@ -135,7 +103,6 @@ public class UsersDaoImpl implements UsersDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(ID, id);
         namedParameterJdbcTemplate.update(sql, params);
-
     }
 
     @Override
@@ -148,10 +115,9 @@ public class UsersDaoImpl implements UsersDao {
     public List<Users> createdAfter() {
         String sql = "SELECT * FROM m_users WHERE created = 20191212163023.000000";
                 //timestamp('27/10/2019 15:51.12.539880', 'dd/mm/yyyy hh24:mi.ss.ff') ";
-
         return namedParameterJdbcTemplate.query(sql, this::getEmployeeRowMapper);
-
     }
+
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public List<Long> batchUpdate(List<Users> users) {
@@ -161,10 +127,8 @@ public class UsersDaoImpl implements UsersDao {
     @Override
     public Users findByLogin(String login) {
         final String findById = "select * from m_users where login = :login";
-
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(LOGIN, login);
-
         return namedParameterJdbcTemplate.queryForObject(findById, params, this::getEmployeeRowMapper);
     }
 
@@ -186,7 +150,6 @@ public class UsersDaoImpl implements UsersDao {
         params.addValue(PHONE_NUMBER_USER, entity.getPhNumberUser());
 
         namedParameterJdbcTemplate.update(sql, params, keyHolder, new String[]{ID});
-
         long createdUserId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         return findById(createdUserId);
@@ -195,9 +158,8 @@ public class UsersDaoImpl implements UsersDao {
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Users updateOne(Users entity) {
-        final String sql = "UPDATE m_users set login = :login, password = :password, created = :created, changed = :changed, is_deleted = :is_deleted, e_mail = :e_mail, phone_number_user = :phone_number_user where id = :id";
-
-        //KeyHolder keyHolder = new GeneratedKeyHolder();
+        final String sql = "UPDATE m_users set login = :login, password = :password, created = :created, changed = :changed, " +
+                "is_deleted = :is_deleted, e_mail = :e_mail, phone_number_user = :phone_number_user where id = :id";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(LOGIN, entity.getLogin());
@@ -209,7 +171,7 @@ public class UsersDaoImpl implements UsersDao {
         params.addValue(PHONE_NUMBER_USER, entity.getPhNumberUser());
         params.addValue(ID, entity.getId());
         namedParameterJdbcTemplate.update(sql, params);
-        //long createdUserId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
         return findById(entity.getId());
     }
 

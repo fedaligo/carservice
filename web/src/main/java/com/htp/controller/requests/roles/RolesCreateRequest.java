@@ -16,9 +16,9 @@ public class RolesCreateRequest {
     @NotNull
     @NotEmpty
     @Size(min = 1, max = 30)
-    private String name_of_role;
+    private String nameOfRole;
 
     @NotNull
     @NotEmpty
-    private Long user_id;
+    private Long userId;
 }

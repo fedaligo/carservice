@@ -17,7 +17,17 @@ public class OrganizationsCreateRequest {
     @NotNull
     @NotEmpty
     @Size(min = 1, max = 30)
-    private String name;
+    private String login;
+
+    @NotNull
+    @NotEmpty
+    @Size(min = 1, max = 30)
+    private String password;
+
+    @NotNull
+    @NotEmpty
+    @Size(min = 1, max = 30)
+    private String role;
 
     @NotNull
     @NotEmpty
@@ -48,5 +58,5 @@ public class OrganizationsCreateRequest {
     @NotEmpty
     @Email
     @Size(min = 1, max = 100)
-    private String e_Mail;
+    private String eMail;
 }

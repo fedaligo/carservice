@@ -1,9 +1,8 @@
 package com.htp.repository.jdbc.impl;
 
-import com.htp.repository.jdbc.OrganizationsDao;
 import com.htp.domain.Organizations;
+import com.htp.repository.jdbc.OrganizationsDao;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,7 +23,9 @@ import java.util.Objects;
 @Transactional
 public class OrganizationsDaoImpl implements OrganizationsDao {
     public static final String ID ="id";
-    public static final String NAME ="name";
+    public static final String LOGIN ="login";
+    public static final String PASSWORD ="password";
+    public static final String ROLE ="role";
     public static final String WEB_SITE ="web_site";
     public static final String PHONE_NUMBER ="phone_number";
     public static final String LOCATION ="location";
@@ -32,16 +33,18 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     public static final String SPECIALIZE ="specialize";
     public static final String E_MAIL ="e_mail";
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    //@Autowired
+    private final JdbcTemplate jdbcTemplate;
+    //@Autowired
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    //getEmployeeRowMapper парсит resultset
+    //getEmployeeRowMapper parsing resultset
     private Organizations getEmployeeRowMapper(ResultSet resultSet, int i) throws SQLException {
         Organizations organizations = new Organizations();
         organizations.setId(resultSet.getLong(ID));
-        organizations.setName(resultSet.getString(NAME));
+        organizations.setLogin(resultSet.getString(LOGIN));
+        organizations.setPassword(resultSet.getString(PASSWORD));
+        organizations.setRole(resultSet.getString(ROLE));
         organizations.setWebSite(resultSet.getString(WEB_SITE));
         organizations.setPhoneNumber(resultSet.getLong(PHONE_NUMBER));
         organizations.setLocation(resultSet.getString(LOCATION));
@@ -57,10 +60,10 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     public void create(Organizations entity) {
 
         String sql = "INSERT INTO m_organization " +
-                "(id, login, web_site, phone_number, location, working_time, specialize, e_mail) " +
-                "VALUES (:id, :name, :web_site, :phone_number, :location, :working_time, :specialize, :e_mail)";
+                "(id, login, password, role, web_site, phone_number, location, working_time, specialize, e_mail) " +
+                "VALUES (:id, :login, :password, :role, :web_site, :phone_number, :location, :working_time, :specialize, :e_mail)";
 
-        jdbcTemplate.update(sql, new Object[] { entity.getId(), entity.getName(), entity.getWebSite(), entity.getPhoneNumber(),
+        jdbcTemplate.update(sql, new Object[] { entity.getId(), entity.getLogin(), entity.getPassword(), entity.getRole(), entity.getWebSite(), entity.getPhoneNumber(),
                 entity.getLocation(), entity.getWorkingTime(), entity.getSpecialize(), entity.getEMail()});
     }
 
@@ -78,20 +81,17 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
         return namedParameterJdbcTemplate.queryForObject(sql, params, this::getEmployeeRowMapper);
     }
 
-   /* @Override
-    public Users readById(int id) {
-        return null;
-    }*/
-//id, name, web_site, phone_number, location, working_time, specialize, e_mail
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public List<Organizations> update(Organizations entity) {
-        final String sql = "UPDATE m_organization set login = :name, web_site = :web_site, " +
+        final String sql = "UPDATE m_organization set login = :login, password = : password, role = :role, web_site = :web_site, " +
                 "phone_number = :phone_number, location = :location, working_time = :working_time, specialize = :specialize, " +
                 "e_mail = :e_mail  where id = :id";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(NAME, entity.getName());
+        params.addValue(LOGIN, entity.getLogin());
+        params.addValue(PASSWORD, entity.getPassword());
+        params.addValue(ROLE, entity.getRole());
         params.addValue(WEB_SITE, entity.getWebSite());
         params.addValue(PHONE_NUMBER, entity.getPhoneNumber());
         params.addValue(LOCATION, entity.getLocation());
@@ -116,23 +116,22 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT)
     public Organizations save(Organizations entity) {
-        final String sql = "INSERT INTO m_organization (login, web_site, phone_number, location, working_time, specialize, e_mail) " +
-                "VALUES (:name, :web_site, :phone_number, :location, :working_time, :specialize, :e_mail)";
+        final String sql = "INSERT INTO m_organization (login, password, role, web_site, phone_number, location, working_time, specialize, e_mail) " +
+                "VALUES (:login, :password, :role, :web_site, :phone_number, :location, :working_time, :specialize, :e_mail)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(NAME, entity.getName());
-        params.addValue(WEB_SITE, entity.getWebSite());
+        params.addValue(LOGIN, entity.getLogin());
+        params.addValue(PASSWORD, entity.getPassword());
+        params.addValue(ROLE, entity.getRole());
         params.addValue(PHONE_NUMBER, entity.getPhoneNumber());
         params.addValue(LOCATION, entity.getLocation());
         params.addValue(WORKING_TIME, entity.getWorkingTime());
         params.addValue(SPECIALIZE, entity.getSpecialize());
         params.addValue(E_MAIL, entity.getEMail());
 
-
         namedParameterJdbcTemplate.update(sql, params, keyHolder, new String[]{ID});
-
         long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         return findById(createdId);
@@ -141,14 +140,14 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Organizations updateOne(Organizations entity) {
-        final String sql = "UPDATE m_organization set login = :name, web_site = :web_site, " +
+        final String sql = "UPDATE m_organization set login = :login, password = :password, role =: role,  web_site = :web_site, " +
                 "phone_number = :phone_number, location = :location, working_time = :working_time, specialize = :specialize, " +
                 "e_mail = :e_mail  where id = :id";
 
-        //KeyHolder keyHolder = new GeneratedKeyHolder();
-
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(NAME, entity.getName());
+        params.addValue(LOGIN, entity.getLogin());
+        params.addValue(PASSWORD, entity.getPassword());
+        params.addValue(ROLE, entity.getRole());
         params.addValue(WEB_SITE, entity.getWebSite());
         params.addValue(PHONE_NUMBER, entity.getPhoneNumber());
         params.addValue(LOCATION, entity.getLocation());
@@ -158,16 +157,7 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
         params.addValue(ID, entity.getId());
 
         namedParameterJdbcTemplate.update(sql, params);
-        //long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
         return findById(entity.getId());
     }
-/*
-    @Override
-    public List<Tracking> trackingByHigherCost(Long cost) {
-        String sql = "SELECT * FROM tracking_system WHERE cost >= :cost";
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("cost", cost);
-        return namedParameterJdbcTemplate.query(sql, params, this::getEmployeeRowMapper);
-    }*/
 
 }

@@ -29,6 +29,9 @@ public class RolesController {
 
     /*FindAll*/
     @GetMapping("/all")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Roles>> getRoles() {
         return new ResponseEntity<>(rolesDao.findAll(), HttpStatus.OK);
@@ -43,6 +46,9 @@ public class RolesController {
             @ApiResponse(code = 404, message = "Roles was not found"),
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @RequestMapping(value = "/getRolesById/{id}", method = RequestMethod.GET)
     public ResponseEntity<Roles> getRolesById(@ApiParam("Role Path Id") @PathVariable Long id) {
         Roles roles = rolesDao.findById(id);
@@ -51,6 +57,9 @@ public class RolesController {
 
     /*Delete*/
     @DeleteMapping("/delete/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> deleteRole(@PathVariable("id") Long id) {
         rolesDao.deleteById(id);
@@ -61,6 +70,9 @@ public class RolesController {
 
     /*FindAll*/
     @GetMapping("/spring-data/all")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<HibernateRoles>> getHibernatesRolesRepository() {
         return new ResponseEntity<>( hibernateRolesRepository.findAll(), HttpStatus.OK);
@@ -75,7 +87,8 @@ public class RolesController {
             @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
                     value = "Sorting criteria in the format: property(,asc|desc). " +
                             "Default sort order is ascending. " +
-                            "Multiple sort criteria are supported.")
+                            "Multiple sort criteria are supported."),
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @GetMapping("/spring-data/all(pageable)")
     @ResponseStatus(HttpStatus.OK)
@@ -92,6 +105,9 @@ public class RolesController {
             @ApiResponse(code = 404, message = "Roles was not found"),
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @RequestMapping(value = "/spring-data/getRolesById/{id}", method = RequestMethod.GET)
     public ResponseEntity<HibernateRoles> getHibernateRolesByIdRepository(@ApiParam("Roles Path Id") @PathVariable Long id) {
         HibernateRoles t = hibernateRolesRepository.findById(id).orElse(null);
@@ -100,6 +116,9 @@ public class RolesController {
 
     /*Delete*/
     @DeleteMapping("/spring-data/delete/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> deleteHibernateRolesRepository(@PathVariable("id") Long id) {
         hibernateRolesRepository.deleteById(id);

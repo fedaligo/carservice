@@ -1,36 +1,22 @@
 package com.htp.repository.hibernate.impl;
 
-import com.htp.domain.hibernate.HibernateOrganizations;
-import com.htp.domain.hibernate.HibernateTasks;
-import com.htp.repository.hibernate.HibernateRolesDao;
 import com.htp.domain.hibernate.HibernateRoles;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.htp.repository.hibernate.HibernateRolesDao;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import java.util.Collections;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Repository
 @Qualifier("hibernateRolesDao")
 public class HibernateRolesDaoImpl implements HibernateRolesDao {
 
-    /*@Autowired
-    @Qualifier("sessionFactory")
-    private SessionFactory sessionFactory;*/
-
-    @Autowired
-    private EntityManager entityManager;
-
-    @Override
-    public void create(HibernateRoles entity) {
-
-    }
+    //@Autowired
+    private final EntityManager entityManager;
 
     @Override
     public List<HibernateRoles> findAll() {

@@ -19,9 +19,9 @@ public abstract class UserRequestConverter<S, T> extends EntityConverter<S, T> {
         //user.setPassword(request.getPassword());
         user.setCreated(new Timestamp(new Date().getTime()));
         user.setChanged(new Timestamp(new Date().getTime()));
-        user.setIs_deleted(false);
-        user.setE_mail(request.getEMail());
-        user.setPhone_number_user(request.getPhNumberUser());
+        user.setIsDeleted(false);
+        user.setEMail(request.getEMail());
+        user.setPhoneNumberUser(request.getPhNumberUser());
 
         log.info("UserCreateRequest with params {} {} ", 4, 5);
 

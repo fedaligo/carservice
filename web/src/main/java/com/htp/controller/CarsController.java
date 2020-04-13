@@ -38,6 +38,9 @@ public class CarsController {
 
     /*FindAll*/
     @GetMapping("/all")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Cars>> getCars() {
         return new ResponseEntity<>(carsDao.findAll(), HttpStatus.OK);
@@ -52,6 +55,9 @@ public class CarsController {
             @ApiResponse(code = 404, message = "Cars was not found"),
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @RequestMapping(value = "/getCarsById/{id}", method = RequestMethod.GET)
     public ResponseEntity<Cars> getCarById(@ApiParam("Car Path Id") @PathVariable Long id) {
         Cars cars = carsDao.findById(id);
@@ -60,6 +66,9 @@ public class CarsController {
 
     /*Create*/
     @PostMapping("/create")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Cars> createCar(@RequestBody CarsCreateRequest request) {
@@ -70,7 +79,7 @@ public class CarsController {
         t.setTypeOfFuel(request.getTypeOfFuel());
         t.setCarWeight(request.getCarWeight());
         t.setVinNumber(request.getVinNumber());
-        t.setUserId(request.getUser_id());
+        t.setUserId(request.getUserId());
 
         Cars savedCar = carsDao.save(t);
 
@@ -85,9 +94,9 @@ public class CarsController {
             @ApiResponse(code = 404, message = "Cars was not found 111111"),
             @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
     })
-        /*@ApiImplicitParams({
+    @ApiImplicitParams({
                 @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-        })*/
+        })
     @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Cars> updateCars(@PathVariable("id") Long id,
@@ -99,13 +108,16 @@ public class CarsController {
         t.setTypeOfFuel(request.getTypeOfFuel());
         t.setCarWeight(request.getCarWeight());
         t.setVinNumber(request.getVinNumber());
-        t.setUserId(request.getUser_id());
+        t.setUserId(request.getUserId());
 
         return new ResponseEntity<>(carsDao.updateOne(t), HttpStatus.OK);
     }
 
     /*Delete*/
     @DeleteMapping("/delete/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> deleteCar(@PathVariable("id") Long id) {
         carsDao.deleteById(id);
@@ -116,6 +128,9 @@ public class CarsController {
 
     /*FindAll*/
     @GetMapping("/spring-data/all")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<HibernateCars>> getHibernatesCarsRepository() {
         return new ResponseEntity<>(hibernateCarsRepository.findAll(), HttpStatus.OK);
@@ -130,7 +145,8 @@ public class CarsController {
             @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
                     value = "Sorting criteria in the format: property(,asc|desc). " +
                             "Default sort order is ascending. " +
-                            "Multiple sort criteria are supported.")
+                            "Multiple sort criteria are supported."),
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @GetMapping("/spring-data/all(pageable)")
     @ResponseStatus(HttpStatus.OK)
@@ -147,6 +163,9 @@ public class CarsController {
             @ApiResponse(code = 404, message = "Cars was not found"),
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @RequestMapping(value = "/spring-data/getCarsById/{id}", method = RequestMethod.GET)
     public ResponseEntity<HibernateCars> getHibernateCarsByIdRepository(@ApiParam("Path Id") @PathVariable Long id) {
         HibernateCars t = hibernateCarsRepository.findById(id).orElse(null);
@@ -155,6 +174,9 @@ public class CarsController {
 
     /*Create */
     @PostMapping("/spring-data/create(converted)")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @Transactional
     public ResponseEntity<HibernateCars> createConvertedHibernateCars(@RequestBody @Valid CarsCreateRequest request) {
         //HibernateTasks savedConvertedTasks = conversionService.convert(request, HibernateTasks.class);
@@ -169,6 +191,9 @@ public class CarsController {
             @ApiResponse(code = 404, message = "Cars was not found"),
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @PutMapping("/spring-data/update(converted)/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<HibernateCars> updateHibernateCarsRepository(@RequestBody @Valid CarsUpdateRequest request) {
@@ -177,6 +202,9 @@ public class CarsController {
 
     /*Delete*/
     @DeleteMapping("/spring-data/delete/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> deleteHibernateCarsRepository(@PathVariable("id") Long id) {
         hibernateCarsRepository.deleteById(id);

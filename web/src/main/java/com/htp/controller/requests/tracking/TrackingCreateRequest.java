@@ -27,10 +27,10 @@ public class TrackingCreateRequest {
         @NotNull
         @NotEmpty
         //@Size(min = 2, max = 100)
-        private Long id_task;
+        private Long idTask;
 
         @NotNull
         @NotEmpty
         //@Size(min = 2, max = 100)
-        private Long id_organaizer;
+        private Long idOrganaizer;
 }

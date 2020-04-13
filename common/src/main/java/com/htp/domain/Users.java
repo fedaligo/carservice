@@ -9,11 +9,7 @@ import java.sql.Timestamp;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
 @Builder
-@EqualsAndHashCode
-@ToString
 public class Users {
     private Long id;
     private String login;

@@ -1,9 +1,8 @@
 package com.htp.repository.jdbc.impl;
 
-import com.htp.repository.jdbc.CarsDao;
 import com.htp.domain.Cars;
+import com.htp.repository.jdbc.CarsDao;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -32,12 +31,12 @@ public class CarsDaoImpl implements CarsDao {
     public static final String USER_ID ="user_id";
     public static final String CAR_WEIGHT ="car_weight";
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    //@Autowired
+    private final JdbcTemplate jdbcTemplate;
+    //@Autowired
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    //getEmployeeRowMapper парсит resultset
+    //getEmployeeRowMapper parsing resultset
     private Cars getEmployeeRowMapper(ResultSet resultSet, int i) throws SQLException {
         Cars cars = new Cars();
         cars.setId(resultSet.getLong(ID));
@@ -50,7 +49,6 @@ public class CarsDaoImpl implements CarsDao {
         cars.setCarWeight(resultSet.getLong(CAR_WEIGHT));
         return cars;
     }
-
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
@@ -77,11 +75,6 @@ public class CarsDaoImpl implements CarsDao {
         params.addValue(ID, id);
         return namedParameterJdbcTemplate.queryForObject(sql, params, this::getEmployeeRowMapper);
     }
-
-   /* @Override
-    public Users readById(int id) {
-        return null;
-    }*/
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)

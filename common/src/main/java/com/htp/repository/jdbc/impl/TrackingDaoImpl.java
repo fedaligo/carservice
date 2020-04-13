@@ -1,8 +1,8 @@
 package com.htp.repository.jdbc.impl;
 
-import com.htp.repository.jdbc.TrackingDao;
 import com.htp.domain.Tracking;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.htp.repository.jdbc.TrackingDao;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
+@RequiredArgsConstructor
 @Repository("TrackingDaoImpl")
 @Transactional
 public class TrackingDaoImpl implements TrackingDao {
@@ -28,12 +29,12 @@ public class TrackingDaoImpl implements TrackingDao {
     public static final String CONFIRM_DATE ="confirm_date";
     public static final String COST ="cost";
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    //@Autowired
+    private final JdbcTemplate jdbcTemplate;
+    //@Autowired
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    //getEmployeeRowMapper парсит resultset
+    //getEmployeeRowMapper parsing resultset
     private Tracking getEmployeeRowMapper(ResultSet resultSet, int i) throws SQLException {
         Tracking tracking = new Tracking();
         tracking.setId(resultSet.getLong(ID));
@@ -44,7 +45,6 @@ public class TrackingDaoImpl implements TrackingDao {
         tracking.setCost(resultSet.getLong(COST));
         return tracking;
     }
-
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
@@ -71,11 +71,6 @@ public class TrackingDaoImpl implements TrackingDao {
         params.addValue(ID, id);
         return namedParameterJdbcTemplate.queryForObject(sql, params, this::getEmployeeRowMapper);
     }
-
-   /* @Override
-    public Users readById(int id) {
-        return null;
-    }*/
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
@@ -129,7 +124,6 @@ public class TrackingDaoImpl implements TrackingDao {
         params.addValue(COST, entity.getCost());
 
         namedParameterJdbcTemplate.update(sql, params, keyHolder, new String[]{ID});
-
         long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         return findById(createdId);
@@ -141,8 +135,6 @@ public class TrackingDaoImpl implements TrackingDao {
         final String sql = "UPDATE tracking_system set id_task = :id_task, id_organaizer = :id_organaizer, " +
                 "status = :status, confirm_date = :confirm_date, cost = :cost  where id = :id";
 
-        //KeyHolder keyHolder = new GeneratedKeyHolder();
-
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(ID_TASK, entity.getIdTask());
         params.addValue(ID_ORGANAIZER, entity.getIdOrganaizer());
@@ -152,9 +144,6 @@ public class TrackingDaoImpl implements TrackingDao {
         params.addValue(ID, entity.getId());
 
         namedParameterJdbcTemplate.update(sql, params);
-        //long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
         return findById(entity.getId());
     }
-
-
 }

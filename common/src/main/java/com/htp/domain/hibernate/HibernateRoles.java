@@ -20,8 +20,8 @@ public class HibernateRoles {
         @Column(name = "id")
         private Long Id;
 
-        @Column
-        private String name_of_role;
+        @Column(name = "name_of_role")
+        private String nameOfRole;
 
         /*@OneToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "user_id")
@@ -32,10 +32,10 @@ public class HibernateRoles {
         @JsonBackReference
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "user_id")
-        private HibernateUsers user_role;
+        private HibernateUsers userRole;
 
-        public HibernateRoles(String role_user, HibernateUsers userId) {
-                this.name_of_role = role_user;
-                this.user_role = userId;
+        public HibernateRoles(String roleUser, HibernateUsers userId) {
+                this.nameOfRole = roleUser;
+                this.userRole = userId;
         }
 }

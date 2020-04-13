@@ -7,11 +7,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
 @Builder
-@EqualsAndHashCode
-@ToString
 public class Tasks {
     private Long id;
     private String serviceWorkName;
