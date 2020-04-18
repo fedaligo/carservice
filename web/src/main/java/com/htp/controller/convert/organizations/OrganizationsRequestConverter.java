@@ -7,9 +7,9 @@ import com.htp.domain.hibernate.HibernateOrganizations;
 public abstract class OrganizationsRequestConverter<S, T> extends EntityConverter<S, T> {
     protected HibernateOrganizations doConvert(HibernateOrganizations t, OrganizationsCreateRequest request) {
 
-        t.setLogin(request.getLogin());
-        t.setPassword(request.getPassword());
-        t.setRole(request.getRole());
+        //t.setLogin(request.getLogin());
+        //t.setPassword(request.getPassword());
+        t.setRole("ROLE_ORG");
         t.setWebSite(request.getWebSite());
         t.setPhoneNumber(request.getPhoneNumber());
         t.setLocation(request.getLocation());

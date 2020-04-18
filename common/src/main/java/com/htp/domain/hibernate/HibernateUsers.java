@@ -2,7 +2,7 @@ package com.htp.domain.hibernate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.htp.domain.Gender;
+import com.htp.domain.enums.Gender;
 import lombok.*;
 
 import javax.persistence.*;

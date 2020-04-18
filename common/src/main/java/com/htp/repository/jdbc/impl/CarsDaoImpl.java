@@ -33,6 +33,8 @@ public class CarsDaoImpl implements CarsDao {
 
     //@Autowired
     private final JdbcTemplate jdbcTemplate;
+
+    //private final TypeOfTransmission typeOfTransmission;
     //@Autowired
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -42,8 +44,8 @@ public class CarsDaoImpl implements CarsDao {
         cars.setId(resultSet.getLong(ID));
         cars.setCarBrand(resultSet.getString(CAR_BRAND));
         cars.setBrandModel(resultSet.getString(BRAND_MODEL));
-        cars.setTypeOfTransmission(resultSet.getString(TYPE_OF_TRANSMISSION));
-        cars.setTypeOfFuel(resultSet.getString(TYPE_OF_FUEL));
+       /* cars.setTypeOfTransmission(resultSet.getString(typeOfTransmission.getTypeOfTransmissionName()));
+        cars.setTypeOfFuel(resultSet.getString(TYPE_OF_FUEL));*/
         cars.setVinNumber(resultSet.getString(VIN_NUMBER));
         cars.setUserId(resultSet.getLong(USER_ID));
         cars.setCarWeight(resultSet.getLong(CAR_WEIGHT));

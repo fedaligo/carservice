@@ -1,8 +1,11 @@
 package com.htp.domain;
 
 
-
-import lombok.*;
+import com.htp.domain.enums.Gender;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 

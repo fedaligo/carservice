@@ -9,14 +9,11 @@ import com.htp.repository.springdata.HibernateOrganizationsRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -36,7 +33,7 @@ public class OrganizationsController {
 
     /*JDBC*/
     /*FindAll*/
-    @GetMapping("/all")
+    @GetMapping()
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
@@ -57,18 +54,18 @@ public class OrganizationsController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @RequestMapping(value = "/getOrganizationsById/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     public ResponseEntity<Organizations> getOrganizationById(@ApiParam("Organization Path Id") @PathVariable Long id) {
         Organizations organizations = organizationsDao.findById(id);
         return new ResponseEntity<>(organizations, HttpStatus.OK);
     }
 
     /*Create*/
-    @PostMapping("/create")
+    @PostMapping()
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Organizations> createOrganizations(@RequestBody OrganizationsCreateRequest request) {
         Organizations t = new Organizations();
@@ -97,8 +94,9 @@ public class OrganizationsController {
     @ApiImplicitParams({
                 @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
         })
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Organizations> updateOrganization(@PathVariable("id") Long id,
                                                             @RequestBody OrganizationsCreateRequest request) {
         Organizations t = organizationsDao.findById(id);
@@ -116,11 +114,12 @@ public class OrganizationsController {
     }
 
     /*Delete*/
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Long> deleteOrganization(@PathVariable("id") Long id) {
         organizationsDao.deleteById(id);
         return new ResponseEntity<>(id, HttpStatus.OK);
@@ -129,31 +128,13 @@ public class OrganizationsController {
     /*SPRING DATA*/
 
     /*FindAll*/
-    @GetMapping("/spring-data/all")
+    @GetMapping("/spring-data")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<HibernateOrganizations>> getHibernatesOrganizationsRepository() {
         return new ResponseEntity<>(hibernateOrganizationsRepository.findAll(), HttpStatus.OK);
-    }
-
-    /*FindAll(pageable)*/
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
-                    value = "Results page you want to retrieve (0..N)"),
-            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
-                    value = "Number of records per page."),
-            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
-                    value = "Sorting criteria in the format: property(,asc|desc). " +
-                            "Default sort order is ascending. " +
-                            "Multiple sort criteria are supported."),
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @GetMapping("/spring-data/all(pageable)")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<HibernateOrganizations>> getOrganizationsSpringData(@ApiIgnore Pageable pageable) {
-        return new ResponseEntity<>(hibernateOrganizationsRepository.findAll(pageable), HttpStatus.OK);
     }
 
     /*FindById*/
@@ -168,18 +149,18 @@ public class OrganizationsController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @RequestMapping(value = "/spring-data/getOrganizationsById/{id}", method = RequestMethod.GET)
+    @GetMapping("/spring-data/{id}")
     public ResponseEntity<HibernateOrganizations> getHibernateOrganizationsByIdRepository(@ApiParam("Path Id") @PathVariable Long id) {
         HibernateOrganizations t = hibernateOrganizationsRepository.findById(id).orElse(null);
         return new ResponseEntity<>(t, HttpStatus.OK);
     }
 
     /*Create */
-    @PostMapping("/spring-data/create(converted)")
+    @PostMapping("/spring-data")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<HibernateOrganizations> createConvertedHibernateOrganizations(@RequestBody @Valid OrganizationsCreateRequest request) {
         //HibernateTasks savedConvertedTasks = conversionService.convert(request, HibernateTasks.class);
         return new ResponseEntity<>(hibernateOrganizationsRepository.saveAndFlush(conversionService.convert(request, HibernateOrganizations.class)), CREATED);
@@ -196,18 +177,20 @@ public class OrganizationsController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @PutMapping("/spring-data/update(converted)/{id}")
+    @PutMapping("/spring-data/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<HibernateOrganizations> updateHibernateOrganizationsRepository(@RequestBody @Valid OrganizationsUpdateRequest request) {
         return new ResponseEntity<>(hibernateOrganizationsRepository.save(conversionService.convert(request, HibernateOrganizations.class)), HttpStatus.OK);
     }
 
     /*Delete*/
-    @DeleteMapping("/spring-data/delete/{id}")
+    @DeleteMapping("/spring-data/{id}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Long> deleteHibernateOrganizationsRepository(@PathVariable("id") Long id) {
         hibernateOrganizationsRepository.deleteById(id);
         return new ResponseEntity<>(id, HttpStatus.OK);

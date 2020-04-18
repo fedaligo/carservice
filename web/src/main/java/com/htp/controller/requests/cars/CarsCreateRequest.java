@@ -1,5 +1,7 @@
 package com.htp.controller.requests.cars;
 
+import com.htp.domain.enums.TypeOfFuel;
+import com.htp.domain.enums.TypeOfTransmission;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,15 +25,15 @@ public class CarsCreateRequest {
         @Size(min = 1, max = 30)
         private String brandModel;
 
-        @NotNull
-        @NotEmpty
-        @Size(min = 2, max = 2)
-        private String typeOfTransmission;
+        /*@NotNull
+        @NotEmpty*/
+        //@Size(min = 2, max = 20)
+        private TypeOfTransmission typeOfTransmission;
 
-        @NotNull
-        @NotEmpty
-        @Size(min = 3, max = 10)
-        private String typeOfFuel;
+        /*@NotNull
+        @NotEmpty*/
+        //@Size(min = 3, max = 10)
+        private TypeOfFuel typeOfFuel;
 
         /*@NotNull
         @NotEmpty*/

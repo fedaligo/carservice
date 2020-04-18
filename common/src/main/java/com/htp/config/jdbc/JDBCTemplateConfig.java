@@ -12,15 +12,11 @@ import javax.persistence.EntityManagerFactory;
 @Configuration
 public class JDBCTemplateConfig {
 
-    //@Autowired
     private final BasicDataSource dataSource;
 
     public JDBCTemplateConfig(BasicDataSource dataSource) {
         this.dataSource = dataSource;
     }
-
-    //https://docs.spring.io/spring/docs/4.0.x/spring-framework-reference/html/jdbc.html
-    //https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html
 
     @Bean("jdbcTemplate")
     public JdbcTemplate getJdbcTemplate() {
@@ -36,7 +32,4 @@ public class JDBCTemplateConfig {
     public JpaTransactionManager getTransactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
-
-    //https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/aop.html#aop-understanding-aop-proxies
-    //https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html
 }

@@ -1,6 +1,5 @@
 package com.htp.security.controller;
 
-import com.htp.repository.springdata.HibernateUsersRepository;
 import com.htp.security.model.AuthResponse;
 import com.htp.security.model.AuthenticationRequest;
 import com.htp.security.util.TokenUtils;
@@ -28,13 +27,11 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
 
-    private final HibernateUsersRepository userRepository;
-
     private final TokenUtils tokenUtils;
 
     private final UserDetailsService userDetailsService;
 
-    @ApiOperation(value = "Login user in system", notes = "Retrun Auth_Token with user login")
+    @ApiOperation(value = "Login user in system", notes = "Return Auth_Token with user login")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful authorization"),
             @ApiResponse(code = 400, message = "Request error"),
@@ -53,8 +50,6 @@ public class AuthenticationController {
 
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
-        //final String token = tokenUtils.generateToken(userRepository.findByLogin(request.getUsername()));
-
         /*Generate token with answer to user*/
         return ResponseEntity.ok(
                 AuthResponse
@@ -64,6 +59,5 @@ public class AuthenticationController {
                         .build()
         );
     }
-    /*2-17-12*/
 }
 

@@ -2,31 +2,24 @@ package com.htp.controller;
 
 import com.htp.controller.requests.users.UserCreateRequest;
 import com.htp.controller.requests.users.UserUpdateRequest;
-import com.htp.domain.Gender;
 import com.htp.domain.Roles;
 import com.htp.domain.Users;
 import com.htp.domain.hibernate.HibernateRoles;
 import com.htp.domain.hibernate.HibernateUsers;
-import com.htp.exceptions.EntityNotFoundException;
 import com.htp.repository.jdbc.RolesDao;
 import com.htp.repository.jdbc.UsersDao;
 import com.htp.repository.springdata.HibernateRolesRepository;
 import com.htp.repository.springdata.HibernateUsersRepository;
-import com.htp.security.util.PrincipalUtil;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +33,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequiredArgsConstructor
 public class UsersController {
 
-    private static final Gender gender = Gender.NOT_SELECTED;
+    //private static final Gender gender = Gender.NOT_SELECTED;
 
     private final UsersDao userDao;
 
@@ -52,27 +45,10 @@ public class UsersController {
 
     private final RolesDao rolesDao;
 
-    @GetMapping(value = "/test/{id}")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<HibernateUsers> getHibernateUserByIdRepository123(@ApiParam("User Path Id") @PathVariable String id,
-                                                                            @ApiIgnore Principal principal) {
-        String username = PrincipalUtil.getUsername(principal);
-        HibernateUsers performer = hibernateUsersRepository.findByLogin(username).orElseThrow(() -> new EntityNotFoundException(HibernateUsers.class, username));
-        HibernateUsers user = hibernateUsersRepository.findById(Long.valueOf(id)).orElseThrow(() -> new EntityNotFoundException(HibernateUsers.class, id));
-
-        log.info("Performer with username {} find by id {} user with login {}", performer.getLogin(), id, user.getLogin());
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
-
     /*JDBC*/
 
     /*FindAll*/
-    @GetMapping("/all")
+    @GetMapping()
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
@@ -93,18 +69,18 @@ public class UsersController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @RequestMapping(value = "/getUserById/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     public ResponseEntity<Users> getUserById(@ApiParam("User Path Id") @PathVariable Long id) {
         Users user = userDao.findById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     /*Create*/
-    @PostMapping("/create")
+    @PostMapping()
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Users> createUser(@RequestBody UserCreateRequest request) {
         Users user = new Users();
@@ -133,8 +109,9 @@ public class UsersController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Users> updateUser(@PathVariable("id") Long userId,
                                             @RequestBody UserCreateRequest request) {
         Users user = userDao.findById(userId);
@@ -149,11 +126,12 @@ public class UsersController {
     }
 
     /*Delete*/
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Long> deleteUser(@PathVariable("id") Long userId) {
         userDao.deleteById(userId);
         return new ResponseEntity<>(userId, HttpStatus.OK);
@@ -163,33 +141,13 @@ public class UsersController {
     /*SPRING DATA*/
 
     /*FindAll*/
-    @GetMapping("/spring-data/all")
+    @GetMapping("/spring-data")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<HibernateUsers>> getHibernatesUsersRepository() {
         return new ResponseEntity<>( hibernateUsersRepository.findAll(), HttpStatus.OK);
-    }
-
-    /*FindAll(pageable)*/
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
-                    value = "Results page you want to retrieve (0..N)"),
-            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
-                    value = "Number of records per page."),
-            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
-                    value = "Sorting criteria in the format: property(,asc|desc). " +
-                            "Default sort order is ascending. " +
-                            "Multiple sort criteria are supported."),
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-
-    })
-    @GetMapping("/spring-data/all(pageable)")
-
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<HibernateUsers>> getUsersSpringData(@ApiIgnore Pageable pageable) {
-        return new ResponseEntity<>( hibernateUsersRepository.findAll(pageable), HttpStatus.OK);
     }
 
     /*FindById*/
@@ -204,18 +162,18 @@ public class UsersController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @RequestMapping(value = "/spring-data/getUserById/{id}", method = RequestMethod.GET)
+    @GetMapping("/spring-data/{id}")
     public ResponseEntity<HibernateUsers> getHibernateUserByIdRepository(@ApiParam("User Path Id") @PathVariable Long id) {
         HibernateUsers user = hibernateUsersRepository.findById(id).orElse(null);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     /*Create */
-    @PostMapping("/spring-data/create(converted)")
+    @PostMapping("/spring-data")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<HibernateUsers> createConvertedHibernateUser(@RequestBody @Valid UserCreateRequest request) {
         HibernateUsers savedConvertedUser = hibernateUsersRepository.saveAndFlush(conversionService.convert(request, HibernateUsers.class));
         hibernateRolesRepository.saveAndFlush(new HibernateRoles("ROLE_USER",savedConvertedUser));
@@ -230,47 +188,25 @@ public class UsersController {
             @ApiResponse(code = 404, message = "User was not found 111111"),
             @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
     })
-    @PutMapping("/spring-data/update(converted)/{id}")
+    @PutMapping("/spring-data/{id}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<HibernateUsers> updateHibernateUserRepository(@RequestBody @Valid UserUpdateRequest request) {
         return new ResponseEntity<>( hibernateUsersRepository.save(conversionService.convert(request, HibernateUsers.class)), HttpStatus.OK);
     }
 
     /*Delete*/
-    @DeleteMapping("/spring-data/delete/{id}")
+    @DeleteMapping("/spring-data/{id}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Long> deleteHibernateUserRepository(@PathVariable("id") Long userId) {
         hibernateUsersRepository.deleteById(userId);
         return new ResponseEntity<>(userId, HttpStatus.OK);
     }
-
-    /*@ApiOperation(value = "Search user by query")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful user update"), //OK
-            @ApiResponse(code = 400, message = "Invalid query supplied"), //Invalid request
-            @ApiResponse(code = 404, message = "User was not found"), //Resourse not found
-            @ApiResponse(code = 500, message = "Server error, something wrong")
-    })
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "limit", value = "limit of users", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "offset", value = "start node of users", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "query", value = "search query", required = true, dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @GetMapping("/search")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<Users>> searchUsers(@ApiIgnore @ModelAttribute SearchCriteria search) {
-        List<Users> searchResult = userDao.search(
-                                                    search.getQuery(),
-                                                    search.getLimit(),
-                                                    search.getOffset()
-                                                    );
-        return new ResponseEntity<>(searchResult, HttpStatus.OK);
-    }*/
 }

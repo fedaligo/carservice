@@ -9,14 +9,11 @@ import com.htp.repository.springdata.HibernateTasksRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -39,7 +36,7 @@ public class TasksController {
     /*JDBC*/
 
     /*FindAll*/
-    @GetMapping("/all")
+    @GetMapping()
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
@@ -60,18 +57,18 @@ public class TasksController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @RequestMapping(value = "/getTasksById/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     public ResponseEntity<Tasks> getTaskById(@ApiParam("Task Path Id") @PathVariable Long id) {
         Tasks tasks = tasksDao.findById(id);
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
     /*Create*/
-    @PostMapping("/create")
+    @PostMapping()
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Tasks> createTasks(@RequestBody TasksCreateRequest request) {
         Tasks t = new Tasks();
@@ -99,8 +96,9 @@ public class TasksController {
     @ApiImplicitParams({
                 @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
         })
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Tasks> updateTask(@PathVariable("id") Long id,
                                             @RequestBody TasksCreateRequest request) {
         Tasks t = tasksDao.findById(id);
@@ -119,11 +117,12 @@ public class TasksController {
 
     /*Delete*/
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Long> deleteTask(@PathVariable("id") Long id) {
         tasksDao.deleteById(id);
         return new ResponseEntity<>(id, HttpStatus.OK);
@@ -134,31 +133,13 @@ public class TasksController {
     /*SPRING DATA*/
 
     /*FindAll*/
-    @GetMapping("/spring-data/all")
+    @GetMapping("/spring-data")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<HibernateTasks>> getHibernatesTasksRepository() {
         return new ResponseEntity<>(hibernateTasksRepository.findAll(), HttpStatus.OK);
-    }
-
-    /*FindAll(pageable)*/
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
-                    value = "Results page you want to retrieve (0..N)"),
-            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
-                    value = "Number of records per page."),
-            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
-                    value = "Sorting criteria in the format: property(,asc|desc). " +
-                            "Default sort order is ascending. " +
-                            "Multiple sort criteria are supported."),
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @GetMapping("/spring-data/all(pageable)")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<HibernateTasks>> getTasksSpringData(@ApiIgnore Pageable pageable) {
-        return new ResponseEntity<>(hibernateTasksRepository.findAll(pageable), HttpStatus.OK);
     }
 
     /*FindById*/
@@ -173,18 +154,18 @@ public class TasksController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @RequestMapping(value = "/spring-data/getTasksById/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/spring-data/{id}")
     public ResponseEntity<HibernateTasks> getHibernateTasksByIdRepository(@ApiParam("Path Id") @PathVariable Long id) {
         HibernateTasks t = hibernateTasksRepository.findById(id).orElse(null);
         return new ResponseEntity<>(t, HttpStatus.OK);
     }
 
     /*Create */
-    @PostMapping("/spring-data/create(converted)")
+    @PostMapping("/spring-data")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<HibernateTasks> createConvertedHibernateTasks(@RequestBody @Valid TasksCreateRequest request) {
         //HibernateTasks savedConvertedTasks = conversionService.convert(request, HibernateTasks.class);
         return new ResponseEntity<>(hibernateTasksRepository.saveAndFlush(conversionService.convert(request, HibernateTasks.class)), CREATED);
@@ -198,21 +179,23 @@ public class TasksController {
             @ApiResponse(code = 404, message = "Tasks was not found"),
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
-    @PutMapping("/spring-data/update(converted)/{id}")
+    @PutMapping("/spring-data/{id}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<HibernateTasks> updateHibernateTasksRepository(@RequestBody @Valid TasksUpdateRequest request) {
         return new ResponseEntity<>(hibernateTasksRepository.save(conversionService.convert(request, HibernateTasks.class)), HttpStatus.OK);
     }
 
     /*Delete*/
-    @DeleteMapping("/spring-data/delete/{id}")
+    @DeleteMapping("/spring-data/{id}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Long> deleteHibernateTasksRepository(@PathVariable("id") Long id) {
         hibernateTasksRepository.deleteById(id);
         return new ResponseEntity<>(id, HttpStatus.OK);

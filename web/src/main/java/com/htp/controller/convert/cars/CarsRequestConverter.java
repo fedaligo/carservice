@@ -7,6 +7,7 @@ import com.htp.repository.hibernate.HibernateUsersDao;
 
 
 public abstract class CarsRequestConverter<S, T> extends EntityConverter<S, T> {
+
     protected HibernateCars doConvert(HibernateCars t, CarsCreateRequest request) {
 
         HibernateUsersDao hibernateUsersDao = null;

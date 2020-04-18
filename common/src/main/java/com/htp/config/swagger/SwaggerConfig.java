@@ -26,8 +26,8 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder().title("CARSERVICE.BY")//Spring Boot REST API
-                .description("HTP REST API project for IT-ACADEMY")
+        return new ApiInfoBuilder().title("CARSERVICE.BY")
+                .description("Spring Boot REST API project for IT-ACADEMY")
                 .contact(new Contact("Igor Fedonenkov", "https://www.facebook.com/profile.php?id=100016753080753&ref=bookmarks",
                         "fedaligo@mail.ru"))
                 .license("Apache 2.0")

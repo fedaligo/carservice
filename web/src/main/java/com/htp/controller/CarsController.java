@@ -3,20 +3,18 @@ package com.htp.controller;
 import com.htp.controller.requests.cars.CarsCreateRequest;
 import com.htp.controller.requests.cars.CarsUpdateRequest;
 import com.htp.domain.Cars;
+import com.htp.domain.enums.TypeOfFuel;
 import com.htp.domain.hibernate.HibernateCars;
 import com.htp.repository.jdbc.CarsDao;
 import com.htp.repository.springdata.HibernateCarsRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -34,10 +32,15 @@ public class CarsController {
 
     private final HibernateCarsRepository hibernateCarsRepository;
 
+    private static final TypeOfFuel typeOfFuel = TypeOfFuel.NOT_SELECTED;
+
+        /*User controllers
+        Admin controllers*/
+
     /*JDBC*/
 
     /*FindAll*/
-    @GetMapping("/all")
+    @GetMapping()
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
@@ -58,18 +61,18 @@ public class CarsController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @RequestMapping(value = "/getCarsById/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     public ResponseEntity<Cars> getCarById(@ApiParam("Car Path Id") @PathVariable Long id) {
         Cars cars = carsDao.findById(id);
         return new ResponseEntity<>(cars, HttpStatus.OK);
     }
 
     /*Create*/
-    @PostMapping("/create")
+    @PostMapping()
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Cars> createCar(@RequestBody CarsCreateRequest request) {
         Cars t = new Cars();
@@ -97,8 +100,9 @@ public class CarsController {
     @ApiImplicitParams({
                 @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
         })
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Cars> updateCars(@PathVariable("id") Long id,
                                            @RequestBody CarsCreateRequest request) {
         Cars t = carsDao.findById(id);
@@ -114,11 +118,12 @@ public class CarsController {
     }
 
     /*Delete*/
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Long> deleteCar(@PathVariable("id") Long id) {
         carsDao.deleteById(id);
         return new ResponseEntity<>(id, HttpStatus.OK);
@@ -127,31 +132,13 @@ public class CarsController {
     /*SPRING DATA*/
 
     /*FindAll*/
-    @GetMapping("/spring-data/all")
+    @GetMapping("/spring-data")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<HibernateCars>> getHibernatesCarsRepository() {
         return new ResponseEntity<>(hibernateCarsRepository.findAll(), HttpStatus.OK);
-    }
-
-    /*FindAll(pageable)*/
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
-                    value = "Results page you want to retrieve (0..N)"),
-            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
-                    value = "Number of records per page."),
-            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
-                    value = "Sorting criteria in the format: property(,asc|desc). " +
-                            "Default sort order is ascending. " +
-                            "Multiple sort criteria are supported."),
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @GetMapping("/spring-data/all(pageable)")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<HibernateCars>> getCarsSpringData(@ApiIgnore Pageable pageable) {
-        return new ResponseEntity<>(hibernateCarsRepository.findAll(pageable), HttpStatus.OK);
     }
 
     /*FindById*/
@@ -166,18 +153,20 @@ public class CarsController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @RequestMapping(value = "/spring-data/getCarsById/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/spring-data/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<HibernateCars> getHibernateCarsByIdRepository(@ApiParam("Path Id") @PathVariable Long id) {
         HibernateCars t = hibernateCarsRepository.findById(id).orElse(null);
         return new ResponseEntity<>(t, HttpStatus.OK);
     }
 
     /*Create */
-    @PostMapping("/spring-data/create(converted)")
+    @PostMapping("/spring-data")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<HibernateCars> createConvertedHibernateCars(@RequestBody @Valid CarsCreateRequest request) {
         //HibernateTasks savedConvertedTasks = conversionService.convert(request, HibernateTasks.class);
         return new ResponseEntity<>(hibernateCarsRepository.saveAndFlush(conversionService.convert(request, HibernateCars.class)), CREATED);
@@ -194,18 +183,20 @@ public class CarsController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
-    @PutMapping("/spring-data/update(converted)/{id}")
+    @PutMapping("/spring-data/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<HibernateCars> updateHibernateCarsRepository(@RequestBody @Valid CarsUpdateRequest request) {
         return new ResponseEntity<>(hibernateCarsRepository.save(conversionService.convert(request, HibernateCars.class)), HttpStatus.OK);
     }
 
     /*Delete*/
-    @DeleteMapping("/spring-data/delete/{id}")
+    @DeleteMapping("/spring-data/{id}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
     })
     @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Long> deleteHibernateCarsRepository(@PathVariable("id") Long id) {
         hibernateCarsRepository.deleteById(id);
         return new ResponseEntity<>(id, HttpStatus.OK);

@@ -1,6 +1,11 @@
 package com.htp.domain;
 
-import lombok.*;
+import com.htp.domain.enums.TypeOfFuel;
+import com.htp.domain.enums.TypeOfTransmission;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -10,8 +15,8 @@ public class Cars {
     private Long id;
     private String carBrand;
     private String brandModel;
-    private String typeOfTransmission;
-    private String typeOfFuel;
+    private TypeOfTransmission typeOfTransmission;
+    private TypeOfFuel typeOfFuel;
     private String vinNumber;
     private Long userId;
     private Long carWeight;

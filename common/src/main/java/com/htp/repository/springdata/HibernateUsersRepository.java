@@ -1,6 +1,6 @@
 package com.htp.repository.springdata;
 
-import com.htp.domain.Gender;
+import com.htp.domain.enums.Gender;
 import com.htp.domain.hibernate.HibernateUsers;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

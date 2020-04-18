@@ -2,11 +2,15 @@ package com.htp.domain.hibernate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.htp.domain.enums.TypeOfFuel;
+import com.htp.domain.enums.TypeOfTransmission;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.Set;
+
+import static javax.persistence.EnumType.STRING;
 
 @Data
 @Setter
@@ -31,11 +35,13 @@ public class HibernateCars {
     @Column(name = "brand_Model")
     private String brandModel;
 
-    @Column(name = "type_Of_Transmission")
-    private String typeOfTransmission;
+    @Enumerated(STRING)
+    @Column(name = "type_Of_transmission")
+    private TypeOfTransmission typeOfTransmission = TypeOfTransmission.NOT_SELECTED;
 
-    @Column(name = "type_Of_Fuel")
-    private String typeOfFuel;
+    @Enumerated(STRING)
+    @Column(name = "type_Of_fuel")
+    private TypeOfFuel typeOfFuel = TypeOfFuel.NOT_SELECTED;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
