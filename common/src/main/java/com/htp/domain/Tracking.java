@@ -1,5 +1,6 @@
 package com.htp.domain;
 
+import com.htp.domain.enums.Status;
 import lombok.*;
 
 import java.util.Date;
@@ -12,7 +13,7 @@ public class Tracking {
     private Long id;
     private Long idTask;
     private Long idOrganaizer;
-    private String status;
+    private Status status;
     private Date confirmDate;
     private Long cost;
 

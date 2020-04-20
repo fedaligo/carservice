@@ -21,10 +21,9 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/admin/rest/organizations")
+@RequestMapping(value = "/organization")
 @RequiredArgsConstructor
-public class OrganizationsController {
-
+public class OrganizationsProfileController {
     private final OrganizationsDao organizationsDao;
 
     private final ConversionService conversionService;
@@ -92,8 +91,8 @@ public class OrganizationsController {
             @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
     })
     @ApiImplicitParams({
-                @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-        })
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Transactional(rollbackFor = Exception.class)

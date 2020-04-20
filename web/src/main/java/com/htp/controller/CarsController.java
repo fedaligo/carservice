@@ -22,7 +22,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/rest/cars")
+@RequestMapping(value = "/admin/rest/cars")
 @RequiredArgsConstructor
 public class CarsController {
 

@@ -15,15 +15,14 @@ public abstract class UserRequestConverter<S, T> extends EntityConverter<S, T> {
 
     protected HibernateUsers doConvert(HibernateUsers user, UserCreateRequest request) {
 
-        //user.setLogin(request.getLogin());
-        //user.setPassword(request.getPassword());
         user.setCreated(new Timestamp(new Date().getTime()));
         user.setChanged(new Timestamp(new Date().getTime()));
         user.setIsDeleted(false);
+        user.setGender(request.getGender());
         user.setEMail(request.getEMail());
         user.setPhoneNumberUser(request.getPhNumberUser());
 
-        log.info("UserCreateRequest with params {} {} ", 4, 5);
+        log.info("UserCreateRequest for user with login {}  ", user.getLogin());
 
         return user;
     }

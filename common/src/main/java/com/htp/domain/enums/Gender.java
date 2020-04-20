@@ -1,7 +1,7 @@
 package com.htp.domain.enums;
 
 public enum Gender {
-    MALE,FEMALE,NOT_SELECTED
+    NOT_SELECTED,MALE,FEMALE
     /*MALE("Male"),
     FEMALE("Female"),
     NOT_SELECTED("Not Selected");

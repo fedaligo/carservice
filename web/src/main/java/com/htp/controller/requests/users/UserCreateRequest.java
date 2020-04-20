@@ -1,11 +1,10 @@
 package com.htp.controller.requests.users;
 
+import com.htp.domain.enums.Gender;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Data
 @NoArgsConstructor
@@ -15,20 +14,25 @@ public class UserCreateRequest {
     @NotNull
     @NotEmpty
     @Size(min = 6, max = 20)
+    @ApiModelProperty(example = "login")
     private String login;
 
     @NotNull
     @NotEmpty
     @Size(min = 1, max = 100)
+    @ApiModelProperty(example = "password")
     private String password;
 
     @NotNull
-    @NotEmpty
     @Email
+    @ApiModelProperty(example = "example@mail.ru")
     @Size(min = 1, max = 100)
     private String eMail;
 
-    /*@NotNull
-    @NotEmpty*/
+    @NotNull
+    @PositiveOrZero
+    @ApiModelProperty(example = "80291111111")
     private Long phNumberUser;
+
+    private Gender gender;
 }

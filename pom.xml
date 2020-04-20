@@ -26,10 +26,11 @@
     </properties>
 
     <parent>
+        <!-- Parent pom providing dependency and plugin management for applications built with Maven -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.2.4.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
 
     <build>
@@ -46,12 +47,10 @@
                     <release>11</release>
                 </configuration>
             </plugin>
-
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
             </plugin>
-
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.22.2</version>
@@ -60,169 +59,148 @@
     </build>
 
     <dependencies>
-
-        <dependency><!--+-->
+        <!--JSON Web Token Support For The JVM-->
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
         </dependency>
 
-        <dependency><!--+-->
+        <!--Starter for using Spring Framework's caching support-->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
 
-        <dependency><!--+-->
+        <!--A high performance caching library-->
+        <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
             <version>2.8.1</version>
         </dependency>
 
-
-        <dependency><!--+-->
+        <!--Support for the DB migration-->
+        <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
             <version>6.3.3</version>
         </dependency>
 
-        <dependency><!--+-->
+        <!--Starter for building web, including RESTful, applications using
+        Spring MVC. Uses Tomcat as the default embedded container-->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <dependency><!--+-->
+        <!--Starter for using Spring Security-->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure -->
+        <!--Starter for using JDBC with the HikariCP connection pool-->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-
-        </dependency>
-
-
-        <dependency><!--+-->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
-
-        <dependency><!--+-->
+        <!--Starter for aspect-oriented programming with Spring AOP and AspectJ-->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <dependency><!--+-->
+        <!--Starter for logging using Logback. Default logging starter-->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
 
-        <dependency><!--+-->
+        <!--Starter for using Spring Boot's Actuator which provides production ready
+        features to help you monitor and manage your application-->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <dependency><!--+-->
+        <!--Spring Boot Developer Tools-->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <dependency><!--+-->
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency><!--+-->
+        <!--Apache Commons Lang, a package of Java utility classes for the classes
+        that are in java.lang's hierarchy, or are considered to be so standard as to
+        justify existence in java.lang. -->
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.8.1</version>
         </dependency>
 
-        <!--Commons Database Connection Pooling-->
+        <!--(DEPRECATED) Commons Database Connection Pooling-->
         <dependency><!--+-->
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <version>${dbcp-version}</version>
         </dependency>
 
-        <dependency><!--+-->
+        <!--(DEPRECATED) Apache Log4j 1.2-->
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j}</version>
         </dependency>
 
-        <dependency><!--+-->
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
-        <dependency><!--+-->
+        <!--Java JDBC 4.2 (JRE 8+) driver for PostgreSQL database-->
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.10</version>
         </dependency>
 
-        <dependency><!--+-->
+        <!--Javassist (JAVA programming ASSISTant) makes Java bytecode manipulation
+        simple. It is a class library for editing bytecodes in Java. -->
+        <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
             <version>3.23.1-GA</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
-        <dependency><!--+-->
+        <!--JSON API documentation for spring based applications-->
+        <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>${swagger.version}</version>
         </dependency>
 
-        <dependency><!--+-->
+        <!--JSON API documentation for spring based applications-->
+        <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${swagger.version}</version>
         </dependency>
 
-        <dependency><!--+-->
+        <!--Hibernate'score ORM functionality-->
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
         </dependency>
 
-        <dependency><!--+-->
+        <!--Starter for using Spring Data JPA with Hibernate-->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <dependency><!--+-->
+        <!--Spice up your java: Automatic Resource Management, automatic generation
+        of getters, setters, equals, hashCode and toString, and more.-->
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-jpamodelgen</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>2.3.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
-            <version>2.3.2</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-
-        </dependency>
-
     </dependencies>
 </project>

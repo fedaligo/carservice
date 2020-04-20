@@ -67,17 +67,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 //.antMatchers("/rest/users/secured").hasRole("ADMIN")
-                .antMatchers("/guest/**").permitAll()
+                //.antMatchers("/guest/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
                 .antMatchers("/authentication/**").permitAll()
-                //.antMatchers("/rest/**").hasRole("ADMIN")
-                .antMatchers("/rest/users/**").hasRole("USER")
-                .antMatchers("/rest/cars/**").hasRole("USER")
-                .antMatchers("/rest/tasks/**").hasAnyRole("USER","ORG")
-                .antMatchers("/rest/tracking/**").hasRole("USER")
-                //.antMatchers("/rest/roles/**").hasRole("ADMIN")
-                .antMatchers("/rest/organizations/**").hasRole("ORG")
-                //.antMatchers("/admin/**").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasAnyRole("USER","ADMIN")
+                .antMatchers("/organization/**").hasAnyRole("ADMIN","ORG")
                 .anyRequest().authenticated();
 
                 //Custom JWT based authentication

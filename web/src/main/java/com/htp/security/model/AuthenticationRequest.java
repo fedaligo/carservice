@@ -15,11 +15,11 @@ import javax.validation.constraints.NotEmpty;
 public class AuthenticationRequest {
 
     @NotEmpty
-    @ApiModelProperty(required = true, allowableValues = "igor", dataType = "string", notes = "user's login")
+    @ApiModelProperty(required = true, allowableValues = "login", dataType = "string", notes = "user's login")
     private String username;
 
     @NotEmpty
-    @ApiModelProperty(required = true, allowableValues = "parolparol", dataType = "string", notes = "user's password")
+    @ApiModelProperty(required = true, allowableValues = "password", dataType = "string", notes = "user's password")
     private String password;
 
 }

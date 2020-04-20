@@ -29,7 +29,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @Slf4j
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/rest/users")
+@RequestMapping(value = "/admin/rest/users")
 @RequiredArgsConstructor
 public class UsersController {
 
@@ -44,6 +44,23 @@ public class UsersController {
     private final ConversionService conversionService;
 
     private final RolesDao rolesDao;
+
+    /*@GetMapping(value = "/test/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<HibernateUsers> getHibernateUserByIdRepository123(@ApiParam("User Path Id") @PathVariable String id,
+                                                                            @ApiIgnore Principal principal) {
+        String username = PrincipalUtil.getUsername(principal);
+        HibernateUsers performer = hibernateUsersRepository.findByLogin(username).orElseThrow(() -> new EntityNotFoundException(HibernateUsers.class, username));
+        HibernateUsers user = hibernateUsersRepository.findById(Long.valueOf(id)).orElseThrow(() -> new EntityNotFoundException(HibernateUsers.class, id));
+
+        log.info("Performer with username {} find by id {} user with login {}", performer.getLogin(), id, user.getLogin());
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+*/
 
     /*JDBC*/
 
@@ -197,6 +214,23 @@ public class UsersController {
     public ResponseEntity<HibernateUsers> updateHibernateUserRepository(@RequestBody @Valid UserUpdateRequest request) {
         return new ResponseEntity<>( hibernateUsersRepository.save(conversionService.convert(request, HibernateUsers.class)), HttpStatus.OK);
     }
+
+    /*@ApiOperation(value = "Update Cars by ID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful Cars update"),
+            @ApiResponse(code = 400, message = "Invalid Cars ID supplied"),
+            @ApiResponse(code = 404, message = "Cars was not found"),
+            @ApiResponse(code = 500, message = "Server error, something wrong")
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
+    @PutMapping("/spring-data/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<HibernateCars> updateHibernateCarsRepository(@RequestBody @Valid CarsUpdateRequest request) {
+        return new ResponseEntity<>(hibernateCarsRepository.save(conversionService.convert(request, HibernateCars.class)), HttpStatus.OK);
+    }*/
 
     /*Delete*/
     @DeleteMapping("/spring-data/{id}")

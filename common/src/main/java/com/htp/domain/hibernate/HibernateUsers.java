@@ -1,6 +1,5 @@
 package com.htp.domain.hibernate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.htp.domain.enums.Gender;
 import lombok.*;
@@ -20,7 +19,7 @@ import static javax.persistence.EnumType.STRING;
 @RequiredArgsConstructor
 @EqualsAndHashCode(exclude = {"userId","cars","role"})
 @ToString(exclude = {"cars","role"})
-@NamedQuery(name = "m_users_multiple_ids_search", query = "select tu from HibernateUsers tu where tu.userId in (:userIds)")
+//@NamedQuery(name = "m_users_multiple_ids_search", query = "select tu from HibernateUsers tu where tu.userId in (:userIds)")
 @Entity
 @Table(name = "m_users")
 /*@Configuration
@@ -35,7 +34,7 @@ public class HibernateUsers {
     @Column
     private String login;
 
-    @JsonIgnore
+    //@JsonIgnore
     @Column
     private String password;
 
@@ -45,15 +44,15 @@ public class HibernateUsers {
     @Column(name = "changed")
     private Timestamp changed;
 
-    @JsonIgnore
+    //@JsonIgnore
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
-    @JsonIgnore
+    //@JsonIgnore
     @Column(name = "e_mail")
     private String eMail;
 
-    @JsonIgnore
+    //@JsonIgnore
     @Column(name = "phone_number_user")
     private Long phoneNumberUser;
 

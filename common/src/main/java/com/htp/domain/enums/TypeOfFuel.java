@@ -1,5 +1,5 @@
 package com.htp.domain.enums;
 
 public enum TypeOfFuel {
-    GASOLINE,DIESEL,NOT_SELECTED
+    NOT_SELECTED,GASOLINE,DIESEL
 }

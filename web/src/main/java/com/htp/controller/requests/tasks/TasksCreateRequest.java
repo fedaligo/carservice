@@ -1,11 +1,13 @@
 package com.htp.controller.requests.tasks;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
 @Data
@@ -15,40 +17,37 @@ public class TasksCreateRequest {
     @NotNull
     @NotEmpty
     @Size(min = 2, max = 100)
+    @ApiModelProperty(example = "diagnostic")
     private String serviceWorkName;
 
-    /*@NotNull
-    @NotEmpty*/
     private Boolean necessityOfEvacuation;
 
-    /*@NotNull
-    @NotEmpty*/
     private Boolean wheelBrake;
 
-    /*@NotNull
-    @NotEmpty*/
-    //@Size(min = 2, max = 100)
+    @NotNull
+    //@NotEmpty
+    @PositiveOrZero
     private Long idCar;
 
     @NotNull
     @NotEmpty
+    @ApiModelProperty(example = "traffic accident")
     @Size(min = 2, max = 100)
     private String description;
 
-    /*@NotNull
-    @NotEmpty
-    @Size(min = 2, max = 10)*/
+    @NotNull
+    //@NotEmpty
+    @PositiveOrZero
     private Double latitude;
 
-    /*@NotNull
-    @NotEmpty
-    @Size(min = 2, max = 10)*/
+    @NotNull
+    //@NotEmpty
+    @PositiveOrZero
     private Double longitude;
 
     @NotNull
     @NotEmpty
     @Size(min = 2, max = 50)
+    @ApiModelProperty(example = "malinovka")
     private String localDescription;
-
-    //idCar
 }

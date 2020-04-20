@@ -8,5 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CarsUpdateRequest extends CarsCreateRequest{
+
+    //@JsonIgnore
     private Long id;
 }

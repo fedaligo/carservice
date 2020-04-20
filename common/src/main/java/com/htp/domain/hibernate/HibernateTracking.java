@@ -1,10 +1,13 @@
 package com.htp.domain.hibernate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.htp.domain.enums.Status;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+
+import static javax.persistence.EnumType.STRING;
 
 @Data
 @Setter
@@ -32,8 +35,9 @@ public class HibernateTracking {
     @JoinColumn(name = "id_organaizer")
     private HibernateOrganizations organizations;
 
+    @Enumerated(STRING)
     @Column
-    private String status;
+    private Status status = Status.NOT_CONFIRMED;
 
     @Column
     private Date confirm_date;

@@ -23,7 +23,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/rest/tracking")
+@RequestMapping(value = "/admin/rest/tracking")
 @RequiredArgsConstructor
 public class TrackingController {
 

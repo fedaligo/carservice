@@ -43,6 +43,7 @@ public class HibernateCars {
     @Column(name = "type_Of_fuel")
     private TypeOfFuel typeOfFuel = TypeOfFuel.NOT_SELECTED;
 
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")

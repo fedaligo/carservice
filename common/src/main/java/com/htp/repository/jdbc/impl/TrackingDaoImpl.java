@@ -40,7 +40,7 @@ public class TrackingDaoImpl implements TrackingDao {
         tracking.setId(resultSet.getLong(ID));
         tracking.setIdTask(resultSet.getLong(ID_TASK));
         tracking.setIdOrganaizer(resultSet.getLong(ID_ORGANAIZER));
-        tracking.setStatus(resultSet.getString(STATUS));
+        //tracking.setStatus(resultSet.getString(STATUS));
         tracking.setConfirmDate(resultSet.getDate(CONFIRM_DATE));
         tracking.setCost(resultSet.getLong(COST));
         return tracking;

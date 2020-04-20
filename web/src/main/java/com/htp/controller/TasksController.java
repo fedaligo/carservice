@@ -23,7 +23,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/rest/tasks")
+@RequestMapping(value = "/admin/rest/tasks")
 @RequiredArgsConstructor
 public class TasksController {
 
