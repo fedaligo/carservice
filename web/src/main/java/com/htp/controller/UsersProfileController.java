@@ -8,7 +8,6 @@ import com.htp.controller.requests.tasks.TasksUpdateRequest;
 import com.htp.controller.requests.tracking.TrackingCreateRequest;
 import com.htp.controller.requests.users.UserCreateRequest;
 import com.htp.controller.requests.users.UserUpdateRequest;
-import com.htp.domain.enums.Status;
 import com.htp.domain.hibernate.HibernateCars;
 import com.htp.domain.hibernate.HibernateTasks;
 import com.htp.domain.hibernate.HibernateUsers;
@@ -51,8 +50,6 @@ public class UsersProfileController {
     private final TrackingCreateRequestConverter trackingCreateRequestConverter;
 
     private final ConversionService conversionService;
-
-    private final Status status = Status.NOT_CONFIRMED;
 
     /*@GetMapping(value = "/test/{id}")
     @ApiImplicitParams({
@@ -106,7 +103,6 @@ public class UsersProfileController {
     @ResponseStatus(HttpStatus.OK)
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<String> deleteMyUser(@ApiIgnore Principal principal) {
-        //HibernateUsers hibernateUsers = hibernateUsersRepository.findByLoginNotDeleted(principal.getName()).orElse(null);
         String login = PrincipalUtil.getUsername(principal);
         hibernateUsersRepository.fakeDelete(login);
         return new ResponseEntity<>(login, HttpStatus.OK);
@@ -227,23 +223,14 @@ public class UsersProfileController {
     public ResponseEntity<HibernateTasks> createConvertedHibernateTasks(@RequestBody @Valid TasksCreateRequest request,
                                                                         String brand, String model,
                                                                         @ApiIgnore Principal principal ) {
-        //HibernateTracking tracking = new HibernateTracking();
-
-
         String login = PrincipalUtil.getUsername(principal);
         HibernateUsers user = hibernateUsersRepository.findByLoginNotDeleted(login).orElse(null);
         HibernateCars car = hibernateCarsRepository.findByCarBrandAndBrandModelAndUser(brand, model, user).orElse(null);
         request.setIdCar(car.getId());
         HibernateTasks task = hibernateTasksRepository.saveAndFlush(conversionService.convert(request, HibernateTasks.class));
-        //tracking.setTasks(task);
-        //tracking.setStatus(status);
         TrackingCreateRequest trackingCreateRequest = new TrackingCreateRequest();
         trackingCreateRequest.setIdTask(task.getId());
-        //trackingCreateRequest.setStatus(status);
-        //trackingCreateRequest.setCost(0l);
-        //trackingCreateRequest.setIdOrganaizer(1l);
-
-                hibernateTrackingRepository.saveAndFlush(trackingCreateRequestConverter.convert(trackingCreateRequest));
+        hibernateTrackingRepository.saveAndFlush(trackingCreateRequestConverter.convert(trackingCreateRequest));
         return new ResponseEntity<>(task, CREATED);
     }
 

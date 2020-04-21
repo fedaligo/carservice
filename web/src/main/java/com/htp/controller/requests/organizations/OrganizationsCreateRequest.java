@@ -1,5 +1,6 @@
 package com.htp.controller.requests.organizations;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class OrganizationsCreateRequest {
     @Size(min = 1, max = 30)
     private String password;
 
+    @JsonIgnore
     @NotNull
     @NotEmpty
     @Size(min = 1, max = 30)
@@ -36,7 +38,7 @@ public class OrganizationsCreateRequest {
     private String webSite;
 
     @NotNull
-    @NotEmpty
+    //@NotEmpty
     @PositiveOrZero
     @ApiModelProperty(example = "80291111111")
     private Long phoneNumber;

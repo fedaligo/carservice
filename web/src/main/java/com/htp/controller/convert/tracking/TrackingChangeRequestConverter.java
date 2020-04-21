@@ -5,9 +5,11 @@ import com.htp.domain.hibernate.HibernateTracking;
 import com.htp.exceptions.EntityNotFoundException;
 import com.htp.repository.hibernate.HibernateOrganizationsDao;
 import com.htp.repository.hibernate.HibernateTasksDao;
+import org.springframework.stereotype.Component;
 
 import static java.util.Optional.ofNullable;
 
+@Component
 public class TrackingChangeRequestConverter extends TrackingRequestConverter<TrackingUpdateRequest, HibernateTracking> {
     public TrackingChangeRequestConverter(HibernateTasksDao hibernateTasksDao, HibernateOrganizationsDao hibernateOrganizationsDao) {
         super(hibernateTasksDao, hibernateOrganizationsDao);

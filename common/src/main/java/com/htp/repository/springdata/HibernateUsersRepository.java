@@ -35,6 +35,4 @@ public interface HibernateUsersRepository extends CrudRepository<HibernateUsers,
     @Query("UPDATE HibernateUsers hu SET hu.isDeleted = true WHERE hu.login=:login")
     void fakeDelete(String login);
 
-   /* @Query("select u.birthDate from TestUser u where u.login like %:lowerId%")
-    List<Timestamp> qweqweqweqw3(@Param("lowerId") String qweqwe);*/
 }

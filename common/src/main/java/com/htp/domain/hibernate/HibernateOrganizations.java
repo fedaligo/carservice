@@ -28,6 +28,9 @@ public class HibernateOrganizations {
         @Column(name = "password")
         private String password;
 
+        @Column(name = "is_deleted")
+        private Boolean isDeleted;
+
         @Column(name = "role")
         private String role;
 

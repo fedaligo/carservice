@@ -24,17 +24,19 @@ public abstract class TrackingRequestConverter<S, T> extends EntityConverter<S, 
         HibernateOrganizations hibernateOrganizations = null;
         Timestamp timestamp = null;
         Status status = Status.NOT_CONFIRMED;
+        Long cost = null;
         HibernateTasks hibernateTasks = hibernateTasksDao.findById(request.getIdTask());
 
         if(request.getIdOrganaizer()!=null){
         hibernateOrganizations = hibernateOrganizationsDao.findById(request.getIdOrganaizer());
         timestamp = new Timestamp(new Date().getTime());
-        status = Status.CONFIRMED;}
+        status = Status.CONFIRMED;
+        cost = request.getCost();}
 
 
 
         t.setConfirm_date(timestamp);
-        t.setCost(request.getCost());
+        t.setCost(cost);
         t.setStatus(status);
         t.setOrganizations(hibernateOrganizations);
         t.setTasks(hibernateTasks);
