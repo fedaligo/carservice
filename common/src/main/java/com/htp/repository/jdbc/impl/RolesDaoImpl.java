@@ -25,10 +25,8 @@ public class RolesDaoImpl implements RolesDao {
     public static final String NAME_OF_ROLE ="name_of_role";
     public static final String USER_ID ="user_id";
 
-
-    //@Autowired
     private final JdbcTemplate jdbcTemplate;
-    //@Autowired
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     //getEmployeeRowMapper parsing resultset

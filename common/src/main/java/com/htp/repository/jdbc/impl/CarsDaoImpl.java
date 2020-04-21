@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-@Repository//("CarsDaoImpl")
+@Repository
 @RequiredArgsConstructor
 @Transactional
 public class CarsDaoImpl implements CarsDao {
@@ -31,11 +31,8 @@ public class CarsDaoImpl implements CarsDao {
     public static final String USER_ID ="user_id";
     public static final String CAR_WEIGHT ="car_weight";
 
-    //@Autowired
     private final JdbcTemplate jdbcTemplate;
 
-    //private final TypeOfTransmission typeOfTransmission;
-    //@Autowired
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     //getEmployeeRowMapper parsing resultset
@@ -44,8 +41,6 @@ public class CarsDaoImpl implements CarsDao {
         cars.setId(resultSet.getLong(ID));
         cars.setCarBrand(resultSet.getString(CAR_BRAND));
         cars.setBrandModel(resultSet.getString(BRAND_MODEL));
-       /* cars.setTypeOfTransmission(resultSet.getString(typeOfTransmission.getTypeOfTransmissionName()));
-        cars.setTypeOfFuel(resultSet.getString(TYPE_OF_FUEL));*/
         cars.setVinNumber(resultSet.getString(VIN_NUMBER));
         cars.setUserId(resultSet.getLong(USER_ID));
         cars.setCarWeight(resultSet.getLong(CAR_WEIGHT));
@@ -132,14 +127,11 @@ public class CarsDaoImpl implements CarsDao {
         return findById(createdId);
     }
 
-
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Cars updateOne(Cars entity) {
         final String sql = "UPDATE m_car set car_brand = :car_brand, brand_model=:brand_model, type_of_transmission = :type_of_transmission, " +
                 "type_of_fuel = :type_of_fuel, vin_number = :vin_number, user_id = :user_id, car_weight = :car_weight  where id = :id";
-
-        //KeyHolder keyHolder = new GeneratedKeyHolder();
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(ID, entity.getId());
@@ -152,16 +144,7 @@ public class CarsDaoImpl implements CarsDao {
         params.addValue(CAR_WEIGHT, entity.getCarWeight());
 
         namedParameterJdbcTemplate.update(sql, params);
-        //long createdId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
         return findById(entity.getId());
     }
-
-    /*@Override
-    public List<Cars> trackingByHigherCost(Long cost) {
-        String sql = "SELECT * FROM m_car WHERE cost >= :cost";
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("cost", cost);
-        return namedParameterJdbcTemplate.query(sql, params, this::getEmployeeRowMapper);
-    }*/
-
 }

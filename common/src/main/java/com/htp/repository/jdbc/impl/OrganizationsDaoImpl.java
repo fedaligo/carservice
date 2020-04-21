@@ -33,9 +33,8 @@ public class OrganizationsDaoImpl implements OrganizationsDao {
     public static final String SPECIALIZE ="specialize";
     public static final String E_MAIL ="e_mail";
 
-    //@Autowired
     private final JdbcTemplate jdbcTemplate;
-    //@Autowired
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     //getEmployeeRowMapper parsing resultset

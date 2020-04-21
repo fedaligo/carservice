@@ -33,9 +33,8 @@ public class TasksDaoImpl implements TasksDao {
     public static final String LONGITUDE ="longitude";
     public static final String LOCAL_DESCRIPTION ="local_description";
 
-    //@Autowired
     private final JdbcTemplate jdbcTemplate;
-    //@Autowired
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     //getEmployeeRowMapper parsing resultset

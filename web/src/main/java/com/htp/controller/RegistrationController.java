@@ -46,7 +46,6 @@ public class RegistrationController {
     @Transactional(rollbackFor = {Exception.class})
     public ResponseEntity<HibernateOrganizations> createConvertedHibernateOrganization(@RequestBody @Valid OrganizationsCreateRequest request) {
         HibernateOrganizations savedConverted = hibernateOrganizationsRepository.saveAndFlush(conversionService.convert(request, HibernateOrganizations.class));
-        //hibernateRolesRepository.saveAndFlush(new HibernateRoles("ROLE_USER",savedConvertedUser));
         return new ResponseEntity<>( savedConverted, CREATED);
     }
 }

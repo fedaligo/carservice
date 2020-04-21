@@ -1,9 +1,13 @@
 package com.htp.controller.requests.tracking;
 
 
-import lombok.*;
+import lombok.Setter;
+import lombok.Getter;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-//@Data
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)

@@ -9,6 +9,6 @@ public class RolesCreateRequestConverter extends RolesRequestConverter<RolesCrea
     @Override
     public HibernateRoles convert(RolesCreateRequest request) {
         HibernateRoles t = new HibernateRoles();
-        return t/*doConvert(t, request)*/;
+        return t;
     }
 }

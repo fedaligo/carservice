@@ -33,10 +33,8 @@ public class CarsCreateRequest {
 
         private TypeOfFuel typeOfFuel;
 
-        //@JsonIgnore
         @NotNull
         @PositiveOrZero
-        //@NotEmpty
         private Long userId;
 
         @NotNull

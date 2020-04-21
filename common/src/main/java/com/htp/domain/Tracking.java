@@ -1,7 +1,10 @@
 package com.htp.domain;
 
 import com.htp.domain.enums.Status;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 import java.util.Date;
 

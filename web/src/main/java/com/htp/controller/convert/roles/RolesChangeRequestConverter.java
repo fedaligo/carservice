@@ -14,6 +14,6 @@ public class RolesChangeRequestConverter extends RolesRequestConverter<RolesUpda
         HibernateRoles t =
                 ofNullable(entityManager.find(HibernateRoles.class, request.getId()))
                         .orElseThrow(() -> new EntityNotFoundException(HibernateRoles.class, request.getId()));
-        return t/*doConvert(t, request)*/;
+        return t;
     }
 }

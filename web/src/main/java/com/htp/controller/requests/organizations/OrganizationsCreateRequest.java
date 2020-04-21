@@ -38,7 +38,6 @@ public class OrganizationsCreateRequest {
     private String webSite;
 
     @NotNull
-    //@NotEmpty
     @PositiveOrZero
     @ApiModelProperty(example = "80291111111")
     private Long phoneNumber;

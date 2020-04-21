@@ -4,11 +4,9 @@ import com.htp.controller.requests.tracking.TrackingCreateRequest;
 import com.htp.domain.hibernate.HibernateTracking;
 import com.htp.repository.hibernate.HibernateOrganizationsDao;
 import com.htp.repository.hibernate.HibernateTasksDao;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
-@Qualifier("trackingCreateRequestConverter")
+@Component
 public class TrackingCreateRequestConverter extends TrackingRequestConverter<TrackingCreateRequest, HibernateTracking> {
     public TrackingCreateRequestConverter(HibernateTasksDao hibernateTasksDao, HibernateOrganizationsDao hibernateOrganizationsDao) {
         super(hibernateTasksDao, hibernateOrganizationsDao);

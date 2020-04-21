@@ -15,7 +15,6 @@ import java.util.List;
 @Qualifier("hibernateTasksDao")
 public class HibernateTasksDaoImpl implements HibernateTasksDao {
 
-    //@Autowired
     private final EntityManager entityManager;
 
     @Override

@@ -8,7 +8,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter
 @NoArgsConstructor
 @Configuration
-//@ConfigurationProperties("app")
 @ConfigurationProperties("tokenset")
 public class JwtTokenConfig {
 

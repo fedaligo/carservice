@@ -15,7 +15,6 @@ import java.util.List;
 @Qualifier("hibernateTrackingDao")
 public class HibernateTrackingDaoImpl implements HibernateTrackingDao{
 
-        //@Autowired
         private final EntityManager entityManager;
 
         @Override

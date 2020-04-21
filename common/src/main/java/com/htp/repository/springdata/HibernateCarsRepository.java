@@ -18,7 +18,6 @@ public interface HibernateCarsRepository extends CrudRepository<HibernateCars, L
     @Query("delete from HibernateCars b where b.carBrand=:brand and b.brandModel=:model and b.user=:user")
     void deleteCars(String brand, String model, HibernateUsers user);
 
-    //@Modifying
     @Query("select distinct hc FROM HibernateCars hc join fetch hc.tasks where hc.user=:user ")
     List<HibernateCars> listOfTasks(HibernateUsers user);
 

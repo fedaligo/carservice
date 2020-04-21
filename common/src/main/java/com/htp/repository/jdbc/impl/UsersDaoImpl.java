@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-@Repository//("UsersDaoImpl")
+@Repository
 @RequiredArgsConstructor
 @Transactional
 public class UsersDaoImpl implements UsersDao {
@@ -32,9 +32,8 @@ public class UsersDaoImpl implements UsersDao {
     public static final String PHONE_NUMBER_USER ="phone_number_user";
     public static final String E_MAIL ="e_mail";
 
-    //@Autowired
     private final JdbcTemplate jdbcTemplate;
-    //@Autowired
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     //getEmployeeRowMapper parsing resultset

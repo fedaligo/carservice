@@ -2,28 +2,36 @@ package com.htp.domain.hibernate;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.htp.domain.enums.Gender;
-import lombok.*;
-
-import javax.persistence.*;
+import lombok.Setter;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Set;
 
 import static javax.persistence.EnumType.STRING;
 
-//import org.springframework.context.annotation.Configuration;
 
-//@Data
 @Setter
 @Getter
 @RequiredArgsConstructor
 @EqualsAndHashCode(exclude = {"userId","cars","role"})
 @ToString(exclude = {"cars","role"})
-//@NamedQuery(name = "m_users_multiple_ids_search", query = "select tu from HibernateUsers tu where tu.userId in (:userIds)")
 @Entity
 @Table(name = "m_users")
-/*@Configuration
-@ConfigurationProperties("hibernateusers")*/
+
 public class HibernateUsers {
 
     @Id
@@ -34,7 +42,6 @@ public class HibernateUsers {
     @Column
     private String login;
 
-    //@JsonIgnore
     @Column
     private String password;
 
@@ -44,25 +51,18 @@ public class HibernateUsers {
     @Column(name = "changed")
     private Timestamp changed;
 
-    //@JsonIgnore
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
-    //@JsonIgnore
     @Column(name = "e_mail")
     private String eMail;
 
-    //@JsonIgnore
     @Column(name = "phone_number_user")
     private Long phoneNumberUser;
 
     @Enumerated(STRING)
     @Column
     private Gender gender = Gender.NOT_SELECTED;
-
-   /* @JsonManagedReference
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user_role")
-    private HibernateRoles role;*/
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "userRole")
@@ -71,9 +71,4 @@ public class HibernateUsers {
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     private Set<HibernateCars> cars = Collections.emptySet();
-
-    /*@JsonManagedReference
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user_car")
-    private HibernateCars car;*/
-
 }

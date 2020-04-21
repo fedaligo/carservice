@@ -14,15 +14,11 @@ public class TrackingCreateRequest {
 
         private Status status;
 
-
         @PositiveOrZero
         private Long cost;
 
-        //@NotNull
         @PositiveOrZero
-        //@NotEmpty
         private Long idTask;
-
 
         @PositiveOrZero
         private Long idOrganaizer;

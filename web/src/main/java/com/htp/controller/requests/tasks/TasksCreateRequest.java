@@ -25,7 +25,6 @@ public class TasksCreateRequest {
     private Boolean wheelBrake;
 
     @NotNull
-    //@NotEmpty
     @PositiveOrZero
     private Long idCar;
 
@@ -36,12 +35,10 @@ public class TasksCreateRequest {
     private String description;
 
     @NotNull
-    //@NotEmpty
     @PositiveOrZero
     private Double latitude;
 
     @NotNull
-    //@NotEmpty
     @PositiveOrZero
     private Double longitude;
 

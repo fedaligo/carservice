@@ -14,7 +14,6 @@ public abstract class CarsRequestConverter<S, T> extends EntityConverter<S, T> {
 
     protected HibernateCars doConvert(HibernateCars t, CarsCreateRequest request) {
 
-
         HibernateUsers hibernateUsers = hibernateUsersDao.findById(request.getUserId());
 
         t.setCarBrand(request.getCarBrand());

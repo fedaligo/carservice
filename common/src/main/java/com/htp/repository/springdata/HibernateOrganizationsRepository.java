@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface HibernateOrganizationsRepository extends CrudRepository<HibernateOrganizations, Long>, JpaRepository<HibernateOrganizations,Long> {
+
     Optional<HibernateOrganizations> findByLogin(String login);
 
     @Query("select hu from HibernateOrganizations hu WHERE hu.login=:login and hu.isDeleted=false")

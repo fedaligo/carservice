@@ -2,12 +2,8 @@ package com.htp.controller;
 
 import com.htp.controller.requests.users.UserCreateRequest;
 import com.htp.controller.requests.users.UserUpdateRequest;
-import com.htp.domain.Roles;
-import com.htp.domain.Users;
 import com.htp.domain.hibernate.HibernateRoles;
 import com.htp.domain.hibernate.HibernateUsers;
-import com.htp.repository.jdbc.RolesDao;
-import com.htp.repository.jdbc.UsersDao;
 import com.htp.repository.springdata.HibernateRolesRepository;
 import com.htp.repository.springdata.HibernateUsersRepository;
 import io.swagger.annotations.*;
@@ -20,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -33,129 +27,11 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequiredArgsConstructor
 public class UsersController {
 
-    //private static final Gender gender = Gender.NOT_SELECTED;
-
-    private final UsersDao userDao;
-
     private final HibernateUsersRepository hibernateUsersRepository;
 
     private final HibernateRolesRepository hibernateRolesRepository;
 
     private final ConversionService conversionService;
-
-    private final RolesDao rolesDao;
-
-    /*@GetMapping(value = "/test/{id}")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<HibernateUsers> getHibernateUserByIdRepository123(@ApiParam("User Path Id") @PathVariable String id,
-                                                                            @ApiIgnore Principal principal) {
-        String username = PrincipalUtil.getUsername(principal);
-        HibernateUsers performer = hibernateUsersRepository.findByLogin(username).orElseThrow(() -> new EntityNotFoundException(HibernateUsers.class, username));
-        HibernateUsers user = hibernateUsersRepository.findById(Long.valueOf(id)).orElseThrow(() -> new EntityNotFoundException(HibernateUsers.class, id));
-
-        log.info("Performer with username {} find by id {} user with login {}", performer.getLogin(), id, user.getLogin());
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-*/
-
-    /*JDBC*/
-
-    /*FindAll*/
-    @GetMapping()
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<Users>> getUsers() {
-        return new ResponseEntity<>(userDao.findAll(), HttpStatus.OK);
-    }
-
-    /*FindById*/
-    @ApiOperation(value = "Get user from server by id")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful getting user"),
-            @ApiResponse(code = 400, message = "Invalid User ID supplied"),
-            @ApiResponse(code = 401, message = "Lol kek"),
-            @ApiResponse(code = 404, message = "User was not found"),
-            @ApiResponse(code = 500, message = "Server error, something wrong")
-    })
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<Users> getUserById(@ApiParam("User Path Id") @PathVariable Long id) {
-        Users user = userDao.findById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
-    /*Create*/
-    @PostMapping()
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @Transactional(rollbackFor = Exception.class)
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Users> createUser(@RequestBody UserCreateRequest request) {
-        Users user = new Users();
-        user.setLogin(request.getLogin());
-        user.setPassword(request.getPassword());
-        user.setCreated(new Timestamp(new Date().getTime()));
-        user.setChanged(new Timestamp(new Date().getTime()));
-        user.setIsDeleted(false);
-        user.setEMail(request.getEMail());
-        user.setPhNumberUser(request.getPhNumberUser());
-
-        Users savedUser = userDao.save(user);
-        rolesDao.save(new Roles(savedUser.getId(), "ROLE_USER"));
-
-        return new ResponseEntity<>(savedUser, HttpStatus.OK);
-    }
-
-    /*Update*/
-    @ApiOperation(value = "Update user by userID")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful user update 1111111"),
-            @ApiResponse(code = 400, message = "Invalid User ID supplied 111111"),
-            @ApiResponse(code = 404, message = "User was not found 111111"),
-            @ApiResponse(code = 500, message = "Server error, something wrong 1111111")
-    })
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<Users> updateUser(@PathVariable("id") Long userId,
-                                            @RequestBody UserCreateRequest request) {
-        Users user = userDao.findById(userId);
-        user.setLogin(request.getLogin());
-        user.setPassword(request.getPassword());
-        user.setChanged(new Timestamp(new Date().getTime()));
-        user.setIsDeleted(false);
-        user.setEMail(request.getEMail());
-        user.setPhNumberUser(request.getPhNumberUser());
-
-        return new ResponseEntity<>(userDao.updateOne(user), HttpStatus.OK);
-    }
-
-    /*Delete*/
-    @DeleteMapping("/{id}")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @ResponseStatus(HttpStatus.OK)
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<Long> deleteUser(@PathVariable("id") Long userId) {
-        userDao.deleteById(userId);
-        return new ResponseEntity<>(userId, HttpStatus.OK);
-    }
-
-
-    /*SPRING DATA*/
 
     /*FindAll*/
     @GetMapping("/spring-data")
@@ -214,23 +90,6 @@ public class UsersController {
     public ResponseEntity<HibernateUsers> updateHibernateUserRepository(@RequestBody @Valid UserUpdateRequest request) {
         return new ResponseEntity<>( hibernateUsersRepository.save(conversionService.convert(request, HibernateUsers.class)), HttpStatus.OK);
     }
-
-    /*@ApiOperation(value = "Update Cars by ID")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful Cars update"),
-            @ApiResponse(code = 400, message = "Invalid Cars ID supplied"),
-            @ApiResponse(code = 404, message = "Cars was not found"),
-            @ApiResponse(code = 500, message = "Server error, something wrong")
-    })
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @PutMapping("/spring-data/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<HibernateCars> updateHibernateCarsRepository(@RequestBody @Valid CarsUpdateRequest request) {
-        return new ResponseEntity<>(hibernateCarsRepository.save(conversionService.convert(request, HibernateCars.class)), HttpStatus.OK);
-    }*/
 
     /*Delete*/
     @DeleteMapping("/spring-data/{id}")

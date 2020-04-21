@@ -15,7 +15,6 @@ import java.util.List;
 @Qualifier("hibernateUserDao")
 public class HibernateUsersDaoImpl implements HibernateUsersDao {
 
-    //@Autowired
     private final EntityManager entityManager;
 
     @Override
@@ -58,6 +57,4 @@ public class HibernateUsersDaoImpl implements HibernateUsersDao {
         transaction.commit();
         return entityManager.find(HibernateUsers.class, entity.getUserId());
     }
-
-
 }

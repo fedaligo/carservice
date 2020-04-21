@@ -1,16 +1,21 @@
 package com.htp.domain.hibernate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.*;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
-import javax.persistence.*;
 
-//@Data
-@Setter
-@Getter
+@Data
 @RequiredArgsConstructor
-@EqualsAndHashCode//(exclude = {"Id", "user_role"})
-@ToString//(exclude = {"user_role"})
 @Entity
 @Table(name = "m_roles")
 public class HibernateRoles {
@@ -22,12 +27,6 @@ public class HibernateRoles {
 
         @Column(name = "name_of_role")
         private String nameOfRole;
-
-        /*@OneToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "user_id")
-        @JsonBackReference
-        //@MapsId
-        private HibernateUsers user_role;*/
 
         @JsonBackReference
         @ManyToOne(fetch = FetchType.EAGER)

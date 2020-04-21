@@ -15,16 +15,10 @@ import java.util.List;
 @Qualifier("hibernateRolesDao")
 public class HibernateRolesDaoImpl implements HibernateRolesDao {
 
-    //@Autowired
     private final EntityManager entityManager;
 
     @Override
     public List<HibernateRoles> findAll() {
-        /*try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("select tu from HibernateUsers tu", HibernateUsers.class).list();
-        }*/
-//
-//        EntityManager entityManager = entityManagerFactory.createEntityManager();
         System.out.println(entityManager.toString());
         return entityManager.createQuery("select tu from HibernateRoles tu order by tu.id", HibernateRoles.class).getResultList();
     }
@@ -52,13 +46,6 @@ public class HibernateRolesDaoImpl implements HibernateRolesDao {
 
     @Override
     public HibernateRoles save(HibernateRoles entity) {
-        /*try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.getTransaction();
-            transaction.begin();
-            Long newID = (Long)session.save(entity);
-            transaction.commit();
-            return session.find(HibernateRoles.class, newID);
-        }*/
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
         entityManager.persist(entity);
@@ -68,18 +55,10 @@ public class HibernateRolesDaoImpl implements HibernateRolesDao {
 
     @Override
     public HibernateRoles updateOne(HibernateRoles entity) {
-        /*try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.getTransaction();
-            transaction.begin();
-            session.saveOrUpdate(entity);
-            transaction.commit();
-            return session.find(HibernateRoles.class, entity.getId());
-        }*/
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
         entityManager.persist(entity);
         transaction.commit();
         return entityManager.find(HibernateRoles.class, entity.getId());
     }
-
 }

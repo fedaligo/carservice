@@ -2,9 +2,24 @@ package com.htp.domain.hibernate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
-
-import javax.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
+import javax.persistence.CascadeType;
 import java.util.Date;
 
 @Data
@@ -14,8 +29,8 @@ import java.util.Date;
 @Entity
 @Builder
 @Table(name = "m_tasks")
-@EqualsAndHashCode(exclude = {"id",/*"cars",*/"tracking"})
-@ToString(exclude = {"tracking"/*"cars"*/})
+@EqualsAndHashCode(exclude = {"id","tracking"})
+@ToString(exclude = {"tracking"})
 public class HibernateTasks {
 
     @Id
@@ -46,12 +61,6 @@ public class HibernateTasks {
 
     @Column(name = "local_Description")
     private String localDescription;
-
-    /*@OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_car")
-    @JsonBackReference
-    //@MapsId
-    private HibernateCars cars;*/
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)

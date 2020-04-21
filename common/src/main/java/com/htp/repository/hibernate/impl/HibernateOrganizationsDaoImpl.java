@@ -15,7 +15,6 @@ import java.util.List;
 @Qualifier("hibernateOrganizationsDao")
 public class HibernateOrganizationsDaoImpl implements HibernateOrganizationsDao {
 
-    //@Autowired
     private final EntityManager entityManager;
 
     @Override

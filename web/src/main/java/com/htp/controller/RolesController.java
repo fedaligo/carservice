@@ -1,10 +1,13 @@
 package com.htp.controller;
 
-import com.htp.domain.Roles;
 import com.htp.domain.hibernate.HibernateRoles;
-import com.htp.repository.jdbc.RolesDao;
 import com.htp.repository.springdata.HibernateRolesRepository;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,53 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RolesController {
 
-    private final RolesDao rolesDao;
-
     private final HibernateRolesRepository hibernateRolesRepository;
-
-    /*JDBC*/
-
-    /*FindAll*/
-    @GetMapping()
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<Roles>> getRoles() {
-        return new ResponseEntity<>(rolesDao.findAll(), HttpStatus.OK);
-    }
-
-    /*FindByID*/
-    @ApiOperation(value = "Get Roles from server by id")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful getting Roles"),
-            @ApiResponse(code = 400, message = "Invalid Roles ID supplied"),
-            @ApiResponse(code = 401, message = "Lol kek"),
-            @ApiResponse(code = 404, message = "Roles was not found"),
-            @ApiResponse(code = 500, message = "Server error, something wrong")
-    })
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<Roles> getRolesById(@ApiParam("Role Path Id") @PathVariable Long id) {
-        Roles roles = rolesDao.findById(id);
-        return new ResponseEntity<>(roles, HttpStatus.OK);
-    }
-
-    /*Delete*/
-    @DeleteMapping("/{id}")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
-    })
-    @ResponseStatus(HttpStatus.OK)
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<Long> deleteRole(@PathVariable("id") Long id) {
-        rolesDao.deleteById(id);
-        return new ResponseEntity<>(id, HttpStatus.OK);
-    }
-
-    /*SPRING DATA*/
 
     /*FindAll*/
     @GetMapping("/spring-data")
