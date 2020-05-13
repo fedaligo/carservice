@@ -1,18 +1,10 @@
 package com.htp.domain.hibernate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
+
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.Set;
 
@@ -36,7 +28,7 @@ public class HibernateOrganizations {
         @Column(name = "is_deleted")
         private Boolean isDeleted;
 
-        @JsonIgnore
+        //@JsonIgnore
         @Column(name = "role")
         private String role;
 
